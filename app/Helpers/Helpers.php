@@ -4,6 +4,7 @@ namespace App\Helpers;
 use Config;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use App\Models\Products;
 
 class Helpers
 {
@@ -205,5 +206,11 @@ class Helpers
 
     public static function loginUserCompanyId(){
         return auth()->user()->company()->first()->id;
+    }
+
+    public static function setNumber() {
+        $number = mt_rand(100000, 999999);
+    
+        return Products::where('product_code', $number)->exists() ? $this->setNumber() : $number;
     }
 }

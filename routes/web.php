@@ -23,6 +23,7 @@ use App\Http\Controllers\ChartController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BuyerController;
+use App\Http\Controllers\ProductsController;
 
 
 /*
@@ -78,10 +79,16 @@ Route::group(['middleware' => ['auth']], function () {
         /** new buyer routes start **/
         Route::resource('/buyer-type', BuyerController::class);
         Route::get('/buyer-type/delete/{id}', [BuyerController::class,'destroy'])->name('buyer-type.destroy');
+        
+        /** new products routes **/
+        Route::resource('/product',ProductsController::class);
+        
     });
 
     
-
+    /** product import and export **/
+    Route::post('/product-import', [ProductsController::class,'productImport']);
+    Route::get('/product-export/{type?}', [ProductsController::class,'productExport'])->name('product-export');
     
     Route::post('/company-user-import', [UserController::class,'companyUserImport']);
     Route::get('/company-user-export/{type?}', [UserController::class,'companyUserExport'])->name('company-user-export');
@@ -95,6 +102,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/company-user-update/{id}', [UserController::class, 'usersUpdate'])->name('company-user-update');
         Route::get('/company-user-list', [UserController::class, 'usersList'])->name('companyadmin.company-user-list');
         Route::post('/company-user-create', [UserController::class, 'userStore'])->name('company-user-create');
+
+        /** new products routes **/
+        Route::resource('/product',ProductsController::class);
     });
     /** state and city **/
     Route::post('api/user-fetch-states', [UserController::class, 'user_fetchState']);

@@ -20,10 +20,13 @@ return new class extends Migration
             $table->string('product_slug')->nullable();
             $table->string('foodType')->default('veg');
             $table->text('description')->nullable();
-            $table->integer('product_catid')->default(1);
-            $table->integer('product_subcatid')->default(1);
+            $table->bigInteger('product_catid')->unsigned();
+            $table->bigInteger('product_subcatid')->unsigned();
             $table->integer('blocked')->default(1);
             $table->timestamps();
+
+            $table->foreign('product_catid')->references('id')->on('product_category')->onDelete('cascade');
+            $table->foreign('product_subcatid')->references('id')->on('product_sub_categories')->onDelete('cascade');
         });
     }
 

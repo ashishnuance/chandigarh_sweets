@@ -31,25 +31,25 @@
             <div class="card-title">
               <div class="row">
                 <div class="col s12 m6 l10">
-                  <h4 class="card-title">{{__('locale.imports')}} {{__('locale.users')}}</h4>
+                  <h4 class="card-title">{{__('locale.imports')}} {{__('locale.Items')}}</h4>
                 </div>
               </div>
             </div>
             <div id="view-file-input">
               <div class="row">
                 <div class="col s12">
-                  <form action="{{asset('company-user-import')}}" method="post" enctype="multipart/form-data">
+                  <form action="{{asset('product-import')}}" method="post" enctype="multipart/form-data">
                     @csrf()
                     <div class="file-field input-field">
                       <div class="btn">
                         <span>File</span>
-                        <input type="file" name="importcompany">
+                        <input type="file" name="importfile">
                       </div>
                       <div class="file-path-wrapper">
                         <input class="file-path validate" type="text">
                       </div>
                     </div>
-                    <a class="waves-effect waves-light left submit" target="_blank" href="{{asset('data-import-files/company-user-import.csv')}}" download>{{__('locale.download_sample_file')}}
+                    <a class="waves-effect waves-light left submit" target="_blank" href="{{asset('data-import-files/product-import.csv')}}" download>{{__('locale.download_sample_file')}}
                         <i class="material-icons">download</i>
                     </a>
                     <button class="btn waves-effect waves-light right submit" type="submit" name="action">Submit
@@ -64,16 +64,7 @@
         </div>
       </div>
     
-        <!-- <div class="col s12 m6 l3">
-          <label for="users-list-status">Status</label>
-          <div class="input-field">
-            <select class="form-control" id="users-list-status">
-              <option value="">Any</option>
-              <option value="1">Blocked</option>
-              <option value="0">Un-Blocked</option>
-            </select>
-          </div>
-        </div> -->
+        
         
     </div>
   </div>
@@ -88,11 +79,11 @@
               <input id="serach" type="text" name="serach" data-error=".errorTxt12">
             </div>
           </div>
-          <a class="btn waves-effect waves-light right" href="{{route('company-user-export',[$userType])}}">{{__('locale.export_users')}}
+          <a class="btn waves-effect waves-light right" href="{{route('product-export',[$userType])}}">{{__('locale.export_users')}}
                 <i class="material-icons right"></i>
             </a>
         <div class="responsive-table table-result">
-          @include('pages.users.users-list-ajax')
+          @include('pages.products.ajax-list')
           
         </div>
         <input type="hidden" name="hidden_page" id="hidden_page" value="{{(isset($currentPage) && $currentPage>0) ? $currentPage : 1}}" />
@@ -115,7 +106,7 @@
 <script src="{{asset('js/scripts/page-users.js')}}"></script>
 <script>
   $(document).ready(function(){
-    var paginationUrl = '{{(isset($paginationUrl) && $paginationUrl!='') ? route($paginationUrl) : route("company-admin-list") }}';
+    var paginationUrl = '{{(isset($paginationUrl) && $paginationUrl!='') ? route($paginationUrl) : '' }}';
     const fetch_data = (page, status, seach_term) => {
         if(status === undefined){
             status = "";

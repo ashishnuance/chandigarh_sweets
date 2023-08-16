@@ -162,7 +162,7 @@
       ]
     },
     {
-      "for" :["superadmin","admin"],
+      "for" :["superadmin"],
       "url": "javascript:void(0)",
       "name": "Items",
       "i18n": "Items",
@@ -171,13 +171,13 @@
       "icon": "person_outline",
       "submenu": [
         {
-          "url": "javascript:void(0)",
+          "url": "superadmin/product/create",
           "name": "Item Add",
           "i18n": "Item Add",
           "slug": "item-add"
         },
         {
-          "url": "javascript:void(0)",
+          "url": "superadmin/product",
           "name": "Items List",
           "i18n": "Items List",
           "slug": "items-list"
