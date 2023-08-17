@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\ProductCategoryModel;
-use App\Models\ProductSubCategory;
+use App\Models\{ProductCategoryModel,ProductSubCategory};
+
 
 class Products extends Model
 {
@@ -16,7 +16,11 @@ class Products extends Model
 
     public function category()
     {
-    return $this->hasOne(ProductCategoryModel::class, 'company_user_mappings', 'user_id', 'company_id');
+        return $this->hasOne(ProductCategoryModel::class, 'id', 'product_catid');
+    }
+    public function subcategory()
+    {
+        return $this->hasOne(ProductSubCategory::class, 'id', 'product_subcatid');
     }
 
 }

@@ -104,7 +104,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/company-user-create', [UserController::class, 'userStore'])->name('company-user-create');
 
         /** new products routes **/
-        Route::resource('/product',ProductsController::class);
+        //Route::resource('/product',ProductsController::class);
     });
     /** state and city **/
     Route::post('api/user-fetch-states', [UserController::class, 'user_fetchState']);

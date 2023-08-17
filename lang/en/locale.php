@@ -205,5 +205,11 @@ return [
     "product variation"=>"Product Variation",
     "product info"=>"Product Info",
     "product images"=>"Product Images",
+    "SKU"=>"SKU",
+    "Main Price"=>"Main Price",
+    "Offer Price"=>"Offer Price",
+    "Quantity"=>"Quantity",
+    "select type"=>"Select Type",
+    'success common add'=>"Successfully Added",
 ];
 ?>

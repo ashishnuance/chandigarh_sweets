@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('sku');
             $table->decimal('main_price', $precision = 8, $scale = 2);
             $table->decimal('offer_price', $precision = 8, $scale = 2);
-            $table->integer('qunatity')->default(1);
+            $table->integer('quantity')->default(1);
             $table->timestamps();
             //FOREIGN KEY
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');

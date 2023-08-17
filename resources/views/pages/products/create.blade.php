@@ -35,14 +35,17 @@
           </div>
           @if(isset($product_result->id))
           <?php $formUrl = (isset($formUrl) && $formUrl!='') ? $formUrl : 'product.update'; ?>
-            <form class="formValidate" action="{{route($formUrl,$product_result->id)}}" id="formValidateCompany" method="post">
+            <form class="formValidate" action="{{route($formUrl,$product_result->id)}}" id="formValidateCompany" method="post" enctype="multipart/form-data">
             {!! method_field('post') !!}
-            @else
-            <?php $formUrl = (isset($formUrl) && $formUrl!='') ? $formUrl : 'company-admin-create'; ?>
-            <form id="accountForm" action="{{route($formUrl)}}" method="post">
-            @endif
+          @else
+            <?php 
+            
+            $formUrl = (isset($formUrl) && $formUrl!='') ? $formUrl : 'superadmin/product/update'; ?>
+            <form id="accountForm" action="{{route('product.store')}}" method="post" enctype="multipart/form-data">
+            {!! method_field('post') !!}
+          @endif
             @csrf()
-          <ul class="stepper horizontal" id="horizStepper">
+          <ul class="stepper horizontal product-create-section" id="horizStepper">
             <li class="step active">
               <div class="step-title waves-effect">{{__('locale.product info')}}</div>
               <div class="step-content">
@@ -72,15 +75,15 @@
                         <label for="country">{{__('locale.category')}}</label>
                     </div>
                     <div class="col s12 m6 input-field">
-                        <select name="state" id="state">
+                        <select name="product_subcatid" id="product_subcatid">
                         <option value="">Choose {{__('locale.sub category')}}</option>
-                        @if(isset($product_result->state) && isset($states) && !empty($states))
-                            @foreach ($states as $state_value)
-                            <option value="{{$state_value->id}}">{{$state_value->name}}</option>
+                        @if(isset($product_result->state) && isset($productSubCategoryResult) && !empty($productSubCategoryResult))
+                            @foreach ($productSubCategoryResult as $subcat_value)
+                            <option value="{{$subcat_value->id}}">{{$subcat_value->subcat_name}}</option>
                             @endforeach
                         @endif
                         </select>
-                        <label for="state">{{__('locale.sub category')}}</label>
+                        <label for="product_subcatid">{{__('locale.sub category')}}</label>
                     </div>
                     
                     <div class="col s12 m6 input-field">
@@ -135,24 +138,24 @@
                 
                 <div class="row section">
                     <div class="col s12 m12 l3">
-                        <p>{{__('locale.product images')}}</p>
-                    </div>
-                    <div class="col s12">
-                    <div class="col s12 m4">
-                        <input type="file" id="input-file-now" class="dropify" data-default-file="" />
-                    </div>
-                    <div class="col s12 m4">
-                        <input type="file" id="input-file-now" class="dropify" data-default-file="" />
-                    </div>
-                    <div class="col s12 m4">
-                        <input type="file" id="input-file-now" class="dropify" data-default-file="" />
-                    </div>
+                      <div class="col s12">
+                          <p>{{__('locale.product images')}}</p>
+                      </div>
+                      </div>
+                      <div class="col s12 clone-product-image-section">
+                        <div class="col s12 m4 clone-image mb-2">
+                            <input type="file" id="input-file-now" name="product_image[]" class="dropify" data-default-file="" />
+                            <button type="button" class="btn btn-primary mt-1 remove-image">Remove</button>
+                        </div>
+                        
+                      </div>
+                      <div class="col s12 m4">
+                        <div class="col s12">
+                        <button class="dark btn btn-primary" id="add-product-image" type="button">Add</button>
+                      </div>
                     </div>
                 </div>
                     
-                
-                
-                
                 <div class="step-actions">
                   <div class="row">
                     <div class="col m4 s12 mb-3">
@@ -173,6 +176,7 @@
                       </button>
                     </div>
                   </div>
+                
                 </div>
               </div>
             </li>
@@ -180,54 +184,48 @@
               <div class="step-title waves-effect">{{__('locale.product variation')}}</div>
               <div class="step-content">
                 <div class="row">
-                  <div class="input-field col m6 s12">
-                    <label for="eventName">Event Name: <span class="red-text">*</span></label>
-                    <input type="text" class="validate" id="eventName" name="eventName" required>
+                  <div class="clone-product-variation">
+                    <div class="product-variation">
+                      <div class="input-field col m6 s12">
+                        <label for="name">{{__('locale.name')}}: <span class="red-text">*</span></label>
+                        <input type="text" class="validate" id="name" name="variation[name][]" required>
+                      </div>
+                      <div class="input-field col m6 s12">
+                        <label for="sku">{{__('locale.SKU')}}: <span class="red-text">*</span></label>
+                        <input type="text" class="validate" id="sku" name="variation[sku][]" required>
+                      </div>
+                      <div class="input-field col m6 s12">
+                        <label for="main_price">{{__('locale.Main Price')}}: <span class="red-text">*</span></label>
+                        <input type="text" class="validate" id="main_price" name="variation[main_price][]" required>
+                      </div>
+                      <div class="input-field col m6 s12">
+                        <label for="offer_price">{{__('locale.Offer Price')}}: <span class="red-text">*</span></label>
+                        <input type="text" class="validate" id="offer_price" name="variation[offer_price][]">
+                      </div>
+                      <div class="input-field col m6 s12">
+                        <label for="quantity">{{__('locale.Quantity')}}: <span class="red-text">*</span></label>
+                        <input type="text" class="validate" id="quantity" name="variation[quantity][]">
+                      </div>
+                      <div class="input-field col m6 s12">
+                        <select name="variation[variation_type][]">
+                          <option value="" disabled selected>{{__('locale.select type')}}</option>
+                          <option value="1">Wedding</option>
+                          <option value="2">Party</option>
+                          <option value="3">Fund Raiser</option>
+                        </select>
+                      </div>
+                      <button type="button" class="btn btn-primary mt-1 remove-variation">Remove</button>
+                    </div>
                   </div>
-                  <div class="input-field col m6 s12">
-                    <select>
-                      <option value="Select" disabled selected>Select Event Type</option>
-                      <option value="Wedding">Wedding</option>
-                      <option value="Party">Party</option>
-                      <option value="FundRaiser">Fund Raiser</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="input-field col m6 s12">
-                    <select>
-                      <option value="Select" disabled selected>Select Event Status</option>
-                      <option value="Planning">Planning</option>
-                      <option value="In Progress">In Progress</option>
-                      <option value="Completed">Completed</option>
-                    </select>
-                  </div>
-                  <div class="input-field col m6 s12">
-                    <select>
-                      <option value="Select" disabled selected>Event Location</option>
-                      <option value="New York">New York</option>
-                      <option value="Queens">Queens</option>
-                      <option value="Washington">Washington</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="input-field col m6 s12">
-                    <label for="Budget">Event Budget: <span class="red-text">*</span></label>
-                    <input type="Number" class="validate" id="Budget" name="Budget">
-                  </div>
-                  <div class="input-field col m6 s12">
-                    <p> <label>Requirments</label></p>
-                    <p> <label>
-                        <input type="checkbox">
-                        <span>Staffing</span>
-                      </label></p>
-                    <p><label>
-                        <input type="checkbox">
-                        <span>Catering</span>
-                      </label></p>
+                  
+                  <div class="col s12 m4">
+                    <div class="col s12">
+                    <button class="dark btn btn-primary" id="add-product-variation" type="button">Add</button>
                   </div>
                 </div>
+                
+                
+                
                 <div class="step-actions">
                   <div class="row">
                     <div class="col m6 s12 mb-1">
@@ -291,5 +289,36 @@
 @section('page-script')
 <script src="{{asset('js/scripts/form-wizard.js')}}"></script>
 <script src="{{asset('js/scripts/form-file-uploads.js')}}"></script>
+<script>
+  $(document).ready(function(){
+    $('#add-product-image').click(function(){
+      
+      let image_clone_html = $('.clone-product-image-section .clone-image:first-child').clone(true);
+      image_clone_html.appendTo('.clone-product-image-section');
 
+    })
+
+    $('#add-product-variation').click(function(){
+      
+      let variation_clone_html = $('.clone-product-variation').find('.product-variation').eq(0).clone();
+      console.log(variation_clone_html.html());
+      variation_clone_html.appendTo('.clone-product-variation');
+
+    })
+    
+
+  })
+  $(document).on('click', '.remove-image', function () {
+    if($('.clone-product-image-section .clone-image').length>1){
+	    $(this).parent().remove();
+    }
+  });
+
+  $(document).on('click', '.remove-variation', function () {
+    if($('.clone-product-variation .product-variation').length>1){
+	    $(this).parent().remove();
+    }
+  });
+  
+</script>
 @endsection
