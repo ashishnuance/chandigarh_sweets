@@ -15,6 +15,13 @@ return [
     "Buyer Type"=>"Buyer Type",
     "Buyer Type Add"=>"Buyer Type Add",
     "Buyer Type List"=>"Buyer Type List",
+
+    "Product Category"=>"Product Category",
+    "Product Category Create"=>"Create",
+    "Product Category List"=>"List",
+    "Product category Add"=>"Product category Add",
+    "product_category_success"=>"Product category Successfully",
+
     "group_code"=>"Group code",
     "group_name"=>"Group name",
     "type"=>"Type",
@@ -158,6 +165,8 @@ return [
     "Access Control"=>"Access Control",
     "company_name"=>"Company Name",
     "company_code"=>"Company Code",
+    "S.no"=>"S.no",
+    "category_name"=>"category_name",
     "address1"=>"Address1",
     "address2"=>"Address2",
     "city"=>"City",
@@ -170,6 +179,7 @@ return [
     "blocked"=>"Blocked",
     "unblocked"=>"Un-Blocked",
     "company_create_success"=>"Company Created Successfully",
+
     "company_admin_create_success"=>"Company Admin Created Successfully",
     "buyer_create_success"=>"Buyer Created Successfully",
     "try_again"=>"Please try again!",
@@ -211,5 +221,9 @@ return [
     "Quantity"=>"Quantity",
     "select type"=>"Select Type",
     'success common add'=>"Successfully Added",
+    "product delete errormessage"=>"Product is not deleted because it is in the Cart and Order list",
+    "product delete successmessage"=>"Product is deleted successfully",
+    "success common update"=>"Successfully Updated",
+    "product edit error"=>"Product id not match"
 ];
 ?>

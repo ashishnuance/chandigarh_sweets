@@ -165,16 +165,7 @@ class UserController extends Controller
         return Excel::download($companyUser, 'company-'.$type.time().'.xlsx');
     }
 
-    public function user_fetchState(Request $request)
-    {
-        $data['states'] = State::where("country_id",$request->country_id)->get(["name", "id"]);
-        return response()->json($data);
-    }
-    public function user_fetchCity(Request $request)
-    {
-        $data['cities'] = City::where("state_id",$request->state_id)->get(["name", "id"]);
-        return response()->json($data);
-    }
+    
 
 
     public function usersList(Request $request)

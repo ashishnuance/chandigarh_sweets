@@ -33,10 +33,11 @@
           <div class="card-header mb-2">
             <h4 class="card-title">Horizontal Stepper</h4>
           </div>
+          
           @if(isset($product_result->id))
           <?php $formUrl = (isset($formUrl) && $formUrl!='') ? $formUrl : 'product.update'; ?>
             <form class="formValidate" action="{{route($formUrl,$product_result->id)}}" id="formValidateCompany" method="post" enctype="multipart/form-data">
-            {!! method_field('post') !!}
+            {!! method_field('patch') !!}
           @else
             <?php 
             
@@ -68,7 +69,7 @@
                         <option value="">Choose {{__('locale.category')}}</option>
                         
                             @foreach ($productCategoryResult as $category_value)
-                            <option value="{{$category_value->id}}">{{$category_value->category_name}}</option>
+                            <option value="{{$category_value->id}}">{{ucwords($category_value->category_name)}}</option>
                             @endforeach
                         
                         </select>
@@ -77,9 +78,9 @@
                     <div class="col s12 m6 input-field">
                         <select name="product_subcatid" id="product_subcatid">
                         <option value="">Choose {{__('locale.sub category')}}</option>
-                        @if(isset($product_result->state) && isset($productSubCategoryResult) && !empty($productSubCategoryResult))
+                        @if(isset($product_result->product_subcatid) && isset($productSubCategoryResult) && !empty($productSubCategoryResult))
                             @foreach ($productSubCategoryResult as $subcat_value)
-                            <option value="{{$subcat_value->id}}">{{$subcat_value->subcat_name}}</option>
+                            <option value="{{$subcat_value->id}}">{{ucwords($subcat_value->subcat_name)}}</option>
                             @endforeach
                         @endif
                         </select>
@@ -87,7 +88,7 @@
                     </div>
                     
                     <div class="col s12 m6 input-field">
-                        <select name="food_type" id="food_type">
+                        <select name="food_type" class="food_type">
                         <option value="">Choose {{__('locale.food type')}}</option>
                         
                             @foreach ($foodTypeResult as $type_value)
@@ -143,6 +144,16 @@
                       </div>
                       </div>
                       <div class="col s12 clone-product-image-section">
+                      
+                        
+                        @if(isset($product_result->product_images) && !empty($product_result->product_images))
+                        @foreach($product_result->product_images as $image_value)
+                        <div class="col s12 m4 clone-image mb-2">
+                            <input type="file" name="product_image[]" class="dropify" data-default-file="{{route('image.displayImage',$image_value->image)}}" />
+                            <button type="button" class="btn btn-primary mt-1 remove-image">Remove</button>
+                        </div>
+                        @endforeach
+                        @endif
                         <div class="col s12 m4 clone-image mb-2">
                             <input type="file" id="input-file-now" name="product_image[]" class="dropify" data-default-file="" />
                             <button type="button" class="btn btn-primary mt-1 remove-image">Remove</button>
@@ -185,29 +196,71 @@
               <div class="step-content">
                 <div class="row">
                   <div class="clone-product-variation">
+                    <?php //print_r($product_result->product_variation) ?>
+                    @if(isset($product_result->product_variation) && !empty($product_result->product_variation))
+                    
+                    @foreach($product_result->product_variation as $provar_value)
+                    
                     <div class="product-variation">
                       <div class="input-field col m6 s12">
                         <label for="name">{{__('locale.name')}}: <span class="red-text">*</span></label>
-                        <input type="text" class="validate" id="name" name="variation[name][]" required>
+                        <input type="text" class="validate name" name="variation[name][]" value="{{(isset($provar_value->name)) ? $provar_value->name : '' }}" required>
                       </div>
                       <div class="input-field col m6 s12">
                         <label for="sku">{{__('locale.SKU')}}: <span class="red-text">*</span></label>
-                        <input type="text" class="validate" id="sku" name="variation[sku][]" required>
+                        <input type="text" class="validate sku" name="variation[sku][]" value="{{(isset($provar_value->sku)) ? $provar_value->sku : '' }}" required>
                       </div>
                       <div class="input-field col m6 s12">
                         <label for="main_price">{{__('locale.Main Price')}}: <span class="red-text">*</span></label>
-                        <input type="text" class="validate" id="main_price" name="variation[main_price][]" required>
+                        <input type="text" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" class="validate main_price" name="variation[main_price][]" value="{{(isset($provar_value->main_price)) ? $provar_value->main_price : '' }}" required>
                       </div>
                       <div class="input-field col m6 s12">
                         <label for="offer_price">{{__('locale.Offer Price')}}: <span class="red-text">*</span></label>
-                        <input type="text" class="validate" id="offer_price" name="variation[offer_price][]">
+                        <input type="text" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" class="validate offer_price" name="variation[offer_price][]" value="{{(isset($provar_value->offer_price)) ? $provar_value->offer_price : '' }}">
                       </div>
                       <div class="input-field col m6 s12">
                         <label for="quantity">{{__('locale.Quantity')}}: <span class="red-text">*</span></label>
-                        <input type="text" class="validate" id="quantity" name="variation[quantity][]">
+                        <input type="text" class="validate quantity" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" name="variation[quantity][]" value="{{(isset($provar_value->quantity)) ? $provar_value->quantity : '' }}">
+                      </div>
+                      <?php 
+                     // echo"<pre>"; print_r($productsVariationsOptions); die; ?>
+                      <div class="input-field col m6 s12">
+                        <select name="variation[variation_type][]" class="variation_type" id="productsVariations">
+                          <option value="" disabled selected>{{__('locale.select type')}}</option>
+                          @if(isset($productsVariationsOptions) && !empty($productsVariationsOptions))
+                          @foreach($productsVariationsOptions as $option_value)
+                          <option value="{{$option_value->name}}">{{$option_value->name}}</option>
+                          @endforeach
+                          @endif
+                        </select>
+                      </div>
+                      <button type="button" class="btn btn-primary mt-1 remove-variation">Remove</button>
+                    </div>
+                    @endforeach
+                    @endif
+                    <div class="product-variation">
+                      <div class="input-field col m6 s12">
+                        <label for="name">{{__('locale.name')}}: <span class="red-text">*</span></label>
+                        <input type="text" class="validate name" name="variation[name][]" required>
                       </div>
                       <div class="input-field col m6 s12">
-                        <select name="variation[variation_type][]">
+                        <label for="sku">{{__('locale.SKU')}}: <span class="red-text">*</span></label>
+                        <input type="text" class="validate sku" name="variation[sku][]" required>
+                      </div>
+                      <div class="input-field col m6 s12">
+                        <label for="main_price">{{__('locale.Main Price')}}: <span class="red-text">*</span></label>
+                        <input type="text" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" class="validate main_price" name="variation[main_price][]" required>
+                      </div>
+                      <div class="input-field col m6 s12">
+                        <label for="offer_price">{{__('locale.Offer Price')}}: <span class="red-text">*</span></label>
+                        <input type="text" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" class="validate offer_price" name="variation[offer_price][]">
+                      </div>
+                      <div class="input-field col m6 s12">
+                        <label for="quantity">{{__('locale.Quantity')}}: <span class="red-text">*</span></label>
+                        <input type="text" class="validate quantity" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" name="variation[quantity][]">
+                      </div>
+                      <div class="input-field col m6 s12">
+                        <select name="variation[variation_type][]" class="variation_type">
                           <option value="" disabled selected>{{__('locale.select type')}}</option>
                           <option value="1">Wedding</option>
                           <option value="2">Party</option>
@@ -216,6 +269,7 @@
                       </div>
                       <button type="button" class="btn btn-primary mt-1 remove-variation">Remove</button>
                     </div>
+                    
                   </div>
                   
                   <div class="col s12 m4">
@@ -278,7 +332,44 @@
   
 </div>
 @endsection
+<div class="cloneimagesection hide" style="display:none">
+  <div class="col s12 m4 clone-image mb-2">
+      <input type="file" name="product_image[]" class="dropify" data-default-file="" />
+      <button type="button" class="btn btn-primary mt-1 remove-image">Remove</button>
+  </div>
 
+  <div class="product-variation">
+    <div class="input-field col m6 s12">
+      <label for="name">{{__('locale.name')}}: <span class="red-text">*</span></label>
+      <input type="text" class="validate name" name="variation[name][]" required>
+    </div>
+    <div class="input-field col m6 s12">
+      <label for="sku">{{__('locale.SKU')}}: <span class="red-text">*</span></label>
+      <input type="text" class="validate sku" name="variation[sku][]" required>
+    </div>
+    <div class="input-field col m6 s12">
+      <label for="main_price">{{__('locale.Main Price')}}: <span class="red-text">*</span></label>
+      <input type="text" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" class="validate main_price" name="variation[main_price][]" required>
+    </div>
+    <div class="input-field col m6 s12">
+      <label for="offer_price">{{__('locale.Offer Price')}}: <span class="red-text">*</span></label>
+      <input type="text" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" class="validate offer_price" name="variation[offer_price][]">
+    </div>
+    <div class="input-field col m6 s12">
+      <label for="quantity">{{__('locale.Quantity')}}: <span class="red-text">*</span></label>
+      <input type="text" class="validate quantity" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" name="variation[quantity][]">
+    </div>
+    <div class="input-field col m6 s12">
+      <select name="variation[variation_type][]" class="variation_type">
+        <option value="" disabled selected>{{__('locale.select type')}}</option>
+        <option value="1">Wedding</option>
+        <option value="2">Party</option>
+        <option value="3">Fund Raiser</option>
+      </select>
+    </div>
+    <button type="button" class="btn btn-primary mt-1 remove-variation">Remove</button>
+  </div>
+</div>
 {{-- vendor script --}}
 @section('vendor-script')
 <script src="{{asset('vendors/materialize-stepper/materialize-stepper.min.js')}}"></script>
@@ -290,22 +381,69 @@
 <script src="{{asset('js/scripts/form-wizard.js')}}"></script>
 <script src="{{asset('js/scripts/form-file-uploads.js')}}"></script>
 <script>
+
+  window.onload=function(){
+    var category_value = "{{(isset($product_result->product_catid) && $product_result->product_catid!='NULL') ? $product_result->product_catid : old('product_catid')}}";
+    var subcategory_value = "{{(isset($product_result->product_subcatid) && $product_result->product_subcatid!='NULL') ? $product_result->product_subcatid : old('product_subcatid')}}";
+    var food_type = "{{(isset($product_result->food_type) && $product_result->food_type!='NULL') ? $product_result->food_type : old('food_type')}}";
+
+    var option_value = "{{(isset($productsVariationsOptions->name) && $productsVariationsOptions->name!='NULL') ? $productsVariationsOptions->name : old('name')}}";
+    
+    $('#product_catid').val(category_value);
+    $('#product_catid').formSelect();
+    $('#product_subcatid').val(subcategory_value);
+    $('#product_subcatid').formSelect();
+    $('.food_type').val(food_type);
+    $('.food_type').formSelect();
+    $('#productsVariations').val(option_value);
+
+    $('#productsVariations').formSelect();
+
+  }
+
   $(document).ready(function(){
     $('#add-product-image').click(function(){
       
       let image_clone_html = $('.clone-product-image-section .clone-image:first-child').clone(true);
-      image_clone_html.appendTo('.clone-product-image-section');
+      
+      console.log('image_clone_html',image_clone_html.html());
+      image_clone_html.appendTo('.clone-product-image-section');//.find('img').remove();
 
     })
 
     $('#add-product-variation').click(function(){
       
-      let variation_clone_html = $('.clone-product-variation').find('.product-variation').eq(0).clone();
+      // let variation_clone_html = $('.clone-product-variation').find('.product-variation').eq(0).clone();
+      let variation_clone_html = $('.cloneimagesection').find('.product-variation').eq(0).clone();
       console.log(variation_clone_html.html());
+      
       variation_clone_html.appendTo('.clone-product-variation');
+      $('.variation_type').formSelect();
 
     })
     
+    $('#product_catid').on('change', function () {
+      var idCategory = this.value;
+      console.log(idCategory);
+      $("#product_subcatid").html('');
+      $.ajax({
+          url: "{{url('api/fetch-subcategory')}}",
+          type: "POST",
+          data: {
+              category_id: idCategory,
+              _token: '{{csrf_token()}}'
+          },
+          dataType: 'json',
+          success: function (result) {
+              $('#product_subcatid').html('<option value="">Select Subcategory</option>');
+              $.each(result.subcategory, function (key, value) {
+                  $("#product_subcatid").append('<option value="' + value
+                      .id + '">' + value.subcat_name + '</option>');
+              });
+              $('#product_subcatid').formSelect();
+          }
+      });
+    });
 
   })
   $(document).on('click', '.remove-image', function () {

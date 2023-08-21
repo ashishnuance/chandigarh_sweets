@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Company;
-use App\Models\{Products,ProductsVariations,ProductImagesModel};
+use App\Models\{Products,ProductsVariations,ProductImagesModel,ProductsVariationsOptions};
 use App\Models\{ProductCategoryModel,ProductSubCategory};
+use App\Models\{Cartlist,Orderlist};
 use App\Exports\ProductsExport;
 use App\Exports\UserProductsExport;
 use App\Imports\ProductsImport;
@@ -36,7 +37,7 @@ class ProductsController extends Controller
         $pageTitle = __('locale.Items List');
         
         $productResult = Products::select(['id','product_code','product_name','product_slug','product_catid','product_subcatid','food_type','blocked'])->orderBy('id','DESC');
-
+        
         if($request->ajax()){
             $productResult = $productResult->when($request->seach_term, function($q)use($request){
                             $q->where('id', 'like', '%'.$request->seach_term.'%')
@@ -65,6 +66,7 @@ class ProductsController extends Controller
      */
     public function create($id='')
     {
+        
         $userType = 'admin';
         $product_result=$states=$productSubCategoryResult=false;
         $breadcrumbs = [
@@ -74,6 +76,8 @@ class ProductsController extends Controller
         
         $companies = Company::get(["company_name", "id","company_code"]);
         $productCategoryResult = ProductCategoryModel::get(["category_name", "id"]);
+        $productsVariationsOptions = ProductsVariationsOptions::get('id','name');
+
         $foodTypeResult = ['veg','non-veg'];
         $pageTitle = __('locale.Company Admin'); 
         $productCode = Helper::setNumber();
@@ -86,7 +90,7 @@ class ProductsController extends Controller
             
         }
         
-        return view('pages.products.create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'pageTitle'=>$pageTitle,'companies'=>$companies,'product_result'=>$product_result,'userType'=>$userType,'productCategoryResult'=>$productCategoryResult,'productSubCategoryResult'=>$productSubCategoryResult,'foodTypeResult'=>$foodTypeResult,'productCode'=>$productCode,'formUrl'=>$formUrl]);
+        return view('pages.products.create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'pageTitle'=>$pageTitle,'companies'=>$companies,'product_result'=>$product_result,'userType'=>$userType,'productCategoryResult'=>$productCategoryResult,'productSubCategoryResult'=>$productSubCategoryResult,'foodTypeResult'=>$foodTypeResult,'productCode'=>$productCode,'formUrl'=>$formUrl,'productsVariationsOptions'=>$productsVariationsOptions]);
     }
 
     /**
@@ -97,7 +101,7 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        // echo '<pre>';print_r($request->all()); exit();
+        // echo '<pre>';print_r($request->file()); exit();
         $product_info = [
             'product_name'=>$request->product_name,
             'product_code'=>$request->product_code,
@@ -191,19 +195,22 @@ class ProductsController extends Controller
         
         $companies = Company::get(["company_name", "id","company_code"]);
         $productCategoryResult = ProductCategoryModel::get(["category_name", "id"]);
+        $productsVariationsOptions = ProductsVariationsOptions::get(['id','name']);
+        // echo"<pre>"; print_r($productsVariationsOptions); die;
         $foodTypeResult = ['veg','non-veg'];
         $pageTitle = __('locale.Company Admin'); 
         $productCode = Helper::setNumber();
-        $formUrl = 'product.store';
+        $formUrl = 'product.update';
         if($id!=''){
-            $product_result = Products::with('category')->with('subcategory')->find($id);
-            $productSubCategoryResult = ProductCategoryModel::get(["category_name", "id"])->where('procat_id',$product_result->product_catid);
+            $product_result = Products::with('product_variation')->with('product_images')->find($id);
+            $productSubCategoryResult =  ProductSubCategory::where("procat_id",$product_result->product_catid)->get(["subcat_name", "id","procat_id"]);
+            //ProductCategoryModel::get(["category_name", "id"])->where('procat_id',$product_result->product_catid);
             $productCode = $product_result->product_code;
             $formUrl = 'product.update';
             
         }
-        
-        return view('pages.products.create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'pageTitle'=>$pageTitle,'companies'=>$companies,'product_result'=>$product_result,'userType'=>$userType,'productCategoryResult'=>$productCategoryResult,'productSubCategoryResult'=>$productSubCategoryResult,'foodTypeResult'=>$foodTypeResult,'productCode'=>$productCode,'formUrl'=>$formUrl]);
+        // dd($product_result);
+        return view('pages.products.create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'pageTitle'=>$pageTitle,'companies'=>$companies,'product_result'=>$product_result,'userType'=>$userType,'productCategoryResult'=>$productCategoryResult,'productSubCategoryResult'=>$productSubCategoryResult,'foodTypeResult'=>$foodTypeResult,'productCode'=>$productCode,'formUrl'=>$formUrl,'productsVariationsOptions'=>$productsVariationsOptions]);
     }
 
     /**
@@ -215,7 +222,74 @@ class ProductsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // dd($request->all());
+        if(Products::where('id',$id)->count()==0){
+            return redirect()->route('product.index')->with('error',__('locale.product edit error'));
+        }
+        $product_info = [
+            'product_name'=>$request->product_name,
+            'product_code'=>$request->product_code,
+            'product_catid'=>($request->product_catid!='') ? $request->product_catid : 0,
+            'product_subcatid'=>($request->product_subcatid!='') ? $request->product_subcatid : 0,
+            'food_type'=>($request->food_type!='') ? $request->food_type : 'veg',
+            'blocked'=>$request->blocked,
+            'description'=>$request->description,
+        ];
+
+        Products::where('id',$id)->update($product_info);
+        
+        if($request->has('product_image')) {
+            $allowedfileExtension=['pdf','jpg','png'];
+            $folder = storage_path('/product/images/');
+            
+            if (!File::exists($folder)) {
+                File::makeDirectory($folder, $mode = 0777, true, true);
+            }
+            
+            foreach ($request->file('product_image') as $key => $value) {
+
+                $file= $value;
+                $extension =  $file->getClientOriginalExtension();
+
+                $check=in_array($extension, $allowedfileExtension);
+                
+                if($check) {
+                    $filename = time(). $file->getClientOriginalName();
+                    $location = storage_path('/product/images/'.$filename);
+                    Image::make($file)->resize(800,400,function ($constraint) {
+                            $constraint->aspectRatio();                 
+                        })->save($location);
+                    ProductImagesModel::create(['product_id'=>$id,'image'=>$filename,'image_order'=>1]);
+                } 
+            }
+            
+        }
+        
+        
+        if($request->has('variation')){
+            $product_variation = [];
+            $pro_new1 ='pro_new';
+            ProductsVariations::where('product_id',$id)->delete();
+            foreach($request->variation as $key => $variation_val){
+                
+                
+                for($i=0; $i<count($request->variation[$key]); $i++){
+                    $product_variation[$i]['product_id'] = $id;
+                    $product_variation[$i][$key] = $request->variation[$key][$i];
+                }
+                if(count($request->variation[$key])<count($request->variation['name'])){
+                    $index = count($request->variation['name'])-count($request->variation[$key]);
+                    $product_variation[$index][$key] = 0;
+                }
+                
+
+            }
+            $product_variation_result = ProductsVariations::insert($product_variation);
+            
+        }
+        
+        return redirect()->route('product.index')->with('success',__('locale.success common update'));
+        
     }
 
     /**
@@ -226,7 +300,18 @@ class ProductsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        
+        $cartList = Cartlist::whereRaw('FIND_IN_SET("1", product_ids)')->count();
+        $orderList = Orderlist::whereRaw('FIND_IN_SET("1", product_ids)')->count();
+        if($cartList==0 && $orderList==0){
+            Products::where('id',$id)->delete();
+            ProductsVariations::where('product_id',$id)->delete();
+            ProductImagesModel::where('product_id',$id)->delete();
+            return redirect()->back()->with('success',__('locale.product delete successmessage'));
+        }else{
+            return redirect()->back()->with('error',__('locale.product delete errormessage'));
+        }
+
     }
 
     public function productImport(){

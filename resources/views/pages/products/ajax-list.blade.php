@@ -13,7 +13,7 @@
     </tr>
   </thead>
   <tbody>
-    @if(isset($productResult) && !empty($productResult->items()))
+    @if(isset($productResult) && !empty($productResult))
     @foreach($productResult as $product_key => $product_value)
     <tr>
     <td>{{$product_key+1}}</td>
@@ -27,6 +27,7 @@
     <td>
     <td>
       <a href="{{route('product.edit',$product_value->id)}}"><i class="material-icons">edit</i></a>
+      <a href="{{route('product.delete',$product_value->id)}}" onclick="return confirm('Are you sure?')"><i class="material-icons">delete</i></a>
     </td>      
     </tr>
     @endforeach

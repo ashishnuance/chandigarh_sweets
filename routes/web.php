@@ -24,6 +24,10 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BuyerController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\ProductCategoryController;
+
+
+
 
 
 /*
@@ -53,6 +57,7 @@ Route::group(['middleware' => ['auth']], function () {
     /** country state city **/
     Route::post('api/fetch-states', [CompanyController::class, 'fetchState']);
     Route::post('api/fetch-cities', [CompanyController::class, 'fetchCity']);
+    Route::get('image/{filename}', [DashboardController::class,'displayImage'])->name('image.displayImage');
     /** new routes start **/
     Route::prefix('superadmin')->middleware(['superadmin'])->group(function () { 
         Route::get('/', [DashboardController::class, 'dashboardSuperadminModern']);
@@ -82,6 +87,11 @@ Route::group(['middleware' => ['auth']], function () {
         
         /** new products routes **/
         Route::resource('/product',ProductsController::class);
+        Route::get('/product/destroy/{id}',[ProductsController::class,'destroy'])->name('product.delete');
+        
+        /** product category **/
+        Route::resource('/product-category',ProductCategoryController::class);
+
         
     });
 
@@ -107,8 +117,10 @@ Route::group(['middleware' => ['auth']], function () {
         //Route::resource('/product',ProductsController::class);
     });
     /** state and city **/
-    Route::post('api/user-fetch-states', [UserController::class, 'user_fetchState']);
-    Route::post('api/user-fetch-cities', [UserController::class, 'user_fetchCity']);
+    Route::post('api/user-fetch-states', [DashboardController::class, 'user_fetchState']);
+    Route::post('api/user-fetch-cities', [DashboardController::class, 'user_fetchCity']);
+    Route::post('api/fetch-subcategory', [DashboardController::class, 'product_fetchSubcategory']);
+    
 
     /** new routes end **/
 

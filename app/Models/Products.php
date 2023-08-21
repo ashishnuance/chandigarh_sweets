@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\{ProductCategoryModel,ProductSubCategory};
+use App\Models\{ProductCategoryModel,ProductSubCategory,ProductImagesModel,ProductsVariations};
 
 
 class Products extends Model
@@ -21,6 +21,14 @@ class Products extends Model
     public function subcategory()
     {
         return $this->hasOne(ProductSubCategory::class, 'id', 'product_subcatid');
+    }
+
+    public function product_images(){
+        return $this->hasMany(ProductImagesModel::class, 'product_id', 'id');
+    }
+
+    public function product_variation(){
+        return $this->hasMany(ProductsVariations::class, 'product_id', 'id');
     }
 
 }

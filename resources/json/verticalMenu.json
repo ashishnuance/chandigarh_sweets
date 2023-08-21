@@ -184,6 +184,31 @@
         }
       ]
     },
+
+    {
+      "for" :["superadmin"],
+      "url": "javascript:void(0)",
+      "name": "Product Category",
+      "i18n": "Product Category",
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "Product category",
+      "icon": "person_outline",
+      "submenu": [
+        {
+          "url": "superadmin/product-category/create",
+          "name": "Product Category Create",
+          "i18n": "Product Category Create",
+          "slug": "product-category-create"
+        },
+        {
+          "url": "superadmin/product-category",
+          "name": "Product Category List",
+          "i18n": "Product Category List",
+          "slug": "product-category-list"
+        }
+      ]
+    },
+
     {
       "for" :["superadmin","admin"],
       "url": "#",
