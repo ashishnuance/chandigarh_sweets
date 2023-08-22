@@ -22,6 +22,12 @@ return [
     "Product category Add"=>"Product category Add",
     "product_category_success"=>"Product category Successfully",
 
+    "Sub Category"=>"Sub Category",
+    "Sub Category Create"=>"Create",
+    "Sub Category List"=>"List",
+    "Sub category Add"=>"Sub category Add",
+    "sub_category_success"=>"Sub category Successfully",
+
     "group_code"=>"Group code",
     "group_name"=>"Group name",
     "type"=>"Type",
@@ -166,7 +172,8 @@ return [
     "company_name"=>"Company Name",
     "company_code"=>"Company Code",
     "S.no"=>"S.no",
-    "category_name"=>"category_name",
+    "category_name"=>"Category Name",
+    "sub_category_name"=>"Sub Category Name",
     "address1"=>"Address1",
     "address2"=>"Address2",
     "city"=>"City",

@@ -25,10 +25,10 @@
           <div class="row">
             <div class="col s12">
                 <div class="col s4">
-                    <select name="company_id" id="company_id" onchange="filtercompany(this)" data-url='{{route("product-category.store")}}'>
-                      <option value="Select" disabled selected>Select Company</option>
-                      @foreach($company_list as $company)
-                      <option value="{{$company->id}}" {{ (request()->route()->id == $company->id) ? 'selected' : '' }}>{{$company->company_name}}</option>
+                    <select name="category_id" id="category_id" onchange="filtercompany(this)" data-url='{{route("sub-category.store")}}'>
+                      <option value="Select" disabled selected>Select Category</option>
+                      @foreach($category_id as $categoryname)
+                      <option value="{{$categoryname->id}}" {{ (request()->route()->id == $categoryname->id) ? 'selected' : '' }}>{{$categoryname->category_name}}</option>
                       @endforeach
                     </select>
                  </div>
@@ -39,6 +39,7 @@
             <thead>
             <tr>
                 <th data-field="s.no">{{__('locale.S.no')}}</th>
+                <th data-field="category_name">{{__('locale.sub_category_name')}}</th>
                 <th data-field="category_name">{{__('locale.category_name')}}</th>
                 <th data-field="company_name">{{__('locale.company_name')}}</th>
 
@@ -46,25 +47,18 @@
             </tr>
             </thead>
             <tbody id="category_table_body">
-                @if(isset($product_category_list) && !empty($product_category_list))
-                @foreach($product_category_list as $key => $product_category_data)
+                @if(isset($sub_category_list) && !empty($sub_category_list))
+                @foreach($sub_category_list as $key => $sub_category_data)
 
-                
                 <tr>
                 <td>{{$key+1}}</td>
-                <td>{{$product_category_data->category_name}}</td> <!-- Handle empty data -->
-               
+                <td>{{$sub_category_data->subcat_name}}</td> <!-- Handle empty data -->
+                <td>{{$sub_category_data->categoryname->category_name}}</td>
+                <td>{{$sub_category_data->categoryname->companyname->company_name}}</td>
+                
                 <td>
-                    <!-- <a href="mailto:{{ $product_category_data->company_id }}">{{ $product_category_data->company_name }}</a> -->
-
-
-                    {{$product_category_data->companyname->company_name}}
-
-                </td>
-                <td> <a href="{{route('product-category.edit',$product_category_data->id)}}"><i class="material-icons">edit</i></a>
-
-                <a href="{{route('product-category.delete',$product_category_data->id)}}" onclick="return confirm('Are you sure?')"><i class="material-icons">delete</i></a>
-
+                    <a href="{{route('sub-category.edit',$sub_category_data->id)}}"><i class="material-icons">edit</i></a>
+                    <a href="{{route('sub-category.delete',$sub_category_data->id)}}" onclick="return confirm('Are you sure?')"><i class="material-icons">delete</i></a>
                 </td>    
                 </tr>
                 @endforeach
@@ -75,8 +69,8 @@
                 @endif
             </tbody>
             </table>
-            @if(isset($product_category_list) && !empty($product_category_list))
-            {!! $product_category_list->links('panels.paginationCustom') !!}
+            @if(isset($sub_category_list) && !empty($sub_category_list))
+            {!! $sub_category_list->links('panels.paginationCustom') !!}
             @endif
 
             </div>
