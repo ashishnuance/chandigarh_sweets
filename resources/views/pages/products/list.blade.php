@@ -49,7 +49,7 @@
                         <input class="file-path validate" type="text">
                       </div>
                     </div>
-                    <a class="waves-effect waves-light left submit" target="_blank" href="{{asset('data-import-files/product-import.csv')}}" download>{{__('locale.download_sample_file')}}
+                    <a class="waves-effect waves-light left submit" target="_blank" href="{{asset('data-import-files/'.$sampleFileName)}}" download>{{__('locale.download_sample_file')}}
                         <i class="material-icons">download</i>
                     </a>
                     <button class="btn waves-effect waves-light right submit" type="submit" name="action">Submit

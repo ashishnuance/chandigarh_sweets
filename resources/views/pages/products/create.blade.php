@@ -1,7 +1,7 @@
 @extends('layouts.contentLayoutMaster')
 
 {{-- page title --}}
-@section('title','Form Wizard')
+@include('panels.page-title')
 
 {{-- vendor style --}}
 @section('vendor-style')
@@ -31,18 +31,18 @@
         @include('panels.flashMessages')
         <div class="card-content pb-0">
           <div class="card-header mb-2">
-            <h4 class="card-title">Horizontal Stepper</h4>
+            
           </div>
           
           @if(isset($product_result->id))
-          <?php $formUrl = (isset($formUrl) && $formUrl!='') ? $formUrl : 'product.update'; ?>
+          <?php //$formUrl = (isset($formUrl) && $formUrl!='') ? $formUrl : 'product.update'; ?>
             <form class="formValidate" action="{{route($formUrl,$product_result->id)}}" id="formValidateCompany" method="post" enctype="multipart/form-data">
             {!! method_field('patch') !!}
           @else
             <?php 
             
-            $formUrl = (isset($formUrl) && $formUrl!='') ? $formUrl : 'superadmin/product/update'; ?>
-            <form id="accountForm" action="{{route('product.store')}}" method="post" enctype="multipart/form-data">
+            //$formUrl = (isset($formUrl) && $formUrl!='') ? $formUrl : 'superadmin/product/update'; ?>
+            <form id="accountForm" action="{{route($formUrl)}}" method="post" enctype="multipart/form-data">
             {!! method_field('post') !!}
           @endif
             @csrf()
@@ -51,7 +51,8 @@
               <div class="step-title waves-effect">{{__('locale.product info')}}</div>
               <div class="step-content">
                 <div class="row">
-                @if(isset($userType) && $userType!='admin')
+                  
+                  @if(isset($userType) && $userType!=config('custom.superadminrole'))
                   <input type="hidden" name="company" value="{{Helper::loginUserCompanyId()}}"/>
                   @endif
                   <div class="input-field col m6 s12">
@@ -196,8 +197,8 @@
               <div class="step-content">
                 <div class="row">
                   <div class="clone-product-variation">
-                    <?php //print_r($product_result->product_variation) ?>
-                    @if(isset($product_result->product_variation) && !empty($product_result->product_variation))
+                    
+                    @if(isset($product_result->product_variation) && !empty($product_result->product_variation) && count($product_result->product_variation)>0)
                     
                     @foreach($product_result->product_variation as $provar_value)
                     
@@ -237,7 +238,8 @@
                       <button type="button" class="btn btn-primary mt-1 remove-variation">Remove</button>
                     </div>
                     @endforeach
-                    @endif
+                    @else
+                    
                     <div class="product-variation">
                       <div class="input-field col m6 s12">
                         <label for="name">{{__('locale.name')}}: <span class="red-text">*</span></label>
@@ -269,7 +271,7 @@
                       </div>
                       <button type="button" class="btn btn-primary mt-1 remove-variation">Remove</button>
                     </div>
-                    
+                    @endif
                   </div>
                   
                   <div class="col s12 m4">

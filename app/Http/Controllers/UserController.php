@@ -20,7 +20,7 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $userType = 'admin';
+        $userType = 'superadmin';
         $perpage = config('app.perpage');
         $breadcrumbs = [
             ['link' => "modern", 'name' => "Home"], ['link' => "javascript:void(0)", 'name' => __('locale.Company Admin')], ['name' => __('locale.Company Admin').__('locale.List')]];
@@ -57,7 +57,7 @@ class UserController extends Controller
 
     public function create($id='')
     {
-        
+        $userType = 'superadmin';
         $user_result=$states=$cities=false;
         $breadcrumbs = [
             ['link' => "modern", 'name' => "Home"], ['link' => "javascript:void(0)", 'name' => __('locale.Company Admin')], ['name' => (($id!='') ? __('locale.Edit') : __('locale.Create') )]];
@@ -74,7 +74,7 @@ class UserController extends Controller
             }
             // echo '<pre>';print_r($user_result); exit();
         }
-        return view('pages.users.users-create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'countries'=>$countries,'pageTitle'=>$pageTitle,'companies'=>$companies,'user_result'=>$user_result,'states'=>$states,'cities'=>$cities]);
+        return view('pages.users.users-create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'countries'=>$countries,'pageTitle'=>$pageTitle,'companies'=>$companies,'user_result'=>$user_result,'states'=>$states,'cities'=>$cities,'userType'=>$userType]);
     }
 
 

@@ -205,6 +205,7 @@ class Helpers
     }
 
     public static function loginUserCompanyId(){
+        
         return auth()->user()->company()->first()->id;
     }
 

@@ -12,12 +12,24 @@ use App\Exports\UserProductsExport;
 use App\Imports\ProductsImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 use Helper;
 use File;
 use Image;
 
 class ProductsController extends Controller
 {
+    
+    function __construct()
+    {
+        
+        //  $this->middleware('permission:product-list|product-create|product-edit|product-delete', ['only' => ['index','show']]);
+        //  $this->middleware('permission:product-create', ['only' => ['create','store']]);
+        //  $this->middleware('permission:product-edit', ['only' => ['edit','update']]);
+        //  $this->middleware('permission:product-delete', ['only' => ['destroy']]);
+    }
+
+    
     /**
      * Display a listing of the resource.
      *
@@ -25,9 +37,10 @@ class ProductsController extends Controller
      */
     public function index(Request $request)
     {
+        $userType = auth()->user()->role()->first()->name;
         $perpage = config('app.perpage');
         $productResultResponse = [];
-        $userType = 'admin';
+        
         // Breadcrumbs
         $breadcrumbs = [
             ['link' => "/superadmin", 'name' => "Home"], ['link' => "superadmin/product", 'name' => __('locale.Items')], ['name' => "List"],
@@ -35,13 +48,23 @@ class ProductsController extends Controller
         //Pageheader set true for breadcrumbs
         $pageConfigs = ['pageHeader' => true];
         $pageTitle = __('locale.Items List');
-        
-        $productResult = Products::select(['id','product_code','product_name','product_slug','product_catid','product_subcatid','food_type','blocked'])->orderBy('id','DESC');
-        
+        $editUrl = 'superadmin.product.edit';
+        $deleteUrl = 'superadmin.product.delete';
+        $sampleFileName = 'product-import.csv';
+        $productResult = Products::with(['category','subcategory','company'])->select(['id','product_code','product_name','product_slug','product_catid','product_subcatid','food_type','blocked'])->orderBy('id','DESC');
+
+        if($userType!=config('custom.superadminrole')){
+            $company_id = Helper::loginUserCompanyId();
+            $productResult = $productResult->whereHas('company',function($query) use ($company_id) {
+                $query->where('company_id',$company_id);
+            });
+            $editUrl = 'product.edit';
+            $deleteUrl = 'product.delete';
+        }
+        // dd($productResult->get()); exit();
         if($request->ajax()){
             $productResult = $productResult->when($request->seach_term, function($q)use($request){
-                            $q->where('id', 'like', '%'.$request->seach_term.'%')
-                            ->orWhere('product_name', 'like', '%'.$request->seach_term.'%')
+                            $q->where('product_name', 'like', '%'.$request->seach_term.'%')
                             ->orWhere('product_code', 'like', '%'.$request->seach_term.'%')
                             ->orWhere('food_type', 'like', '%'.$request->seach_term.'%');
                         })
@@ -49,14 +72,14 @@ class ProductsController extends Controller
                             $q->where('blocked',$request->status);
                         })
                         ->paginate($perpage);
-            return view('pages.products.ajax-list', compact('productResult'))->render();
+            return view('pages.products.ajax-list', compact('productResult','editUrl','deleteUrl'))->render();
         }
         $productResult = $productResult->paginate($perpage);
 
         if($productResult->count()>0){
             $productResultResponse = $productResult;
         }
-        return view('pages.products.list',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'productResult'=>$productResultResponse,'userType'=>$userType]);
+        return view('pages.products.list',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'productResult'=>$productResultResponse,'userType'=>$userType,'editUrl'=>$editUrl,'deleteUrl'=>$deleteUrl,'sampleFileName'=>$sampleFileName]);
     }
 
     /**
@@ -67,26 +90,34 @@ class ProductsController extends Controller
     public function create($id='')
     {
         
-        $userType = 'admin';
+        $userType = auth()->user()->role()->first()->name;
         $product_result=$states=$productSubCategoryResult=false;
         $breadcrumbs = [
             ['link' => "modern", 'name' => "Home"], ['link' => "product", 'name' => __('locale.Items')], ['name' => (($id!='') ? __('locale.Edit') : __('locale.Create') )]];
         //Pageheader set true for breadcrumbs
         $pageConfigs = ['pageHeader' => true];
-        
+        $formUrl = 'superadmin.product.store';
         $companies = Company::get(["company_name", "id","company_code"]);
         $productCategoryResult = ProductCategoryModel::get(["category_name", "id"]);
+        if($userType!=config('custom.superadminrole')){
+            $company_id = Helper::loginUserCompanyId();
+            $productCategoryResult = ProductCategoryModel::where('company_id',$company_id)->get(["category_name", "id"]);
+            $formUrl = 'product.store';
+        }
         $productsVariationsOptions = ProductsVariationsOptions::get('id','name');
 
         $foodTypeResult = ['veg','non-veg'];
-        $pageTitle = __('locale.Company Admin'); 
+        $pageTitle = __('locale.Items'); 
         $productCode = Helper::setNumber();
-        $formUrl = 'product.store';
+        
         if($id!=''){
             $product_result = Products::with('category')->find($id);
             $productSubCategoryResult = ProductCategoryModel::get(["category_name", "id"])->where('procat_id',$product_result->product_catid);
             $productCode = $product_result->product_code;
-            $formUrl = 'product.update';
+            $formUrl = 'superadmin.product.update';
+            if($userType!=config('custom.superadminrole')){
+                $formUrl = 'product.update';
+            }
             
         }
         
@@ -101,7 +132,7 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        // echo '<pre>';print_r($request->file()); exit();
+        $userType = auth()->user()->role()->first()->name;
         $product_info = [
             'product_name'=>$request->product_name,
             'product_code'=>$request->product_code,
@@ -111,8 +142,12 @@ class ProductsController extends Controller
             'blocked'=>$request->blocked,
             'description'=>$request->description,
         ];
-
+        $redirectUrl = 'superadmin.product.index';
         $product = Products::create($product_info);
+        if($userType!=config('custom.superadminrole')){
+            $product->company()->attach($request->company);
+            $redirectUrl = 'product.index';
+        }
         
         if($request->has('product_image')) {
             $allowedfileExtension=['pdf','jpg','png'];
@@ -163,7 +198,7 @@ class ProductsController extends Controller
         }
         $product_variation_result = ProductsVariations::insert($product_variation);
         
-        return redirect()->route('product.index')->with('success',__('locale.success common add'));
+        return redirect()->route($redirectUrl)->with('success',__('locale.success common add'));
         
     }
 
@@ -186,30 +221,43 @@ class ProductsController extends Controller
      */
     public function edit($id)
     {
-        $userType = 'admin';
+        $userType = auth()->user()->role()->first()->name;
         $product_result=$states=$productSubCategoryResult=false;
         $breadcrumbs = [
             ['link' => "modern", 'name' => "Home"], ['link' => "product", 'name' => __('locale.Items')], ['name' => (($id!='') ? __('locale.Edit') : __('locale.Create') )]];
         //Pageheader set true for breadcrumbs
         $pageConfigs = ['pageHeader' => true];
-        
+        $listUrl = 'superadmin.product.index';
         $companies = Company::get(["company_name", "id","company_code"]);
         $productCategoryResult = ProductCategoryModel::get(["category_name", "id"]);
+
+        if($userType!=config('custom.superadminrole')){
+            $company_id = Helper::loginUserCompanyId();
+            $productCategoryResult = ProductCategoryModel::where('company_id',$company_id)->get(["category_name", "id"]);
+            $listUrl = 'product.index';
+        }
+
         $productsVariationsOptions = ProductsVariationsOptions::get(['id','name']);
         // echo"<pre>"; print_r($productsVariationsOptions); die;
         $foodTypeResult = ['veg','non-veg'];
         $pageTitle = __('locale.Company Admin'); 
         $productCode = Helper::setNumber();
+        $formUrl = 'superadmin.product.update';
+        if($userType!=config('custom.superadminrole')){
         $formUrl = 'product.update';
+        }
         if($id!=''){
             $product_result = Products::with('product_variation')->with('product_images')->find($id);
+            if(!$product_result){
+                return redirect()->route($listUrl)->with('error',__('locale.product edit error'));
+            } 
             $productSubCategoryResult =  ProductSubCategory::where("procat_id",$product_result->product_catid)->get(["subcat_name", "id","procat_id"]);
             //ProductCategoryModel::get(["category_name", "id"])->where('procat_id',$product_result->product_catid);
             $productCode = $product_result->product_code;
-            $formUrl = 'product.update';
             
         }
         // dd($product_result);
+        
         return view('pages.products.create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'pageTitle'=>$pageTitle,'companies'=>$companies,'product_result'=>$product_result,'userType'=>$userType,'productCategoryResult'=>$productCategoryResult,'productSubCategoryResult'=>$productSubCategoryResult,'foodTypeResult'=>$foodTypeResult,'productCode'=>$productCode,'formUrl'=>$formUrl,'productsVariationsOptions'=>$productsVariationsOptions]);
     }
 
@@ -222,7 +270,7 @@ class ProductsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($request->all());
+        $userType = auth()->user()->role()->first()->name;
         if(Products::where('id',$id)->count()==0){
             return redirect()->route('product.index')->with('error',__('locale.product edit error'));
         }
@@ -237,7 +285,12 @@ class ProductsController extends Controller
         ];
 
         Products::where('id',$id)->update($product_info);
-        
+
+        $redirectUrl = 'superadmin.product.index';
+        if($userType!=config('custom.superadminrole')){
+            $redirectUrl = 'product.index';
+        }
+
         if($request->has('product_image')) {
             $allowedfileExtension=['pdf','jpg','png'];
             $folder = storage_path('/product/images/');
@@ -288,7 +341,7 @@ class ProductsController extends Controller
             
         }
         
-        return redirect()->route('product.index')->with('success',__('locale.success common update'));
+        return redirect()->route($redirectUrl)->with('success',__('locale.success common update'));
         
     }
 

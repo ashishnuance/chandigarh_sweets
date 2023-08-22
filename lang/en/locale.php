@@ -224,6 +224,9 @@ return [
     "product delete errormessage"=>"Product is not deleted because it is in the Cart and Order list",
     "product delete successmessage"=>"Product is deleted successfully",
     "success common update"=>"Successfully Updated",
-    "product edit error"=>"Product id not match"
+    "product edit error"=>"Product id not match",
+    "Product Company Mapping"=>"Product Company Mapping",
+    "create"=>"Create",
+    "list"=>"List"
 ];
 ?>

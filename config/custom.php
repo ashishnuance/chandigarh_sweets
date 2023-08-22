@@ -23,4 +23,6 @@ return [
         'isFabButton' => false,   //favorite button for shortcurt menu Option: True or False
         'direction' => env('MIX_CONTENT_DIRECTION', 'ltr'),
     ],
+    
+    "superadminrole"=>"superadmin",
 ];

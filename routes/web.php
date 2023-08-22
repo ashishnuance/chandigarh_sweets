@@ -25,6 +25,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BuyerController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProductCategoryController;
+use App\Http\Controllers\ProductCompanyMapping;
+
 
 
 
@@ -87,10 +89,17 @@ Route::group(['middleware' => ['auth']], function () {
         
         /** new products routes **/
         Route::resource('/product',ProductsController::class);
-        Route::get('/product/destroy/{id}',[ProductsController::class,'destroy'])->name('product.delete');
+        Route::get('/product',[ProductsController::class,'index'])->name('superadmin.product.index');
+        Route::get('/product/{$id}/edit',[ProductsController::class,'edit'])->name('superadmin.product.edit');
+        Route::post('/product',[ProductsController::class,'store'])->name('superadmin.product.store');
+        Route::patch('/product/{$id}',[ProductsController::class,'update'])->name('superadmin.product.update');
+        Route::get('/product/destroy/{id}',[ProductsController::class,'destroy'])->name('superadmin.product.delete');
         
         /** product category **/
         Route::resource('/product-category',ProductCategoryController::class);
+
+        /** product company mapping **/
+        Route::resource('/product-mapping',ProductCompanyMapping::class);
 
         
     });
@@ -115,6 +124,10 @@ Route::group(['middleware' => ['auth']], function () {
 
         /** new products routes **/
         //Route::resource('/product',ProductsController::class);
+        /** new products routes **/
+        Route::resource('/product',ProductsController::class);
+        Route::get('/product/destroy/{id}',[ProductsController::class,'destroy'])->name('product.delete');
+        
     });
     /** state and city **/
     Route::post('api/user-fetch-states', [DashboardController::class, 'user_fetchState']);

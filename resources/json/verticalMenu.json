@@ -208,9 +208,64 @@
         }
       ]
     },
+    {
+      "for" :["admin"],
+      "url": "javascript:void(0)",
+      "name": "Items",
+      "i18n": "Items",
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "Items",
+      "icon": "person_outline",
+      "submenu": [
+        {
+          "url": "product/create",
+          "name": "Item Add",
+          "i18n": "Item Add",
+          "slug": "item-add"
+        },
+        {
+          "url": "product",
+          "name": "Items List",
+          "i18n": "Items List",
+          "slug": "items-list"
+        }
+      ]
+    },
+    {
+      "for" :["superadmin"],
+      "url": "javascript:void(0)",
+      "name": "Product Company Mapping",
+      "i18n": "Product Company Mapping",
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "Product category",
+      "icon": "person_outline",
+      "submenu": [
+        {
+          "url": "superadmin/product-mapping/create",
+          "name": "create",
+          "i18n": "create",
+          "slug": "product-Company-mapping-create"
+        },
+        {
+          "url": "superadmin/product-mapping",
+          "name": "list",
+          "i18n": "list",
+          "slug": "product-company-mapping-list"
+        }
+      ]
+    },
 
     {
-      "for" :["superadmin","admin"],
+      "for" :["superadmin"],
+      "url": "#",
+      "name": "Orders",
+      "i18n": "Orders",
+      "class": "waves-effect waves-cyan",
+      "icon": "add_shopping_cart",
+      "slug": "orders"
+    },
+    {
+      "for" :["admin"],
       "url": "#",
       "name": "Orders",
       "i18n": "Orders",

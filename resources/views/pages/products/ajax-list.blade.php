@@ -5,6 +5,9 @@
       <th>{{__('locale.name')}}</th>
       <th>{{__('locale.product code')}}</th>
       <th>{{__('locale.slug')}}</th>
+      @if(isset($userType) && $userType==config('custom.superadminrole'))
+      <th>{{__('locale.company_name')}}</th>
+      @endif
       <th>{{__('locale.category')}}</th>
       <th>{{__('locale.sub category')}}</th>
       <th>{{__('locale.food type')}}</th>
@@ -20,14 +23,17 @@
     <td>{{$product_value->product_name}}</td>
     <td>{{$product_value->product_code}}</td>
     <td>{{$product_value->product_slug}}</td>
-    <td>{{$product_value->product_catid}}</td>
-    <td>{{$product_value->product_subcatid}}</td>
+    @if(isset($userType) && $userType==config('custom.superadminrole'))
+    <td>{{isset($product_value->company[0]->company_name) ? $product_value->company[0]->company_name : '' }}</td>
+    @endif
+    <td>{{isset($product_value->category->category_name) ? $product_value->category->category_name : '' }}</td>
+    <td>{{isset($product_value->subcategory->subcat_name) ? $product_value->subcategory->subcat_name : '' }}</td>
     <td>{{$product_value->food_type}}</td>
     <td>{{($product_value->blocked==1) ? 'Blocked' : 'Un-blocked'}}</td>
     <td>
     <td>
-      <a href="{{route('product.edit',$product_value->id)}}"><i class="material-icons">edit</i></a>
-      <a href="{{route('product.delete',$product_value->id)}}" onclick="return confirm('Are you sure?')"><i class="material-icons">delete</i></a>
+      <a href="{{route($editUrl,$product_value->id)}}"><i class="material-icons">edit</i></a>
+      <a href="{{route($deleteUrl,$product_value->id)}}" onclick="return confirm('Are you sure?')"><i class="material-icons">delete</i></a>
     </td>      
     </tr>
     @endforeach

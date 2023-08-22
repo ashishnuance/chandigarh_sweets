@@ -7,6 +7,7 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithStartRow;
+use Helper;
 
 class ProductsImport implements ToCollection,WithStartRow
 {
@@ -21,6 +22,7 @@ class ProductsImport implements ToCollection,WithStartRow
     */
     public function collection(Collection $rows)
     {
+        $userType = auth()->user()->role()->first()->name;
         foreach ($rows as $row) 
         {
             if(count($row)==8){
@@ -36,8 +38,12 @@ class ProductsImport implements ToCollection,WithStartRow
                     'blocked' => (is_int($row[7])) ? $row[7] : 1,
                     
                 ]);
+                if($userType!=config('custom.superadminrole')){
+                    $product->company()->attach(Helper::loginUserCompanyId());
+                }
                 // print_r($product); exit();
             }
+
         }
     }
 }

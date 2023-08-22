@@ -31,4 +31,10 @@ class Products extends Model
         return $this->hasMany(ProductsVariations::class, 'product_id', 'id');
     }
 
+    public function company()
+    {
+    return $this->belongsToMany(Company::class, 'company_product_mapping', 'product_id', 'company_id');
+    }
+
+
 }
