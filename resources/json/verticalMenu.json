@@ -210,6 +210,31 @@
     },
 
     {
+      "for" :["superadmin"],
+      "url": "javascript:void(0)",
+      "name": "Sub Category",
+      "i18n": "Sub Category",
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "Sub category",
+      "icon": "person_outline",
+      "submenu": [
+        {
+          "url": "superadmin/sub-category/create",
+          "name": "Sub Category Create",
+          "i18n": "Sub Category Create",
+          "slug": "sub-category-create"
+        },
+        {
+          "url": "superadmin/sub-category",
+          "name": "Sub Category List",
+          "i18n": "Sub Category List",
+          "slug": "Sub-category-list"
+        }
+      ]
+    },
+
+
+    {
       "for" :["superadmin","admin"],
       "url": "#",
       "name": "Orders",

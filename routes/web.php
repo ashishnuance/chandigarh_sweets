@@ -26,6 +26,7 @@ use App\Http\Controllers\BuyerController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProductCategoryController;
 
+use App\Http\Controllers\SubCategoryController;
 
 
 
@@ -91,7 +92,11 @@ Route::group(['middleware' => ['auth']], function () {
         
         /** product category **/
         Route::resource('/product-category',ProductCategoryController::class);
+        Route::get('/product-category/destroy/{id}',[ProductCategoryController::class,'destroy'])->name('product-category.delete');
 
+          /** sub category **/
+          Route::resource('/sub-category',SubCategoryController::class);
+          Route::get('/sub-category/destroy/{id}',[SubCategoryController::class,'destroy'])->name('sub-category.delete');
         
     });
 
