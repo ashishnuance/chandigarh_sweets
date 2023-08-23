@@ -7,9 +7,9 @@ use App\Models\Company;
 use App\Models\{Products,ProductsVariations,ProductImagesModel,ProductsVariationsOptions};
 use App\Models\{ProductCategoryModel,ProductSubCategory};
 use App\Models\{Cartlist,Orderlist};
-use App\Exports\ProductsExport;
-use App\Exports\UserProductsExport;
-use App\Imports\ProductsImport;
+use App\Exports\ProductCategoryExport;
+use App\Exports\AdminProductCategoryExport;
+use App\Imports\ProductCategoryImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
@@ -23,7 +23,15 @@ class ProductCategoryController extends Controller
  
     public function index(Request $request,$id='')
     {
+        // Urls
         $perpage = config('app.perpage');
+        $userType = auth()->user()->role()->first()->name;
+        $editUrl = 'superadmin.product-category.edit';
+        $deleteUrl = 'superadmin.product-category.delete';
+        $paginationUrl = 'superadmin.product-category.index';
+        $importUrl = 'superadmin.product-category-import';
+        $exportUrl = 'superadmin.product-category-export';
+        
         // Breadcrumbs
         $breadcrumbs = [
             ['link' => "/", 'name' => "Home"], ['link' => "product category", 'name' => "product category"], ['name' => "List"],
@@ -31,34 +39,67 @@ class ProductCategoryController extends Controller
         //Pageheader set true for breadcrumbs
         $pageConfigs = ['pageHeader' => true];
         $pageTitle = __('locale.Company List');
+        $productCategoryList = ProductCategoryModel::with('companyname')->orderBy('id','DESC');
+        
+        if($userType!=config('custom.superadminrole')){
+            $editUrl = 'product-category.edit';
+            $deleteUrl = 'product-category.delete';
+            $paginationUrl = 'product-category.index';
+            $importUrl = 'product-category-import';
+            $exportUrl = 'product-category-export';
+            $company_id = Helper::loginUserCompanyId();
+            $productCategoryList = $productCategoryList->whereHas('companyname',function($query) use ($company_id) {
+                $query->where('company_id',$company_id);
+            });
+            
+        }
 
-        $product_cate_list = ProductCategoryModel::with('companyname')->orderBy('id','DESC')->paginate($perpage);
+        if($request->ajax()){
+            $product_category_list = $productCategoryList->whereHas('companyname',function($query) use ($request) {
+                $query->where('company_name','like', '%'.$request->seach_term.'%');
+            })->when($request->seach_term, function($q)use($request){
+                $q->where('category_name', 'like', '%'.$request->seach_term.'%');
+            })->paginate($perpage);
+            return view('pages.product-category.ajax-list', compact('product_category_list','editUrl','deleteUrl'))->render();
+        }
 
-        // echo '<pre>'; print_r($product_cate_lis); die;
-        $company_list = Company::get();
+        $productCategoryList = $productCategoryList->paginate($perpage);
+        
+        $companyResult = Company::get();
 
-        return view('pages.product-category.list',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'product_category_list'=>$product_cate_list, 'company_list'=>$company_list]);
+        
+        return view('pages.product-category.list',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'product_category_list'=>$productCategoryList, 'company_list'=>$companyResult,'editUrl'=>$editUrl,'deleteUrl'=>$deleteUrl,'userType'=>$userType,'exportUrl'=>$exportUrl,'importUrl'=>$importUrl]);
     }
     public function create()
     {
         $breadcrumbs = [
-            ['link' => "/", 'name' => "Home"], ['link' => "product category", 'name' => "product category"], ['name' => "Add"],
+            ['link' => "/", 'name' => "Home"], ['link' => route("superadmin.product-category.index"), 'name' => __('locale.product category')], ['name' => "Add"],
         ];
+        $userType = auth()->user()->role()->first()->name;
+        $formUrl = 'superadmin.product-category.store';
+        if($userType!=config('custom.superadminrole')){
+            $formUrl = 'product-category.store';
+        }
         //Pageheader set true for breadcrumbs
 
         $company = Company::get();
 
         $pageConfigs = ['pageHeader' => true];
-        $pageTitle = __('locale.Product category Add');
-        return view('pages.product-category.create',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'company'=>$company]);
+        $pageTitle = __('locale.product category');
+        return view('pages.product-category.create',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'company'=>$company,'formUrl'=>$formUrl]);
     }
 
     public function store(Request $request)
     {
         
+        $userType = auth()->user()->role()->first()->name;
+        $listUrl = 'superadmin.product-category.index';
+        if($userType!=config('custom.superadminrole')){
+            $listUrl = 'product-category.index';
+        }
+
         $validator = Validator::make($request->all(), [
             'category_name' => 'required',
-          
         ]);
         
         if ($validator->fails()) {
@@ -66,15 +107,21 @@ class ProductCategoryController extends Controller
             ->withErrors($validator)
             ->withInput();
         }
-        // echo '<pre>';print_r($request->all());  exit();
+        
+        $checkCatgoryName = ProductCategoryModel::where('company_id',$request->company_id)->where('category_name','like',$request->category_name);
+        if($checkCatgoryName->count()>0){
+            return redirect()->back()
+            ->withErrors(__('locale.name_exits'))
+            ->withInput();
+            // return redirect()->back()->with('error',__('locale.name_exits'))->withInput();
+        }
         $insert_data=[];
 
         $insert_data['company_id'] = $request['company_id'];
         $insert_data['category_name'] = $request['category_name'];
-    
         $create = ProductCategoryModel::create($insert_data);
 
-        return redirect()->route('product-category.index')->with('success',__('locale.product_category_success'));  
+        return redirect()->route($listUrl)->with('success',__('locale.product_category_success'));  
     }
 
     public function show($id)
@@ -84,39 +131,44 @@ class ProductCategoryController extends Controller
 
     public function edit($id=0)
     {
+        $breadcrumbs = [
+            ['link' => "/", 'name' => "Home"], ['link' => route("superadmin.product-category.index"), 'name' => __('locale.product category')], ['name' => "Add"],
+        ];
 
-        if($id > 0){
-            $data_check = ProductCategoryModel::where(['id'=>$id]);
-            if($data_check->count() > 0 ){
-                $this->data['result'] = $data_check->first();
-                $this->data['company'] = Company::get();
-
-            }else{
-                return redirect()->back()->with('error','Data Not found in Database');
-            }
-            return view('pages.product-category.create',$this->data);
-        }else{
-            return redirect()->back()->with('error','Data Not found in Database');
+        $userType = auth()->user()->role()->first()->name;
+        $formUrl = 'superadmin.product-category.update';
+        
+        if($userType!=config('custom.superadminrole')){
+            $formUrl = 'product-category.update';
         }
+        $company = Company::get();
+        //Pageheader set true for breadcrumbs
 
-        // echo $id; exit();
-        // $product_category_edit = ProductCategoryModel::find($id);
+        $productCategoryResult = ProductCategoryModel::findOrFail($id);
 
-        // $company_list = Company::get();
-        //     return view('pages.product-category.create',['product_category_edit' => $product_category_edit,'company_list' => $company_list]); 
+        $pageConfigs = ['pageHeader' => true];
+        $pageTitle = __('locale.product category');
+        return view('pages.product-category.create',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'company'=>$company,'result'=>$productCategoryResult,'formUrl'=>$formUrl]);        
         
     }
 
     public function update(Request $request, $id=0)
     {
-            $result = ProductCategoryModel::findOrFail($id);
+        $userType = auth()->user()->role()->first()->name;
+        $listUrl = 'superadmin.product-category.index';
+        
+        if($userType!=config('custom.superadminrole')){
+            $listUrl = 'product-category.index';
+        }
 
-            $result->category_name = $request->input('category_name');
-            $result->company_id = $request->input('company_id');
+        $result = ProductCategoryModel::findOrFail($id);
 
-            $result->save();
-            
-            return redirect()->route('product-category.index')->with('success','Data Updated Successfully');
+        $result->category_name = $request->input('category_name');
+        $result->company_id = $request->input('company_id');
+
+        $result->save();
+        
+        return redirect()->route($listUrl)->with('success','Data Updated Successfully');
         
     }
     
@@ -126,4 +178,29 @@ class ProductCategoryController extends Controller
         return redirect()->back()->with('success','Data Deleted Successfully');
     } 
     
+    public function productcategoryimport(Request $request){
+        
+        try{
+            $import = new ProductCategoryImport;
+            Excel::import($import, request()->file('importfile'));
+            // print_r($import); exit();
+            return redirect()->back()->with('success', __('locale.import_message'));
+        }catch(\Maatwebsite\Excel\Validators\ValidationException $e){
+            $listUrl = 'superadmin.product-category.index';
+        
+            if($userType!=config('custom.superadminrole')){
+                $listUrl = 'product-category.index';
+            }
+            return redirect()->route($returnUrl)->with('error', __('locale.try_again'));
+        }
+    }
+    public function productcategoryexport($type=''){
+        
+        if($type=='superadmin'){
+            $companyUser = new AdminProductCategoryExport;   
+        }else{
+            $companyUser = new ProductCategoryExport;
+        }
+        return Excel::download($companyUser, 'product-category-'.$type.time().'.xlsx');
+    }
 }
