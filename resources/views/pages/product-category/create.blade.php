@@ -20,9 +20,9 @@
 
   <div class="row">
     <div class="col s12">
-      @include('panels.flashMessages')
-
+      
       <div id="validations" class="card card-tabs">
+        @include('panels.flashMessages')
         <div class="card-content">
           <div class="card-title">
             <div class="row">
@@ -33,7 +33,7 @@
           </div>
           <div id="view-validations">
          
-          <form class="formValidate" method="post" action="{{ isset($result) ? route('product-category.update', $result['id']) : route('product-category.store') }}">
+          <form class="formValidate" method="post" action="{{ isset($result) ? route($formUrl, $result['id']) : route($formUrl) }}">
 
             @csrf
 
@@ -41,23 +41,29 @@
                   @method('PUT') <!-- Use PUT for updating -->
               @endif
 
-              <div class="input-field col s12">
+            
 
-                 <select name="company_id" id="company" required>
-                  <option value="Select" disabled selected>Select Company</option>
-                  @if(isset($company) && !empty($company))
-                  @foreach($company as $company_val)
-                  {{$company_val->id}}
-                  <option value="{{ $company_val->id }}" {{ (isset($result->company_id) &&$result->company_id == $company_val->id ) ? 'selected' : '' }}>{{ $company_val->company_name }}</option>
-                    @endforeach
-                  @endif
-                </select>
-                @error('company_id')
-                <div style="color:red">{{$message}}</div>
-                @enderror
-             </div>             
+                          
               
            <div class="row">
+              @if(isset($userType) && $userType==config('custom.superadminrole'))
+                <div class="input-field col s12 m6">
+                  <select name="company_id" id="company" required>
+                    <option value="" disabled selected>Select Company</option>
+                    @if(isset($company) && !empty($company))
+                    @foreach($company as $company_val)
+                    {{$company_val->id}}
+                    <option value="{{ $company_val->id }}">{{ $company_val->company_name }}</option>
+                      @endforeach
+                    @endif
+                  </select>
+                  @error('company_id')
+                  <div style="color:red">{{$message}}</div>
+                  @enderror
+                </div> 
+              @else
+              <input type="hidden" name="company_id" value="{{Helper::loginUserCompanyId()}}"/>
+              @endif
               <div class="input-field col m6 s12">
                 <label for="category_name">Category Name</label>
                 <input id="category_name" class="validate" name="category_name" type="text" data-error=".errorTxt1" value="{{ (isset($result['category_name']) && $result['category_name'] !='' ) ? $result['category_name'] :  old('category_name') }}">
@@ -74,9 +80,6 @@
                 </div>
               </div>
 
-             
-
-
             </form>
           </div>
           
@@ -87,5 +90,14 @@
 </div>
 @endsection
 
-
+@section('page-script')
+<script>
+window.onload=function(){
+    var company_value = "{{(isset($result->company_id) && $result->company_id!='NULL') ? $result->company_id : old('company_id')}}";
+    console.log('company_value',company_value);
+    $('#company').val(company_value);
+    $('#company').formSelect();
+  }
+  </script>
+@endsection
 
