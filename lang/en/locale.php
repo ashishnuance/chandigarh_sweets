@@ -19,6 +19,7 @@ return [
     "Product Category"=>"Product Category",
     "Product Category Create"=>"Create",
     "Product Category List"=>"List",
+    "Category List"=>"Category List",
     "Product category Add"=>"Product category Add",
     "product_category_success"=>"Product category Successfully",
 
@@ -27,7 +28,7 @@ return [
     "Sub Category List"=>"List",
     "Sub category Add"=>"Sub category Add",
     "sub_category_success"=>"Sub category Successfully",
-
+    "name_exits"=> "Sub Category Name Already Exist",
     "group_code"=>"Group code",
     "group_name"=>"Group name",
     "type"=>"Type",
@@ -198,6 +199,7 @@ return [
     "action"=>"Action",
     "delete_message"=>"Deleted Successfully",
     "company_update_success"=>"Company Updated Success",
+    "sub_category_update_success"=>"Sub Category Updated Success",
     "buyer_update_success"=>"Buyer Updated Successfully",
     "Company Admin"=>"Company Admin",
     "Create"=>"Create",
@@ -230,6 +232,7 @@ return [
     'success common add'=>"Successfully Added",
     "product delete errormessage"=>"Product is not deleted because it is in the Cart and Order list",
     "product delete successmessage"=>"Product is deleted successfully",
+    "sub category delete successmessage"=>"Sub Category is deleted successfully",
     "success common update"=>"Successfully Updated",
     "product edit error"=>"Product id not match",
     "Product Company Mapping"=>"Product Company Mapping",

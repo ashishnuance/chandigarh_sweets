@@ -208,6 +208,31 @@
         }
       ]
     },
+
+    {
+      "for" :["admin"],
+      "url": "javascript:void(0)",
+      "name": "Product Category",
+      "i18n": "Product Category",
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "Product Category",
+      "icon": "person_outline",
+      "submenu": [
+        {
+          "url": "product-category/create",
+          "name": "Product Category Create",
+          "i18n": "Product Category Create",
+          "slug": "product-category-create"
+        },
+        {
+          "url": "product-category",
+          "name": "Product Category List",
+          "i18n": "Product Category List",
+          "slug": "product-category-list"
+        }
+      ]
+    },
+
     {
       "for" :["admin"],
       "url": "javascript:void(0)",
@@ -265,7 +290,7 @@
       "slug": "orders"
     },
     {
-      "for" :["admin"],
+      "for" :["superadmin"],
       "url": "javascript:void(0)",
       "name": "Sub Category",
       "i18n": "Sub Category",
@@ -287,6 +312,35 @@
         }
       ]
     },
+
+    {
+      "for" :["admin"],
+      "url": "javascript:void(0)",
+      "name": "Sub Category",
+      "i18n": "Sub Category",
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "Sub Category",
+      "icon": "person_outline",
+      "submenu": [
+        {
+          "url": "sub-category/create",
+          "name": "Sub Category Create",
+          "i18n": "Sub Category Create",
+          "slug": "sub-category-create"
+        },
+        {
+          "url": "sub-category",
+          "name": "Sub Category List",
+          "i18n": "Sub Category List",
+          "slug": "Sub-category-list"
+        }
+      ]
+    },
+
+
+
+
+
 
 
     {

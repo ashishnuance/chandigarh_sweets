@@ -12,7 +12,9 @@
 {{-- page content --}}
 @section('content')
 <div class="section">
-
+<div class="card">
+    
+    </div>
 
   <!-- Responsive Table -->
   <div class="row">
@@ -27,57 +29,81 @@
                 <div class="col s4">
                     <select name="category_id" id="category_id" onchange="filtercompany(this)" data-url='{{route("sub-category.store")}}'>
                       <option value="Select" disabled selected>Select Category</option>
-                      @foreach($category_id as $categoryname)
+                      @foreach($category_list as $categoryname)
                       <option value="{{$categoryname->id}}" {{ (request()->route()->id == $categoryname->id) ? 'selected' : '' }}>{{$categoryname->category_name}}</option>
                       @endforeach
                     </select>
                  </div>
             </div>
-            <div class="col s12 table-result">
-                
-            <table class="responsive-table" id="category_table">
-            <thead>
-            <tr>
-                <th data-field="s.no">{{__('locale.S.no')}}</th>
-                <th data-field="category_name">{{__('locale.sub_category_name')}}</th>
-                <th data-field="category_name">{{__('locale.category_name')}}</th>
-                <th data-field="company_name">{{__('locale.company_name')}}</th>
 
-                <th data-field="action">{{__('locale.action')}}</th>
-            </tr>
-            </thead>
-            <tbody id="category_table_body">
-                @if(isset($sub_category_list) && !empty($sub_category_list))
-                @foreach($sub_category_list as $key => $sub_category_data)
-
-                <tr>
-                <td>{{$key+1}}</td>
-                <td>{{$sub_category_data->subcat_name}}</td> <!-- Handle empty data -->
-                <td>{{$sub_category_data->categoryname->category_name}}</td>
-                <td>{{$sub_category_data->categoryname->companyname->company_name}}</td>
-                
-                <td>
-                    <a href="{{route('sub-category.edit',$sub_category_data->id)}}"><i class="material-icons">edit</i></a>
-                    <a href="{{route('sub-category.delete',$sub_category_data->id)}}" onclick="return confirm('Are you sure?')"><i class="material-icons">delete</i></a>
-                </td>    
-                </tr>
-                @endforeach
-                @else
-                <tr>
-                <td colspan="10"><p class="center">{{__('locale.no_record_found')}}</p></td>
-                </tr>
-                @endif
-            </tbody>
-            </table>
-            @if(isset($sub_category_list) && !empty($sub_category_list))
-            {!! $sub_category_list->links('panels.paginationCustom') !!}
-            @endif
-
+            <div class="responsive-table table-result">
+                    @include('pages.sub-category.ajax-list')
             </div>
+             <input type="hidden" name="hidden_page" id="hidden_page" value="{{(isset($currentPage) && $currentPage>0) ? $currentPage : 1}}" />
+
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+@endsection
+
+
+
+{{-- vendor scripts --}}
+@section('vendor-script')
+<script src="{{asset('vendors/data-tables/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{asset('vendors/data-tables/extensions/responsive/js/dataTables.responsive.min.js')}}"></script>
+@endsection
+
+{{-- page script --}}
+@section('page-script')
+<script src="{{asset('js/scripts/page-users.js')}}"></script>
+<script>
+  $(document).ready(function(){
+    var paginationUrl = "{{(isset($paginationUrl) && $paginationUrl!='') ? route($paginationUrl) : '' }}";
+ 
+    const fetch_data = (page, status, seach_term) => {
+        if(status === undefined){
+            status = "";
+        }
+        if(seach_term === undefined){
+            seach_term = "";
+        }
+        $.ajax({ 
+            url: paginationUrl+"?page="+page+"&status="+status+"&seach_term="+seach_term,
+            success:function(data){
+              console.log(data);
+                $('.table-result').html('');
+                $('.table-result').html(data);
+            }
+        })
+    }
+
+    $('body').on('keyup', '#serach', function(){
+        var status = $('#status').val();
+        var seach_term = $('#serach').val();
+        var page = $('#hidden_page').val();
+        fetch_data(page, status, seach_term);
+    });
+
+    $('body').on('change', '#users-list-status', function(){
+        var status = $('#users-list-status').val();
+        var seach_term = $('#serach').val();
+        var page = $('#hidden_page').val();
+        fetch_data(page, status, seach_term);
+    });
+
+    $('body').on('click', '.pager a', function(event){
+        console.log('ssss');
+        event.preventDefault();
+        var page = $(this).attr('href').split('page=')[1];
+        $('#hidden_page').val(page);
+        var serach = $('#serach').val();
+        var seach_term = $('#status').val();
+        fetch_data(page,status, seach_term);
+    });
+});
+</script>
 @endsection

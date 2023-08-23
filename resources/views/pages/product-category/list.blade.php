@@ -61,6 +61,7 @@
                     {{$product_category_data->companyname->company_name}}
 
                 </td>
+
                 <td> <a href="{{route('product-category.edit',$product_category_data->id)}}"><i class="material-icons">edit</i></a>
 
                 <a href="{{route('product-category.delete',$product_category_data->id)}}" onclick="return confirm('Are you sure?')"><i class="material-icons">delete</i></a>

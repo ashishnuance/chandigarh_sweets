@@ -43,7 +43,7 @@ class ProductsController extends Controller
         
         // Breadcrumbs
         $breadcrumbs = [
-            ['link' => "/superadmin", 'name' => "Home"], ['link' => "superadmin/product", 'name' => __('locale.Items')], ['name' => "List"],
+            ['link' => "/superadmin", 'name' => "Home"], ['link' => "superadmin/product", 'name' => __('locale.Items')], ['name' => "List"]
         ];
         //Pageheader set true for breadcrumbs
         $pageConfigs = ['pageHeader' => true];

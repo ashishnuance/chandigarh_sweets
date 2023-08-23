@@ -20,7 +20,7 @@
 
   <div class="row">
     <div class="col s12">
-    @include('panels.flashMessages')
+      @include('panels.flashMessages')
 
       <div id="validations" class="card card-tabs">
         <div class="card-content">
@@ -41,22 +41,6 @@
                   @method('PUT') <!-- Use PUT for updating -->
               @endif
 
-            <!-- <div class="input-field col  s12">
-                <select name="company_id" id="company" required>
-                  <option value="Select" disabled selected>Select Company</option>
-                  @if(isset($company) && !empty($company))
-                  @foreach($company as $company_val)
-                  {{$company_val->id}}
-                  <option value="{{ $company_val->id }}" {{ (isset($result->company_id) &&$result->company_id == $company_val->id ) ? 'selected' : '' }}>
-                    {{ $company_val->company_name }}</option>
-                    @endforeach
-                  @endif
-                </select>
-                @error('company_id')
-                <div style="color:red">{{$message}}</div>
-                @enderror
-            </div> -->
-
               <div class="input-field col s12">
 
                  <select name="company_id" id="company" required>
@@ -64,8 +48,7 @@
                   @if(isset($company) && !empty($company))
                   @foreach($company as $company_val)
                   {{$company_val->id}}
-                  <option value="{{ $company_val->id }}" {{ (isset($result->company_id) &&$result->company_id == $company_val->id ) ? 'selected' : '' }}>
-                    {{ $company_val->company_name }}</option>
+                  <option value="{{ $company_val->id }}" {{ (isset($result->company_id) &&$result->company_id == $company_val->id ) ? 'selected' : '' }}>{{ $company_val->company_name }}</option>
                     @endforeach
                   @endif
                 </select>
