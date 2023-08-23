@@ -92,6 +92,7 @@
             <div class="card-content">
                <h4 class="card-title mb-0">Recent Buyers <i class="material-icons float-right">more_vert</i></h4>
                <p class="medium-small pt-2">Today</p>
+               {{--
                <ul class="collection mb-0">
                   <li class="collection-item avatar">
                      <img src="{{asset('images/avatar/avatar-7.png')}}" alt="" class="circle" />
@@ -112,6 +113,7 @@
                      <a href="#!" class="secondary-content"><i class="material-icons">star_border</i></a>
                   </li>
                </ul>
+               --}}
             </div>
          </div>
       </div>
@@ -135,6 +137,7 @@
                </div>
             </div>
          </div>
+         {{--
          <div id="chartjs" class="card pt-0 pb-0 animate fadeLeft">
             <div class="dashboard-revenue-wrapper padding-2 ml-2">
                <span class="new badge gradient-45deg-indigo-purple gradient-shadow mt-2 mr-2">+ $900</span>
@@ -146,6 +149,7 @@
                <canvas id="custom-line-chart-sample-three" class="center"></canvas>
             </div>
          </div>
+         --}}
       </div>
       <div class="col s12 m6 l8">
          <div class="card subscriber-list-card animate fadeRight">
@@ -164,6 +168,10 @@
                   </tr>
                </thead>
                <tbody>
+                  <tr>
+                     <td colspan="10"><p class="center">{{__('locale.no_record_found')}}</p></td>
+                  </tr>
+                  {{--   
                   <tr>
                      <td>Michael Austin</td>
                      <td>ABC Fintech LTD.</td>
@@ -196,6 +204,7 @@
                      <td>$ 1100.00</td>
                      <td class="center-align"><a href="#"><i class="material-icons pink-text">clear</i></a></td>
                   </tr>
+                  --}}
                </tbody>
             </table>
          </div>

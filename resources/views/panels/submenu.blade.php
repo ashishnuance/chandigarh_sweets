@@ -8,7 +8,8 @@
         $custom_classes = $submenu->class;
         }
       @endphp
-      <li class="{{(request()->is($submenu->url.'*')) ? 'active' : '' }}">
+      <li class="{{(Request::url() == $submenu->url) ? 'active' : '' }}">
+        
         <a href="@if(($submenu->url) === 'javascript:void(0)'){{$submenu->url}} @else{{url($submenu->url)}} @endif"
           class="{{$custom_classes}} {{(request()->is($submenu->url.'*')) ? 'active '.$configData['activeMenuColor'] : '' }}"
           @if(!empty($configData['activeMenuColor'])) {{'style=background:none;box-shadow:none;'}} @endif

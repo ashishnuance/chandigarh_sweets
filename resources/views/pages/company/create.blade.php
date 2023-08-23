@@ -35,7 +35,7 @@
             <form class="formValidate" action="{{route('company.update',$company_result->id)}}" id="formValidateCompany" method="post">
             {!! method_field('patch') !!}
             @else
-            <form class="formValidate" action="{{asset('company')}}" id="formValidateCompany" method="post">
+            <form class="formValidate" action="{{route('company.store')}}" id="formValidateCompany" method="post">
             @endif
             @csrf()
               <div class="row">
@@ -62,7 +62,7 @@
                 <div class="col m4 s12">
                   <label for="country">{{__('locale.country')}} *</label>
                   <div class="input-field">
-                    <select class="error" id="country" name="country" data-error=".errorTxt6" required>
+                    <select class="error" id="country" name="country" data-error=".errorTxt6">
                       <option value="">Choose {{__('locale.country')}}</option>
                       @if(isset($countries) && !empty($countries))
                         @foreach ($countries as $country_value)
@@ -76,7 +76,7 @@
                 <div class="col m4 s12">
                   <label for="state">{{__('locale.state')}} *</label>
                   <div class="input-field">
-                    <select class="error" id="state" name="state" data-error=".errorTxt7" required>
+                    <select class="error" id="state" name="state" data-error=".errorTxt7">
                       <option value="">Choose {{__('locale.state')}}</option>
                       @if(isset($company_result->state) && isset($states) && !empty($states))
                         @foreach ($states as $state_value)
@@ -90,7 +90,7 @@
                 <div class="col m4 s12">
                   <label for="city">{{__('locale.city')}} *</label>
                   <div class="input-field">
-                    <select class="error" id="city" name="city" data-error=".errorTxt8" required>
+                    <select class="error" id="city" name="city" data-error=".errorTxt8">
                       <option value="">Choose {{__('locale.city')}}</option>
                       @if(isset($company_result->city) && isset($cities) && !empty($cities))
                         @foreach ($cities as $city_value)

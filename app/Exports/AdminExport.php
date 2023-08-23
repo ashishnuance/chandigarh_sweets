@@ -13,7 +13,7 @@ class AdminExport implements FromCollection,WithHeadings
     */
     public function collection()
     {
-        return User::select("id","users.name","email","phone","address","country","state","city","website_url","image","blocked","created_at","updated_at")->whereHas(
+        return User::with('company')->select("id","users.name","email","phone","address","country","state","city","website_url","image","blocked","created_at","updated_at")->whereHas(
             'role', function($q){
                 $q->where('name', 'company-admin');
             }
@@ -22,7 +22,7 @@ class AdminExport implements FromCollection,WithHeadings
 
     public function headings(): array
     {
-        return ["id","name","email","phone","address","country","state","city","website_url","image","blocked","created_at","updated_at"
+        return ["id","name","email","phone","address","country","state","city","website_url","image","blocked","created","updated","company name"
     ];
     }
 }
