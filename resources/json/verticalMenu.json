@@ -33,13 +33,13 @@
       "icon": "format_list_bulleted",
       "submenu": [
         {
-          "url": "company.create",
+          "url": "superadmin/company/create",
           "name": "Company Add",
           "i18n": "Company Add",
           "slug": "add-company"
         },
         {
-          "url": "company.index",
+          "url": "superadmin/company",
           "name": "Companies List",
           "i18n": "Companies List",
           "slug": "companies-list"

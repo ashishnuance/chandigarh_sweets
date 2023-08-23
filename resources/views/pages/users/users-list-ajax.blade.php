@@ -26,7 +26,7 @@
       
     </td>
     <td>{{($user_value->blocked==1) ? 'Blocked' : 'Un-blocked'}}</td>
-    <td>
+    
     <td>
       <a href="{{route($editUrl,$user_value->id)}}"><i class="material-icons">edit</i></a>
     </td>      

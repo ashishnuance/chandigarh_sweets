@@ -86,7 +86,7 @@ class ProductCategoryController extends Controller
 
         $pageConfigs = ['pageHeader' => true];
         $pageTitle = __('locale.product category');
-        return view('pages.product-category.create',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'company'=>$company,'formUrl'=>$formUrl]);
+        return view('pages.product-category.create',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'company'=>$company,'formUrl'=>$formUrl,'userType'=>$userType]);
     }
 
     public function store(Request $request)
@@ -131,6 +131,7 @@ class ProductCategoryController extends Controller
 
     public function edit($id=0)
     {
+        
         $breadcrumbs = [
             ['link' => "/", 'name' => "Home"], ['link' => route("superadmin.product-category.index"), 'name' => __('locale.product category')], ['name' => "Add"],
         ];
@@ -148,7 +149,7 @@ class ProductCategoryController extends Controller
 
         $pageConfigs = ['pageHeader' => true];
         $pageTitle = __('locale.product category');
-        return view('pages.product-category.create',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'company'=>$company,'result'=>$productCategoryResult,'formUrl'=>$formUrl]);        
+        return view('pages.product-category.create',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'company'=>$company,'result'=>$productCategoryResult,'formUrl'=>$formUrl,'userType'=>$userType]);        
         
     }
 

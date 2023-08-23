@@ -13,4 +13,17 @@ class Company extends Model
     public function users() {
         return $this->belongsToMany(User::class,'company_user_mappings');  
     }
+
+    public function countryname()
+    {
+        return $this->hasOne(Country::class, 'id', 'country');
+    }
+    public function statename()
+    {
+        return $this->hasOne(State::class, 'id', 'state');
+    }
+    public function cityname()
+    {
+        return $this->hasOne(City::class, 'id', 'city');
+    }
 }

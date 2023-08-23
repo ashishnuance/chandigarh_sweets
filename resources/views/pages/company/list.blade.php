@@ -20,6 +20,7 @@
 <div class="row">
   <div class="col s12">
     <div id="file-input" class="card card-tabs">
+      @include('panels.flashMessages')
       <div class="card-content">
         <div class="card-title">
           <div class="row">
@@ -31,7 +32,6 @@
         <div id="view-file-input">
           <div class="row">
             <div class="col s12">
-              @include('panels.flashMessages')
               <form action="{{route('company-import')}}" method="post" enctype="multipart/form-data">
                 @csrf()
                 <div class="file-field input-field">
