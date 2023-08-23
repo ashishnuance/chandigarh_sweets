@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Company;
+use Illuminate\Support\Facades\Validator;
 use App\Models\{Products,ProductsVariations,ProductImagesModel,ProductsVariationsOptions};
 use App\Models\{ProductCategoryModel,ProductSubCategory};
 use App\Models\{Cartlist,Orderlist};
@@ -104,7 +105,7 @@ class ProductsController extends Controller
             $productCategoryResult = ProductCategoryModel::where('company_id',$company_id)->get(["category_name", "id"]);
             $formUrl = 'product.store';
         }
-        $productsVariationsOptions = ProductsVariationsOptions::get('id','name');
+        $productsVariationsOptions = ProductsVariationsOptions::select('id','name')->get();
 
         $foodTypeResult = ['veg','non-veg'];
         $pageTitle = __('locale.Items'); 
@@ -118,7 +119,6 @@ class ProductsController extends Controller
             if($userType!=config('custom.superadminrole')){
                 $formUrl = 'product.update';
             }
-            
         }
         
         return view('pages.products.create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'pageTitle'=>$pageTitle,'companies'=>$companies,'product_result'=>$product_result,'userType'=>$userType,'productCategoryResult'=>$productCategoryResult,'productSubCategoryResult'=>$productSubCategoryResult,'foodTypeResult'=>$foodTypeResult,'productCode'=>$productCode,'formUrl'=>$formUrl,'productsVariationsOptions'=>$productsVariationsOptions]);
@@ -132,6 +132,17 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'product_name' => 'required|max:250',
+            'product_code' => 'required',
+        ]);
+        
+        
+        if ($validator->fails()) {
+            return redirect()->back()
+            ->withErrors($validator)
+            ->withInput();
+        }
         $userType = auth()->user()->role()->first()->name;
         $product_info = [
             'product_name'=>$request->product_name,
@@ -141,6 +152,7 @@ class ProductsController extends Controller
             'food_type'=>($request->food_type!='') ? $request->food_type : 'veg',
             'blocked'=>$request->blocked,
             'description'=>$request->description,
+            'product_slug'=>str_replace(' ','-',$request->product_name),
         ];
         $redirectUrl = 'superadmin.product.index';
         $product = Products::create($product_info);
@@ -379,8 +391,8 @@ class ProductsController extends Controller
             return redirect()->route('product')->with('error', __('locale.try_again'));
         }
     }
-    public function productExport($type='admin'){
-        if($type=='admin'){
+    public function productExport($type=''){
+        if($type==config('custom.superadminrole')){
             $companyUser = new ProductsExport;
         }else{
             $companyUser = new UserProductsExport;

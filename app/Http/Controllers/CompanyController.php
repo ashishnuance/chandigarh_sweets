@@ -56,8 +56,7 @@ class CompanyController extends Controller
      */
     public function create()
     {
-        //dd('hi');
-        // Breadcrumbs
+        
         $breadcrumbs = [
             ['link' => "/", 'name' => "Home"], ['link' => "company", 'name' => "Company"], ['name' => "Add"],
         ];
@@ -82,9 +81,6 @@ class CompanyController extends Controller
             'company_code' => 'required|max:10',
             'address1' => 'required|max:250',
             'address2' => 'max:250',
-            'country' => 'required',
-            'state' => 'required',
-            'city' => 'required',
             'pincode' => 'required',
             'contact_person' => 'required|max:250',
             'contact_mobile' => 'required|max:20',
@@ -99,7 +95,7 @@ class CompanyController extends Controller
         // echo '<pre>';print_r($request->all());  exit();
         $company = Company::create($request->all());
         if($company){
-            return redirect()->to('/company')->with('success',__('locale.company_create_success'));
+            return redirect()->route('company.index')->with('success',__('locale.company_create_success'));
         }else{
             return redirect()->back()->with('error',__('locale.try_again'));
         }

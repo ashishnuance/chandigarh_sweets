@@ -30,18 +30,18 @@
           <!-- users edit account form start -->
           @include('panels.flashMessages')
           @if(isset($user_result->id))
-          <?php $formUrl = (isset($formUrl) && $formUrl!='') ? $formUrl : 'company-admin-update'; ?>
+          <?php //$formUrl = (isset($formUrl) && $formUrl!='') ? $formUrl : 'company-admin-update'; ?>
             <form class="formValidate" action="{{route($formUrl,$user_result->id)}}" id="formValidateCompany" method="post">
             {!! method_field('post') !!}
             @else
-            <?php $formUrl = (isset($formUrl) && $formUrl!='') ? $formUrl : 'company-admin-create'; ?>
+            <?php //$formUrl = (isset($formUrl) && $formUrl!='') ? $formUrl : 'company-admin-create'; ?>
           <form id="accountForm" action="{{route($formUrl)}}" method="post">
             @endif
             @csrf()
             <div class="row">
               <div class="col s12 m12">
                 <div class="row">
-                  @if(isset($userType) && $userType=='superadmin')
+                  @if(isset($userType) && $userType==config('custom.superadminrole'))
                   <div class="col s12 input-field">
                     <select class="error" id="company" name="company" data-error=".errorTxt7" required>
                       <option value="">Choose {{__('locale.Company')}}</option>

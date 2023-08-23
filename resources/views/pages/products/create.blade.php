@@ -255,18 +255,20 @@
                       </div>
                       <div class="input-field col m6 s12">
                         <label for="offer_price">{{__('locale.Offer Price')}}: <span class="red-text">*</span></label>
-                        <input type="text" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" class="validate offer_price" name="variation[offer_price][]">
+                        <input type="text" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" class="validate offer_price" name="variation[offer_price][]" required>
                       </div>
                       <div class="input-field col m6 s12">
                         <label for="quantity">{{__('locale.Quantity')}}: <span class="red-text">*</span></label>
-                        <input type="text" class="validate quantity" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" name="variation[quantity][]">
+                        <input type="text" class="validate quantity" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" name="variation[quantity][]" required>
                       </div>
                       <div class="input-field col m6 s12">
-                        <select name="variation[variation_type][]" class="variation_type">
+                        <select name="variation[variation_type][]" class="variation_type" id="productsVariations" required>
                           <option value="" disabled selected>{{__('locale.select type')}}</option>
-                          <option value="1">Wedding</option>
-                          <option value="2">Party</option>
-                          <option value="3">Fund Raiser</option>
+                          @if(isset($productsVariationsOptions) && !empty($productsVariationsOptions))
+                          @foreach($productsVariationsOptions as $option_value)
+                          <option value="{{$option_value->id}}">{{$option_value->name}}</option>
+                          @endforeach
+                          @endif
                         </select>
                       </div>
                       <button type="button" class="btn btn-primary mt-1 remove-variation">Remove</button>

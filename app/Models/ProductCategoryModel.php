@@ -15,9 +15,9 @@ class ProductCategoryModel extends Model
 
 
 
-public function companyname()
-{
-    return $this->belongsTo(Company::class, 'company_id', 'id');
-}
+    public function companyname()
+    {
+        return $this->belongsTo(Company::class, 'company_id', 'id');
+    }
 
 }

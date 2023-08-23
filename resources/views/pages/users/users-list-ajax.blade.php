@@ -6,7 +6,7 @@
       <th>{{__('locale.email')}}</th>
       <th>{{__('locale.phone')}}</th>
       <th>{{__('locale.address')}}</th>
-      <th>{{__('locale.website_url')}}</th>
+      <th>{{__('locale.company_name')}}</th>
       <th>{{__('locale.status')}}</th>
       <th>{{__('locale.action')}}</th>
     </tr>
@@ -20,11 +20,15 @@
     <td>{{$user_value->email}}</td>
     <td>{{$user_value->phone}}</td>
     <td>{{$user_value->address}}</td>
-    <td>{{$user_value->website_url}}</td>
+    <td>
+      
+      {{ isset($user_value->company[0]->company_name) ? $user_value->company[0]->company_name : '' }}
+      
+    </td>
     <td>{{($user_value->blocked==1) ? 'Blocked' : 'Un-blocked'}}</td>
     <td>
     <td>
-      <a href="{{route('company-admin-edit',$user_value->id)}}"><i class="material-icons">edit</i></a>
+      <a href="{{route($editUrl,$user_value->id)}}"><i class="material-icons">edit</i></a>
     </td>      
     </tr>
     @endforeach

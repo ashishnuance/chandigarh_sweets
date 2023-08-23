@@ -237,6 +237,10 @@ return [
     "product edit error"=>"Product id not match",
     "Product Company Mapping"=>"Product Company Mapping",
     "create"=>"Create",
-    "list"=>"List"
+    "list"=>"List",
+    "product mapping"=>"Product Mapping",
+    "Select Company"=>"Select Company",
+    "product category"=>"Product Category",
+    "name_exits"=>"Name already in use"
 ];
 ?>

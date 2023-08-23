@@ -63,6 +63,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::prefix('superadmin')->middleware(['superadmin'])->group(function () { 
         Route::get('/', [DashboardController::class, 'dashboardSuperadminModern']);
         Route::get('/login', [LoginController::class, 'showLoginForm']);
+
         /** company route */
         Route::resource('/company', CompanyController::class);
         Route::post('/company-import', [CompanyController::class,'companyImport'])->name('company-import');
@@ -70,17 +71,17 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/company/delete/{id}', [CompanyController::class,'destroy'])->name('company.destroy');
         
         /** company admin **/
-        Route::get('/company-admin-create', [UserController::class, 'create']);
+        Route::get('/company-admin-create', [UserController::class, 'create'])->name('company-admin-create');
         Route::get('/company-admin-edit/{id}', [UserController::class, 'create'])->name('company-admin-edit');
         Route::post('/company-admin-update/{id}', [UserController::class, 'update'])->name('company-admin-update');
         Route::get('/company-admin-list', [UserController::class, 'index'])->name('company-admin-list');
         Route::post('/company-admin-create', [UserController::class, 'store'])->name('company-admin-create');
 
-        Route::get('/company-user-create', [UserController::class, 'usersCreate']);
-        Route::get('/company-user-edit/{id}', [UserController::class, 'usersCreate'])->name('company-user-edit');
-        Route::post('/company-user-update/{id}', [UserController::class, 'usersUpdate'])->name('company-user-update');
-        Route::get('/company-user-list', [UserController::class, 'usersList'])->name('company-user-list');
-        Route::post('/company-user-create', [UserController::class, 'userStore'])->name('company-user-create');
+        Route::get('/company-user-create', [UserController::class, 'usersCreate'])->name('superadmin.company-user-create');
+        Route::get('/company-user-edit/{id}', [UserController::class, 'usersCreate'])->name('superadmin.company-user-edit');
+        Route::post('/company-user-update/{id}', [UserController::class, 'usersUpdate'])->name('superadmin.company-user-update');
+        Route::get('/company-user-list', [UserController::class, 'usersList'])->name('superadmin.company-user-list');
+        Route::post('/company-user-create', [UserController::class, 'userStore'])->name('superadmin.company-user-create');
 
         /** new buyer routes start **/
         Route::resource('/buyer-type', BuyerController::class);
@@ -92,15 +93,27 @@ Route::group(['middleware' => ['auth']], function () {
         
         /** product category admin side **/
         Route::resource('/product-category',ProductCategoryController::class);
-        Route::get('/product-category/destroy/{id}',[ProductCategoryController::class,'destroy'])->name('product-category.delete');
+        Route::get('/product-category',[ProductCategoryController::class,'index'])->name('superadmin.product-category.index');
+        Route::get('/product-category/{$id}/edit',[ProductCategoryController::class,'index'])->name('superadmin.product-category.edit');
+        Route::post('/product-category',[ProductCategoryController::class,'store'])->name('superadmin.product-category.store');
+        Route::put('/product-category/{$id}',[ProductCategoryController::class,'update'])->name('superadmin.product-category.update');
+        Route::get('/product-category/destroy/{id}',[ProductCategoryController::class,'destroy'])->name('superadmin.product-category.delete');
+        Route::post('/product-category-import',[ProductCategoryController::class,'productcategoryimport'])->name('superadmin.product-category-import');
+        Route::get('/product-category-export/{type?}',[ProductCategoryController::class,'productcategoryexport'])->name('superadmin.product-category-export');
 
           /** sub category admin side**/
+        /** product company mapping **/
+        Route::resource('/product-mapping',ProductCompanyMapping::class);
+        Route::get('/product-mapping/destroy/{id}',[ProductCompanyMapping::class,'destroy'])->name('product-mapping.delete');
+
+          /** sub category **/
           Route::resource('/sub-category',SubCategoryController::class);
           Route::get('/sub-category/destroy/{id}',[SubCategoryController::class,'destroy'])->name('sub-category.delete');
         
     });
 
-    
+    /** product category import and export **/
+
     /** product import and export **/
     Route::post('/product-import', [ProductsController::class,'productImport']);
     Route::get('/product-export/{type?}', [ProductsController::class,'productExport'])->name('product-export');
@@ -115,7 +128,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/company-user-create', [UserController::class, 'usersCreate'])->name('company-user-create');
         Route::get('/company-user-edit/{id}', [UserController::class, 'usersCreate'])->name('company-user-edit');
         Route::post('/company-user-update/{id}', [UserController::class, 'usersUpdate'])->name('company-user-update');
-        Route::get('/company-user-list', [UserController::class, 'usersList'])->name('companyadmin.company-user-list');
+        Route::get('/company-user-list', [UserController::class, 'usersList'])->name('company-user-list');
         Route::post('/company-user-create', [UserController::class, 'userStore'])->name('company-user-create');
 
         /** new products routes **/
@@ -127,6 +140,15 @@ Route::group(['middleware' => ['auth']], function () {
 
       
      
+        /** new products routes **/
+        Route::resource('/product',ProductsController::class);
+        Route::get('/product/destroy/{id}',[ProductsController::class,'destroy'])->name('product.delete');
+
+        /** product category **/
+        Route::resource('/product-category',ProductCategoryController::class);
+        Route::get('/product-category/destroy/{id}',[ProductCategoryController::class,'destroy'])->name('product-category.delete');
+        Route::post('/product-category-import',[ProductCategoryController::class,'productcategoryimport'])->name('product-category-import');
+        Route::get('/product-category-export/{$type?}',[ProductCategoryController::class,'productCategoryexportFile'])->name('product-category-export');
     });
     /** state and city **/
     Route::post('api/user-fetch-states', [DashboardController::class, 'user_fetchState']);
