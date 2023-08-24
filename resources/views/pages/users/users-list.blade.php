@@ -43,7 +43,7 @@
                     <div class="file-field input-field">
                       <div class="btn">
                         <span>File</span>
-                        <input type="file" name="importcompany">
+                        <input type="file" name="importcompany" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                       </div>
                       <div class="file-path-wrapper">
                         <input class="file-path validate" type="text">

@@ -150,13 +150,13 @@
                         @if(isset($product_result->product_images) && !empty($product_result->product_images))
                         @foreach($product_result->product_images as $image_value)
                         <div class="col s12 m4 clone-image mb-2">
-                            <input type="file" name="product_image[]" class="dropify" data-default-file="{{route('image.displayImage',$image_value->image)}}" />
+                            <input type="file" name="product_image[]" class="dropify" data-default-file="{{route('image.displayImage',$image_value->image)}}" accept="image/*"/>
                             <button type="button" class="btn btn-primary mt-1 remove-image">Remove</button>
                         </div>
                         @endforeach
                         @endif
                         <div class="col s12 m4 clone-image mb-2">
-                            <input type="file" id="input-file-now" name="product_image[]" class="dropify" data-default-file="" />
+                            <input type="file" name="product_image[]" class="dropify" data-default-file="" accept="image/*"/>
                             <button type="button" class="btn btn-primary mt-1 remove-image">Remove</button>
                         </div>
                         
@@ -226,17 +226,24 @@
                       <?php 
                      // echo"<pre>"; print_r($productsVariationsOptions); die; ?>
                       <div class="input-field col m6 s12">
-                        <select name="variation[variation_type][]" class="variation_type" id="productsVariations">
+                        <select name="variation[variation_type][]" class="variation_type" >
                           <option value="" disabled selected>{{__('locale.select type')}}</option>
                           @if(isset($productsVariationsOptions) && !empty($productsVariationsOptions))
                           @foreach($productsVariationsOptions as $option_value)
-                          <option value="{{$option_value->name}}">{{$option_value->name}}</option>
+                          <option value="{{$option_value->id}}" {{($provar_value->variation_type == $option_value->id) ? 'selected="selected"' : '' }}>{{$option_value->name}}</option>
+                          
                           @endforeach
                           @endif
                         </select>
                       </div>
                       <button type="button" class="btn btn-primary mt-1 remove-variation">Remove</button>
                     </div>
+                    <script>
+                      var option_value = "{{(isset($provar_value->variation_type) && $provar_value->variation_type!=NULL) ? $provar_value->variation_type : old('variation_type')}}";
+                      console.log('option_valuess',option_value);
+                      $('.variation_type').val(option_value);
+                      $('.variation_type').formSelect();
+                      </script>
                     @endforeach
                     @else
                     
@@ -366,15 +373,18 @@
     <div class="input-field col m6 s12">
       <select name="variation[variation_type][]" class="variation_type">
         <option value="" disabled selected>{{__('locale.select type')}}</option>
-        <option value="1">Wedding</option>
-        <option value="2">Party</option>
-        <option value="3">Fund Raiser</option>
+        @if(isset($productsVariationsOptions) && !empty($productsVariationsOptions))
+        @foreach($productsVariationsOptions as $option_value)
+        <option value="{{$option_value->id}}">{{$option_value->name}}</option>
+        @endforeach
+        @endif
       </select>
     </div>
     <button type="button" class="btn btn-primary mt-1 remove-variation">Remove</button>
   </div>
 </div>
 {{-- vendor script --}}
+<?php //echo '<pre>';print_r($provar_value->variation_type); exit(); ?>
 @section('vendor-script')
 <script src="{{asset('vendors/materialize-stepper/materialize-stepper.min.js')}}"></script>
 <script src="{{asset('vendors/dropify/js/dropify.min.js')}}"></script>
@@ -391,7 +401,6 @@
     var subcategory_value = "{{(isset($product_result->product_subcatid) && $product_result->product_subcatid!='NULL') ? $product_result->product_subcatid : old('product_subcatid')}}";
     var food_type = "{{(isset($product_result->food_type) && $product_result->food_type!='NULL') ? $product_result->food_type : old('food_type')}}";
 
-    var option_value = "{{(isset($productsVariationsOptions->name) && $productsVariationsOptions->name!='NULL') ? $productsVariationsOptions->name : old('name')}}";
     
     $('#product_catid').val(category_value);
     $('#product_catid').formSelect();
@@ -399,9 +408,9 @@
     $('#product_subcatid').formSelect();
     $('.food_type').val(food_type);
     $('.food_type').formSelect();
-    $('#productsVariations').val(option_value);
+    
 
-    $('#productsVariations').formSelect();
+    //$('.variation_type').formSelect();
 
   }
 
