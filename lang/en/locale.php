@@ -23,9 +23,12 @@ return [
     "Product category Add"=>"Product category Add",
     "product_category_success"=>"Product category Successfully",
 
-    "Sub Category"=>"Sub Category",
+    "Sub Category"=>"Sub Category",  
+    "sub category"=>"sub category",  
     "Sub Category Create"=>"Create",
     "Sub Category List"=>"List",
+    "sub category list"=>"Sub Category List",
+
     "Sub category Add"=>"Sub category Add",
     "sub_category_success"=>"Sub category Successfully",
     "name_exits"=> "Sub Category Name Already Exist",
@@ -217,7 +220,6 @@ return [
     "product name"=>"Product Name",
     "slug"=>"Slug",
     "category"=>"Category",
-    "sub category"=>"Sub Category",
     "food type"=>"Food Type",
     "description"=>"Description",
     "image"=>"Image",

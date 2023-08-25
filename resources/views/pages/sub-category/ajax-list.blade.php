@@ -1,4 +1,4 @@
-<table class="responsive-table" id="category_table">
+<table class="table">
    <thead>
      <tr>
         <th data-field="s.no">{{__('locale.S.no')}}</th>
@@ -8,7 +8,7 @@
         <th data-field="action">{{__('locale.action')}}</th>
      </tr>
    </thead>
-   <tbody id="category_table_body">
+   <tbody>
         @if(isset($sub_category_list) && !empty($sub_category_list))
         @foreach($sub_category_list as $key => $sub_category_data)
 

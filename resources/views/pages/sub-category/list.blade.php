@@ -12,21 +12,52 @@
 {{-- page content --}}
 @section('content')
 <div class="section">
-<div class="card">
-    
-    </div>
+
 
   <!-- Responsive Table -->
   <div class="row">
     <div class="col s12 m12 l12">
-    @include('panels.flashMessages')
-
+      
       <div id="responsive-table" class="card card card-default scrollspy">
+        @include('panels.flashMessages')
+        <div class="card-content">
+          <div class="card-title">
+            <div class="row">
+              <div class="col s12 m6 l10">
+                <h4 class="card-title">{{__('locale.imports')}} {{__('locale.users')}}</h4>
+              </div>
+            </div>
+          </div>
+          <div id="view-file-input">
+            <div class="row">
+              <div class="col s12">
+                <form action="{{route($importUrl)}}" method="post" enctype="multipart/form-data">
+                  @csrf()
+                  <div class="file-field input-field">
+                    <div class="btn">
+                      <span>File</span>
+                      <input type="file" name="importfile" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                    </div>
+                    <div class="file-path-wrapper">
+                      <input class="file-path validate" type="text">
+                    </div>
+                  </div>
+                  <a class="waves-effect waves-light left submit" target="_blank" href="{{asset('data-import-files/subcategory-importfile.csv')}}" download>{{__('locale.download_sample_file')}}
+                      <i class="material-icons">download</i>
+                  </a>
+                  <button class="btn waves-effect waves-light right submit" type="submit" name="action">Submit
+                      <i class="material-icons right">send</i>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="card-content">
            
           <div class="row">
             <div class="col s12">
-                <div class="col s4">
+                  <div class="col s4">
                     <select name="category_id" id="category_id" onchange="filtercompany(this)" data-url='{{route("sub-category.store")}}'>
                       <option value="Select" disabled selected>Select Category</option>
                       @foreach($category_list as $categoryname)
@@ -35,12 +66,18 @@
                     </select>
                  </div>
             </div>
+            <a class="btn waves-effect waves-light right" href="{{route($exportUrl,[$userType])}}">{{__('locale.export_users')}}
+                <i class="material-icons right"></i>
+            </a>
+            <div class="col s12 table-result">
+                
+              <div class="responsive-table table-result">
+                @include('pages.sub-category.ajax-list')
+                
+              </div>
+              <input type="hidden" name="hidden_page" id="hidden_page" value="{{(isset($currentPage) && $currentPage>0) ? $currentPage : 1}}" />
 
-            <div class="responsive-table table-result">
-                    @include('pages.sub-category.ajax-list')
             </div>
-             <input type="hidden" name="hidden_page" id="hidden_page" value="{{(isset($currentPage) && $currentPage>0) ? $currentPage : 1}}" />
-
           </div>
         </div>
       </div>
@@ -48,22 +85,11 @@
   </div>
 </div>
 @endsection
-
-
-
-{{-- vendor scripts --}}
-@section('vendor-script')
-<script src="{{asset('vendors/data-tables/js/jquery.dataTables.min.js')}}"></script>
-<script src="{{asset('vendors/data-tables/extensions/responsive/js/dataTables.responsive.min.js')}}"></script>
-@endsection
-
-{{-- page script --}}
 @section('page-script')
 <script src="{{asset('js/scripts/page-users.js')}}"></script>
 <script>
   $(document).ready(function(){
     var paginationUrl = "{{(isset($paginationUrl) && $paginationUrl!='') ? route($paginationUrl) : '' }}";
- 
     const fetch_data = (page, status, seach_term) => {
         if(status === undefined){
             status = "";

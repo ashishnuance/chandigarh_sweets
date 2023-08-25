@@ -40,11 +40,7 @@
               @if(isset($result))
                   @method('PUT') <!-- Use PUT for updating -->
               @endif
-
-            
-
-                          
-              
+ 
            <div class="row">
               @if(isset($userType) && $userType==config('custom.superadminrole'))
                 <div class="input-field col s12 m6">

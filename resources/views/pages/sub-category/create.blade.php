@@ -33,8 +33,7 @@
               </div>
              <div id="view-validations">
                   <form class="formValidate" method="post" action="{{ isset($result) ? route($formUrl, $result['id']) : route($formUrl) }}">
-                    
-                  <form class="formValidate" method="post" action="{{ isset($result) ? route('sub-category.update', $result['id']) : route('sub-category.store') }}">
+              
 
                     @csrf
 
@@ -61,7 +60,7 @@
                 
                       <div class="input-field col m6 s12">
                         <label for="subcat_name">Sub Category Name</label>
-                        <input id="subcat_name" class="validate" name="subcat_name" type="text" data-error=".errorTxt1" value="{{ (isset($SubCategoryResult['subcat_name']) && $SubCategoryResult['subcat_name'] !='' ) ? $SubCategoryResult['subcat_name'] :  old('subcat_name') }}">
+                        <input id="subcat_name" class="validate" name="subcat_name" type="text" data-error=".errorTxt1" value="{{ (isset($result['subcat_name']) && $result['subcat_name'] !='' ) ? $result['subcat_name'] :  old('subcat_name') }}">
                         @error('subcat_name')
                             <div style="color:red">{{ $message }}</div>
                         @enderror
