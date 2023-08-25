@@ -240,6 +240,7 @@ class ProductsController extends Controller
         //Pageheader set true for breadcrumbs
         $pageConfigs = ['pageHeader' => true];
         $listUrl = 'superadmin.product.index';
+        $deleteImageUrl = 'superadmin/product/imagedelete';
         $companies = Company::get(["company_name", "id","company_code"]);
         $productCategoryResult = ProductCategoryModel::get(["category_name", "id"]);
 
@@ -247,6 +248,7 @@ class ProductsController extends Controller
             $company_id = Helper::loginUserCompanyId();
             $productCategoryResult = ProductCategoryModel::where('company_id',$company_id)->get(["category_name", "id"]);
             $listUrl = 'product.index';
+            $deleteImageUrl = 'product/imagedelete';
         }
 
         $productsVariationsOptions = ProductsVariationsOptions::get(['id','name']);
@@ -270,7 +272,7 @@ class ProductsController extends Controller
         }
         // dd($product_result);
         
-        return view('pages.products.create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'pageTitle'=>$pageTitle,'companies'=>$companies,'product_result'=>$product_result,'userType'=>$userType,'productCategoryResult'=>$productCategoryResult,'productSubCategoryResult'=>$productSubCategoryResult,'foodTypeResult'=>$foodTypeResult,'productCode'=>$productCode,'formUrl'=>$formUrl,'productsVariationsOptions'=>$productsVariationsOptions]);
+        return view('pages.products.create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'pageTitle'=>$pageTitle,'companies'=>$companies,'product_result'=>$product_result,'userType'=>$userType,'productCategoryResult'=>$productCategoryResult,'productSubCategoryResult'=>$productSubCategoryResult,'foodTypeResult'=>$foodTypeResult,'productCode'=>$productCode,'formUrl'=>$formUrl,'productsVariationsOptions'=>$productsVariationsOptions,'deleteImageUrl'=>$deleteImageUrl]);
     }
 
     /**
@@ -377,6 +379,13 @@ class ProductsController extends Controller
             return redirect()->back()->with('error',__('locale.product delete errormessage'));
         }
 
+    }
+
+    public function imagedelete($id){
+        
+        $productImage = ProductImagesModel::findOrFail($id);
+        $productImage->delete();
+        return response()->json(['status'=>true,'message'=>'deleted'],200);
     }
 
     public function productImport(){

@@ -90,7 +90,12 @@ Route::group(['middleware' => ['auth']], function () {
         
         /** new products routes **/
         Route::resource('/product',ProductsController::class);
-        Route::get('/product/destroy/{id}',[ProductsController::class,'destroy'])->name('product.delete');
+        Route::get('/product',[ProductsController::class,'index'])->name('superadmin.product.index');
+        Route::get('/product/{$id}/edit',[ProductsController::class,'edit'])->name('superadmin.product.edit');
+        Route::post('/product',[ProductsController::class,'store'])->name('superadmin.product.store');
+        Route::patch('/product/{$id}',[ProductsController::class,'update'])->name('superadmin.product.update');
+        Route::get('/product/destroy/{id}',[ProductsController::class,'destroy'])->name('superadmin.product.delete');
+        Route::get('/product/imagedelete/{id}',[ProductsController::class,'imagedelete'])->name('superadmin.product.imagedelete');
         
         /** product category admin side **/
         Route::resource('/product-category',ProductCategoryController::class);
@@ -149,6 +154,7 @@ Route::group(['middleware' => ['auth']], function () {
         /** new products routes **/
         Route::resource('/product',ProductsController::class);
         Route::get('/product/destroy/{id}',[ProductsController::class,'destroy'])->name('product.delete');
+        Route::get('/product/imagedelete/{id}',[ProductsController::class,'imagedelete'])->name('product.imagedelete');
 
         /** product category **/
         Route::resource('/product-category',ProductCategoryController::class);
