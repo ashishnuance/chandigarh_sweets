@@ -8,10 +8,9 @@
         $custom_classes = $submenu->class;
         }
       @endphp
-      <li class="{{(Request::url() == $submenu->url) ? 'active' : '' }}">
-        
+      <li class="{{(request()->is($submenu->url)) ? 'active' : '' }}">
         <a href="@if(($submenu->url) === 'javascript:void(0)'){{$submenu->url}} @else{{url($submenu->url)}} @endif"
-          class="{{$custom_classes}} {{(request()->is($submenu->url.'*')) ? 'active '.$configData['activeMenuColor'] : '' }}"
+          class="{{$custom_classes}} {{(request()->is($submenu->url)) ? 'active '.$configData['activeMenuColor'] : '' }}"
           @if(!empty($configData['activeMenuColor'])) {{'style=background:none;box-shadow:none;'}} @endif
           {{isset($submenu->newTab) ? 'target="_blank"':''}}>
           <i class="material-icons">radio_button_unchecked</i>

@@ -136,6 +136,7 @@ class ProductCategoryController extends Controller
 
     public function edit($id=0)
     {
+        
         $breadcrumbs = [
             ['link' => "/", 'name' => "Home"], ['link' => route("superadmin.product-category.index"), 'name' => __('locale.product category')], ['name' => "Add"],
         ];

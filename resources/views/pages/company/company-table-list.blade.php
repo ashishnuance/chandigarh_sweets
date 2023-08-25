@@ -16,19 +16,21 @@
 <tbody>
     @if(isset($companyResult) && !empty($companyResult))
     @foreach($companyResult as $company_value)
+    
     <tr>
-    <td>{{$company_value->company_code}}</td>
-    <td>{{$company_value->company_name}}</td>
-    <td>{{$company_value->address1}}</td>
-    <td>{{$company_value->city}}</td>
-    <td>{{$company_value->state}}</td>
-    <td>{{$company_value->country}}</td>
-    <td>{{$company_value->contact_person}}</td>
-    <td>{{$company_value->licence_valid_till}}</td>
-    <td>{{($company_value->blocked==1) ? 'Blocked' : 'Un-blocked'}}</td>
-    <td>
-        <a href="{{route('company.destroy',$company_value->id)}}" class="btn" onclick="return confirm('Are you sure you want to delete this item')"><i class="material-icons">delete</i></a>
-        <a href="{{asset('company/'.$company_value->id.'/edit')}}" class="btn"><i class="material-icons">edit</i></a></td>
+        <td>{{$company_value->company_code}}</td>
+        <td>{{$company_value->company_name}}</td>
+        <td>{{$company_value->address1}}</td>
+        <td>{{(isset($company_value->cityname->name)) ? $company_value->cityname->name : ''}}</td>
+        <td>{{(isset($company_value->statename->name)) ? $company_value->statename->name : ''}}</td>
+        <td>{{(isset($company_value->countryname->name)) ? $company_value->countryname->name : ''}}</td>
+        <td>{{$company_value->contact_person}}</td>
+        <td>{{$company_value->licence_valid_till}}</td>
+        <td>{{($company_value->blocked==1) ? 'Blocked' : 'Un-blocked'}}</td>
+        <td>
+            <a href="{{route('company.edit',$company_value->id)}}"><i class="material-icons">edit</i></a>
+            <a href="{{route('company.destroy',$company_value->id)}}" onclick="return confirm('Are you sure you want to delete this item')"><i class="material-icons">delete</i></a>
+        </td>
     </tr>
     @endforeach
     @else

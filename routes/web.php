@@ -66,6 +66,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         /** company route */
         Route::resource('/company', CompanyController::class);
+        // Route::get('/company/{id}/edit', [CompanyController::class,'edit'])->index('superadmin');
         Route::post('/company-import', [CompanyController::class,'companyImport'])->name('company-import');
         Route::get('/company-export', [CompanyController::class,'companyExport']);
         Route::get('/company/delete/{id}', [CompanyController::class,'destroy'])->name('company.destroy');

@@ -28,11 +28,10 @@ class CompanyController extends Controller
         //Pageheader set true for breadcrumbs
         $pageConfigs = ['pageHeader' => true];
         $pageTitle = __('locale.Company List');
-        $companyResult = Company::select(['id','company_name','company_code','address1','country','state','city','contact_person','contact_mobile','licence_valid_till','blocked','phone_no'])->orderBy('id','DESC')->paginate($perpage);
+        $companyResult = Company::with(['countryname','statename', 'cityname'])->select(['id','company_name','company_code','address1','country','state','city','contact_person','contact_mobile','licence_valid_till','blocked','phone_no'])->orderBy('id','DESC');
 
         if($request->ajax()){
-            $companyResult = Company::select(['id','company_name','company_code','address1','country','state','city','contact_person','contact_mobile','licence_valid_till','blocked','phone_no'])->orderBy('id','DESC')
-                        ->when($request->seach_term, function($q)use($request){
+            $companyResult = $companyResult->when($request->seach_term, function($q)use($request){
                             $q->where('id', 'like', '%'.$request->seach_term.'%')
                             ->orWhere('company_name', 'like', '%'.$request->seach_term.'%')
                             ->orWhere('company_code', 'like', '%'.$request->seach_term.'%');
@@ -44,8 +43,10 @@ class CompanyController extends Controller
             return view('pages.company.company-table-list', compact('companyResult'))->render();
         }
         if($companyResult->count()>0){
-            $companyResultResponse = $companyResult;
+            $companyResultResponse = $companyResult->paginate($perpage);;
         }
+        // dd($companyResultResponse);
+        // echo '<pre>';print_r($companyResultResponse[0]->cityname);exit();
         return view('pages.company.list',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'companyResult'=>$companyResultResponse]);
     }
 
@@ -171,7 +172,7 @@ class CompanyController extends Controller
         // echo '<pre>';print_r($request->input()); exit();
         $company = Company::where('id',$id)->update($request->input());
         if($company){
-            return redirect()->to('/company')->with('success',__('locale.company_update_success'));
+            return redirect()->route('company.index')->with('success',__('locale.company_update_success'));
         }else{
             return redirect()->back()->with('error',__('locale.try_again'));
         }

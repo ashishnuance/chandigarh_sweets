@@ -229,7 +229,7 @@
                     $('#city').html('<option value="">Select City</option>');
                     $.each(res.cities, function (key, value) {
                         $("#city").append('<option value="' + value
-                            .name + '">' + value.name + '</option>');
+                            .id + '">' + value.name + '</option>');
                     });
                     $('#city').formSelect();
                 }

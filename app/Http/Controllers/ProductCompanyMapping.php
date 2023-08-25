@@ -53,6 +53,7 @@ class ProductCompanyMapping extends Controller
         }
         $productMappingResult = $productMappingResult->paginate($perpage);
 
+        $productMappingResponse  = [];
         if($productMappingResult->count()>0){
             $productMappingResponse = $productMappingResult;
         }
