@@ -101,18 +101,25 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/product-category-import',[ProductCategoryController::class,'productcategoryimport'])->name('superadmin.product-category-import');
         Route::get('/product-category-export/{type?}',[ProductCategoryController::class,'productcategoryexport'])->name('superadmin.product-category-export');
 
-          /** sub category admin side**/
         /** product company mapping **/
         Route::resource('/product-mapping',ProductCompanyMapping::class);
         Route::get('/product-mapping/destroy/{id}',[ProductCompanyMapping::class,'destroy'])->name('product-mapping.delete');
 
-          /** sub category **/
+          /** sub category admin side **/
+
           Route::resource('/sub-category',SubCategoryController::class);
-          Route::get('/sub-category/destroy/{id}',[SubCategoryController::class,'destroy'])->name('sub-category.delete');
+          Route::get('/sub-category',[SubCategoryController::class,'index'])->name('superadmin.sub-category.index');
+          Route::get('/sub-category/{$id}/edit',[SubCategoryController::class,'index'])->name('superadmin.sub-category.edit');
+          Route::post('/sub-category',[SubCategoryController::class,'store'])->name('superadmin.sub-category.store');
+          Route::put('/sub-category/{$id}',[SubCategoryController::class,'update'])->name('superadmin.sub-category.update');
+          Route::get('/sub-category/destroy/{id}',[SubCategoryController::class,'destroy'])->name('superadmin.sub-category.delete');
+          Route::post('/sub-category-import',[SubCategoryController::class,'subcategoryimport'])->name('superadmin.sub-category-import');
+          
         
     });
 
     /** product category import and export **/
+    Route::get('/sub-category-export/{type?}',[SubCategoryController::class,'subcategoryexport'])->name('sub-category-export');
 
     /** product import and export **/
     Route::post('/product-import', [ProductsController::class,'productImport']);
@@ -138,8 +145,6 @@ Route::group(['middleware' => ['auth']], function () {
          Route::resource('/product-category',ProductCategoryController::class);
          Route::get('/product-category/destroy/{id}',[ProductCategoryController::class,'destroy'])->name('product-category.delete');
 
-      
-     
         /** new products routes **/
         Route::resource('/product',ProductsController::class);
         Route::get('/product/destroy/{id}',[ProductsController::class,'destroy'])->name('product.delete');
@@ -149,6 +154,16 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/product-category/destroy/{id}',[ProductCategoryController::class,'destroy'])->name('product-category.delete');
         Route::post('/product-category-import',[ProductCategoryController::class,'productcategoryimport'])->name('product-category-import');
         Route::get('/product-category-export/{$type?}',[ProductCategoryController::class,'productCategoryexportFile'])->name('product-category-export');
+
+        /** sub category user side **/
+        Route::resource('/sub-category',SubCategoryController::class);
+        Route::get('/sub-category/destroy/{id}',[SubCategoryController::class,'destroy'])->name('sub-category.delete');
+
+        Route::resource('/sub-category',SubCategoryController::class);
+        Route::get('/sub-category/destroy/{id}',[SubCategoryController::class,'destroy'])->name('sub-category.delete');
+        Route::post('/sub-category-import',[SubCategoryController::class,'subcategoryimport'])->name('sub-category-import');
+        // Route::get('/sub-category-export/{type?}',[SubCategoryController::class,'subCategoryexportFile'])->name('sub-category-export');
+
     });
     /** state and city **/
     Route::post('api/user-fetch-states', [DashboardController::class, 'user_fetchState']);

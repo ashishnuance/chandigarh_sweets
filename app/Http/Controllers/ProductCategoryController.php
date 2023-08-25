@@ -90,7 +90,7 @@ class ProductCategoryController extends Controller
 
         $pageConfigs = ['pageHeader' => true];
         $pageTitle = __('locale.product category');
-        return view('pages.product-category.create',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'company'=>$company,'formUrl'=>$formUrl]);
+        return view('pages.product-category.create',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'company'=>$company,'formUrl'=>$formUrl,'userType'=>$userType]);
     }
 
     public function store(Request $request)
@@ -153,7 +153,7 @@ class ProductCategoryController extends Controller
 
         $pageConfigs = ['pageHeader' => true];
         $pageTitle = __('locale.product category');
-        return view('pages.product-category.create',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'company'=>$company,'result'=>$productCategoryResult,'formUrl'=>$formUrl]);        
+        return view('pages.product-category.create',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'company'=>$company,'result'=>$productCategoryResult,'formUrl'=>$formUrl,'userType'=>$userType]);        
         
     }
 
