@@ -151,7 +151,7 @@
                         @foreach($product_result->product_images as $image_value)
                         <div class="col s12 m4 clone-image mb-2">
                             <input type="file" name="product_image[]" class="dropify" data-default-file="{{route('image.displayImage',$image_value->image)}}" accept="image/*"/>
-                            <button type="button" class="btn btn-primary mt-1 remove-image">Remove</button>
+                            <button type="button" class="btn btn-primary mt-1 delete-image" data-id="{{$image_value->id}}">Delete</button>
                         </div>
                         @endforeach
                         @endif
@@ -345,7 +345,7 @@
 @endsection
 <div class="cloneimagesection hide" style="display:none">
   <div class="col s12 m4 clone-image mb-2">
-      <input type="file" name="product_image[]" class="dropify" data-default-file="" />
+      <input type="file" name="product_image[]" class="dropify" data-default-file="" accept="image/*"/>
       <button type="button" class="btn btn-primary mt-1 remove-image">Remove</button>
   </div>
 
@@ -460,8 +460,26 @@
 
   })
   $(document).on('click', '.remove-image', function () {
-    if($('.clone-product-image-section .clone-image').length>1){
+    if($('.clone-product-image-section .clone-image .remove-image').length>1){
 	    $(this).parent().remove();
+    }
+  });
+
+  $(document).on('click', '.delete-image', function () {
+    var result = confirm("Are you really want to delete?");
+    if(result){
+      var _this = $(this);
+      var product_image_id = _this.data('id');
+      var delete_url = '{{url($deleteImageUrl)}}/'+product_image_id;
+      console.log('delete_url',delete_url);
+      $.ajax({
+        url: delete_url,
+        type: "get",
+        success: function (result) {
+          console.log(result,'result');
+          _this.parent().remove();
+        }
+      });
     }
   });
 
