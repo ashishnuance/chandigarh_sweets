@@ -115,7 +115,29 @@
         }
       ]
     },
-    
+    {
+      "for" :["superadmin"],
+      "url": "javascript:void(0)",
+      "name": "Buyer",
+      "i18n": "Buyer",
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "Buyer",
+      "icon": "person_outline",
+      "submenu": [
+        {
+          "url": "superadmin/buyer/create",
+          "name": "Registration",
+          "i18n": "Buyer Registration",
+          "slug": "buyer-registration"
+        },
+        {
+          "url": "superadmin/buyer",
+          "name": "List",
+          "i18n": "Buyer List",
+          "slug": "buyer-list"
+        }
+      ]
+    },
     {
       "for" :["admin"],
       "url": "javascript:void(0)",

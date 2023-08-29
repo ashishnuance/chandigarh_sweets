@@ -26,9 +26,11 @@ class BuyerUserController extends Controller
     public function index(Request $request)
     {
         $userType = auth()->user()->role()->first()->name;
-        $listUrl = 'buyer-list';
-        $paginationUrl = 'buyer.index';
         $perpage = config('app.perpage');
+        
+        $paginationUrl = 'superadmin.buyer.index';
+        $editUrl = 'superadmin.buyer.edit';
+        $deleteUrl = 'superadmin.buyer.delete';
         $breadcrumbs = [
             ['link' => "modern", 'name' => "Home"], ['link' => "javascript:void(0)", 'name' => __('locale.Buyer')], ['name' => __('locale.add')]];
         //Pageheader set true for breadcrumbs
@@ -38,8 +40,7 @@ class BuyerUserController extends Controller
             'role', function($q){
                 $q->where('name', 'general');
             }
-        )->select(['id','name','email','phone','blocked','user_type'])->orderBy('id','DESC');
-        $editUrl = 'buyer.edit';
+        )->select(['id','name','email','phone','blocked','user_type','invite_code'])->orderBy('id','DESC');
         if(isset($userType) && $userType!=config('custom.superadminrole')){
             $company_id = Helper::loginUserCompanyId();
             
@@ -48,6 +49,10 @@ class BuyerUserController extends Controller
                     $q->where('company_id', $company_id);
                 }
             );
+            
+            $paginationUrl = 'buyer.index';
+            $editUrl = 'buyer.edit';
+            $deleteUrl = 'buyer.delete';
         }
         
         if($request->ajax()){
@@ -58,12 +63,12 @@ class BuyerUserController extends Controller
                         })
                         ->paginate($perpage);
                         
-            return view('pages.buyer-users.ajax-list', compact('usersResult','editUrl'))->render();
+            return view('pages.buyer-users.ajax-list', compact('usersResult','editUrl','deleteUrl','userType'))->render();
         }
         
         $usersResult = $usersResult->paginate($perpage);
         
-        return view('pages.buyer-users.list', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'usersResult'=>$usersResult,'pageTitle'=>$pageTitle,'userType'=>$userType,'editUrl'=>$editUrl,'paginationUrl'=>$paginationUrl]);
+        return view('pages.buyer-users.list', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'usersResult'=>$usersResult,'pageTitle'=>$pageTitle,'userType'=>$userType,'editUrl'=>$editUrl,'paginationUrl'=>$paginationUrl,'deleteUrl'=>$deleteUrl]);
     }
 
     /**
@@ -74,7 +79,7 @@ class BuyerUserController extends Controller
     public function create()
     {
         $userType = auth()->user()->role()->first()->name;
-        $formUrl = 'buyer.store';
+        $formUrl = 'superadmin.buyer.store';
         $user_result=$states=$cities=false;
         $breadcrumbs = [
             ['link' => "modern", 'name' => "Home"], ['link' => "javascript:void(0)", 'name' =>  __('locale.Buyer')], ['name' => __('locale.Create')]];
@@ -82,9 +87,12 @@ class BuyerUserController extends Controller
         $pageConfigs = ['pageHeader' => true];
         $countries = Country::get(["name", "id"]);
         $companies = Company::get(["company_name", "id","company_code"]);
-        $pageTitle = __('locale.Company Admin');
-        
-        return view('pages.buyer-users.create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'countries'=>$countries,'pageTitle'=>$pageTitle,'companies'=>$companies,'user_result'=>$user_result,'states'=>$states,'cities'=>$cities,'userType'=>$userType,'formUrl'=>$formUrl]);
+        $pageTitle = __('locale.Buyer');
+        if(isset($userType) && $userType!=config('custom.superadminrole')){
+            $formUrl = 'buyer.store';
+        }
+
+        return view('pages.buyer-users.create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'countries'=>$countries,'pageTitle'=>$pageTitle,'companies'=>$companies,'states'=>$states,'cities'=>$cities,'userType'=>$userType,'formUrl'=>$formUrl]);
     }
 
     /**
@@ -110,12 +118,16 @@ class BuyerUserController extends Controller
         $role = Role::where('name', 'general')->first();
         
         $request['password'] = 'null';
+        $request['invite_code'] = Str::random(8);
+        // dd($request->all()); exit();
         $user = User::create($request->all());
         $user->company()->attach($request->company);
         $user->role()->attach( $role->id);
         
-        $list = 'buyer.index';
-        
+        $list = 'superadmin.buyer.index';
+        if(isset($userType) && $userType!=config('custom.superadminrole')){
+            $list = 'buyer.index';
+        }
         
         return redirect()->route($list)->with('success',__('locale.success common add'));
     }
@@ -139,7 +151,26 @@ class BuyerUserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $userType = auth()->user()->role()->first()->name;
+        $formUrl = 'superadmin.buyer.update';
+        if(isset($userType) && $userType!=config('custom.superadminrole')){
+            $formUrl = 'buyer.update';
+        }
+        $user_result=$states=$cities=false;
+        $breadcrumbs = [
+            ['link' => "modern", 'name' => "Home"], ['link' => "javascript:void(0)", 'name' =>  __('locale.Buyer')], ['name' => __('locale.Edit')]];
+        //Pageheader set true for breadcrumbs
+        $pageConfigs = ['pageHeader' => true];
+        $countries = Country::get(["name", "id"]);
+        $companies = Company::get(["company_name", "id","company_code"]);
+        $pageTitle = __('locale.Buyer');
+        $user_result = User::with('company')->whereHas(
+            'role', function($q){
+                $q->where('name', 'general');
+            })->select('id','name','email','user_type','blocked')->where('id',$id)->first();
+
+            
+        return view('pages.buyer-users.create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'countries'=>$countries,'pageTitle'=>$pageTitle,'companies'=>$companies,'user_result'=>$user_result,'states'=>$states,'cities'=>$cities,'userType'=>$userType,'formUrl'=>$formUrl]);
     }
 
     /**
@@ -151,7 +182,18 @@ class BuyerUserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $userType = auth()->user()->role()->first()->name;
+        $buyer = User::find($id);
+        $buyer->name = $request->name;
+        $buyer->user_type = $request->user_type;
+        $buyer->blocked = $request->blocked;
+        $buyer->save();
+        $buyer->company()->sync($request->company);
+        $listUrl = 'superadmin.buyer.index';
+        if(isset($userType) && $userType!=config('custom.superadminrole')){
+            $listUrl = 'buyer.index';
+        }
+        return redirect()->route($listUrl)->with('success',__('locale.success common update'));
     }
 
     /**
@@ -162,6 +204,12 @@ class BuyerUserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $buyer = User::find($id);
+        if($buyer){
+            $buyer->delete();
+            return redirect()->back()->with('success',__('locale.delete_message'));
+        }else{
+            return redirect()->back()->with('error',__('locale.try_again'));
+        }
     }
 }
