@@ -208,10 +208,11 @@ class Helpers
         
         return auth()->user()->company()->first()->id;
     }
+   
 
     public static function setNumber() {
         $number = mt_rand(100000, 999999);
-    
+     
         return Products::where('product_code', $number)->exists() ? $this->setNumber() : $number;
     }
 }

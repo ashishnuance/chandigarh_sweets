@@ -5,6 +5,7 @@ namespace App\Exports;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use App\Models\ProductCategoryModel;
+use Helper;
 
 class ProductCategoryExport implements FromCollection, WithHeadings
 {
@@ -13,11 +14,13 @@ class ProductCategoryExport implements FromCollection, WithHeadings
     */
     public function collection()
     {
-        return ProductCategoryModel::select('company_id','category_name')->get();
+        $company_id = Helper::loginUserCompanyId();
+
+        return ProductCategoryModel::select('id','company_id','category_name')->where('company_id',$company_id)->get();
     }
 
     public function headings(): array
     {
-        return ['Company Id','Category Name',];
+        return ['Category Id','Company Id','Category Name',];
     }
 }

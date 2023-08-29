@@ -127,6 +127,8 @@ Route::group(['middleware' => ['auth']], function () {
     /** product category import and export **/
     Route::get('/sub-category-export/{type?}',[SubCategoryController::class,'subcategoryexport'])->name('sub-category-export');
 
+     Route::get('/product-category-export/{type?}',[ProductCategoryController::class,'productCategoryexport'])->name('product-category-export');
+
     /** product import and export **/
     Route::post('/product-import', [ProductsController::class,'productImport']);
     Route::get('/product-export/{type?}', [ProductsController::class,'productExport'])->name('product-export');
@@ -160,7 +162,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('/product-category',ProductCategoryController::class);
         Route::get('/product-category/destroy/{id}',[ProductCategoryController::class,'destroy'])->name('product-category.delete');
         Route::post('/product-category-import',[ProductCategoryController::class,'productcategoryimport'])->name('product-category-import');
-        Route::get('/product-category-export/{$type?}',[ProductCategoryController::class,'productCategoryexportFile'])->name('product-category-export');
+       
 
         /** sub category user side **/
         Route::resource('/sub-category',SubCategoryController::class);

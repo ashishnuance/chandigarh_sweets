@@ -35,3 +35,4 @@
 @if(isset($sub_category_list) && !empty($sub_category_list))
 {!! $sub_category_list->links('panels.paginationCustom') !!}
 @endif
+
