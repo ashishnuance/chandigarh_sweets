@@ -58,24 +58,24 @@
           <div class="row">
             <div class="col s12">
                   <div class="col s4">
-                    <select name="category_id" id="category_id" onchange="filtercompany(this)" data-url='{{route("sub-category.store")}}'>
+                    <select name="category_id" id="category_id" data-url='{{route("sub-category.store")}}'>
                       <option value="Select" disabled selected>Select Category</option>
                       @foreach($category_list as $categoryname)
                       <option value="{{$categoryname->id}}" {{ (request()->route()->id == $categoryname->id) ? 'selected' : '' }}>{{$categoryname->category_name}}</option>
                       @endforeach
                     </select>
-                 </div>
+                  </div>
             </div>
             <a class="btn waves-effect waves-light right" href="{{route($exportUrl,[$userType])}}">{{__('locale.export')}}
                 <i class="material-icons right"></i>
             </a>
             <div class="col s12 table-result">
                 
-              <div class="responsive-table table-result">
+              <div class="responsive-table table-result" id="sub_category_display">
                 @include('pages.sub-category.ajax-list')
                 
               </div>
-              <input type="hidden" name="hidden_page" id="hidden_page" value="{{(isset($currentPage) && $currentPage>0) ? $currentPage : 1}}" />
+              <input type="hidden" name="hidden_page" id="hidden_page" value="1" />
 
             </div>
           </div>
@@ -86,37 +86,33 @@
 </div>
 @endsection
 @section('page-script')
+
 <script src="{{asset('js/scripts/page-users.js')}}"></script>
 <script>
+ 
   $(document).ready(function(){
     var paginationUrl = "{{(isset($paginationUrl) && $paginationUrl!='') ? route($paginationUrl) : '' }}";
     const fetch_data = (page, status, seach_term) => {
+      console.log(seach_term);
         if(status === undefined){
             status = "";
         }
-        if(seach_term === undefined){
+        if(seach_term === undefined || seach_term === null){
             seach_term = "";
         }
         $.ajax({ 
             url: paginationUrl+"?page="+page+"&status="+status+"&seach_term="+seach_term,
             success:function(data){
               console.log(data);
-                $('.table-result').html('');
-                $('.table-result').html(data);
+                $('#sub_category_display').html('');
+                $('#sub_category_display').html(data);
             }
         })
     }
 
     $('body').on('keyup', '#serach', function(){
         var status = $('#status').val();
-        var seach_term = $('#serach').val();
-        var page = $('#hidden_page').val();
-        fetch_data(page, status, seach_term);
-    });
-
-    $('body').on('change', '#users-list-status', function(){
-        var status = $('#users-list-status').val();
-        var seach_term = $('#serach').val();
+        var seach_term = $('#category_id').val();
         var page = $('#hidden_page').val();
         fetch_data(page, status, seach_term);
     });
@@ -127,9 +123,27 @@
         var page = $(this).attr('href').split('page=')[1];
         $('#hidden_page').val(page);
         var serach = $('#serach').val();
-        var seach_term = $('#status').val();
+        var seach_term = $('#category_id').val();
         fetch_data(page,status, seach_term);
     });
+
+    $('body').on('change', '#category_id', function() {
+      
+      var seach_term = $(this).val();
+      var status=false;
+      console.log('selectedCategoryId', seach_term);
+    
+      var url = $(this).data('url');
+      console.log('url', url);
+
+      var page = $('#hidden_page').val();
+      fetch_data(page,status, seach_term);
+    });
+
 });
 </script>
+
+
+
+
 @endsection

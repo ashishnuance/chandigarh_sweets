@@ -16,11 +16,11 @@ use App\Imports\ProductsImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 use Helper;
 use File;
 use Image;
-use Auth;
 
 class SubCategoryController extends Controller
 {
@@ -45,6 +45,7 @@ class SubCategoryController extends Controller
         $pageTitle = __('locale.sub category list');
             
         $subCategory_List = ProductSubCategory::with('categoryname')->orderBy('id','DESC');
+        $categoryResult = ProductCategoryModel::get();
 
         // echo '<pre>'; print_r($subCategoryList); die;
         if($userType!=config('custom.superadminrole')){
@@ -59,39 +60,30 @@ class SubCategoryController extends Controller
              $subCategoryList = $subCategory_List->whereHas('categoryname', function ($query) use ($company_id) {
                 $query->where('company_id', $company_id);
             });
+
+            $categoryResult = ProductCategoryModel::whereHas('companyname', function ($query) use ($company_id) {
+
+                $query->where('company_id', $company_id);
+
+            })->get();
+
         }
 
+        // whereHas('categoryname',function($query) use ($request) {
+        //     $query->where('category_name','like', '%'.$request->seach_term.'%');
+        // })
         if($request->ajax()){
-            $sub_category_list = $subCategory_List->whereHas('categoryname',function($query) use ($request) {
-                $query->where('category_name','like', '%'.$request->seach_term.'%');
-            })->when($request->seach_term, function($q)use($request){
-                $q->where('subcat_name', 'like', '%'.$request->seach_term.'%');
+            $sub_category_list = $subCategory_List->when($request->seach_term, function($q)use($request){
+                $q->where('procat_id',$request->seach_term);
             })->paginate($perpage);
+            // echo $sub_category_list->toSql(); exit();
             return view('pages.sub-category.ajax-list', compact('sub_category_list','editUrl','deleteUrl'))->render();
         }
 
         $sub_Category_List = $subCategory_List->paginate($perpage);
 
-        $categoryResult = ProductCategoryModel::get();
-
-
-        //   $company_id = auth()->user()->company->id;
-         
-
-        
-        // $user = Auth::user(); 
-        // $company_id =Company::select('id')->$user->id; 
-        $company_id = auth()->user()->company()->first()->id;
-        dd($company_id); 
-        
-        // $company_id = Helper::loginUserCompanyId();
-        // $categoryResult = ProductCategoryModel::whereHas('companyname', function ($query) use ($company_id) {
-        //     $query->where('company_id', $company_id);
-        //     })->get();
-        // $categoryResult = ProductCategoryModel::whereHas('companyname', function ($query) use ($company_id) {
-        //     $query->where('company_id', $company_id);
-        // })->select('id', 'category_name')->get();
-        
+        // $categoryResult = ProductCategoryModel::get();
+  
         return view('pages.sub-category.list',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'sub_category_list'=>$sub_Category_List, 'category_list'=>$categoryResult,'editUrl'=>$editUrl,'deleteUrl'=>$deleteUrl,'userType'=>$userType,'exportUrl'=>$exportUrl,'importUrl'=>$importUrl]);
     }
  

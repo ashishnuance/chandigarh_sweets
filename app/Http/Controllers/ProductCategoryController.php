@@ -30,7 +30,7 @@ class ProductCategoryController extends Controller
         $deleteUrl = 'superadmin.product-category.delete';
         $paginationUrl = 'superadmin.product-category.index';
         $importUrl = 'superadmin.product-category-import';
-        $exportUrl = 'superadmin.product-category-export';
+        $exportUrl = 'product-category-export';
         
         // Breadcrumbs
         $breadcrumbs = [
@@ -40,6 +40,8 @@ class ProductCategoryController extends Controller
         $pageConfigs = ['pageHeader' => true];
         $pageTitle = __('locale.Company List');
         $productCategoryList = ProductCategoryModel::with('companyname')->orderBy('id','DESC');
+        $companyResult = Company::get();
+
         
         if($userType!=config('custom.superadminrole')){
             $editUrl = 'product-category.edit';
@@ -51,7 +53,9 @@ class ProductCategoryController extends Controller
             $productCategoryList = $productCategoryList->whereHas('companyname',function($query) use ($company_id) {
                 $query->where('company_id',$company_id);
             });
-            
+
+            $companyResult = ProductCategoryModel::where('company_id',$company_id)->get();
+   
         }
 
         if($request->ajax()){
@@ -64,9 +68,6 @@ class ProductCategoryController extends Controller
         }
 
         $productCategoryList = $productCategoryList->paginate($perpage);
-        
-        $companyResult = Company::get();
-
         
         return view('pages.product-category.list',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'product_category_list'=>$productCategoryList, 'company_list'=>$companyResult,'editUrl'=>$editUrl,'deleteUrl'=>$deleteUrl,'userType'=>$userType,'exportUrl'=>$exportUrl,'importUrl'=>$importUrl]);
     }
@@ -94,9 +95,7 @@ class ProductCategoryController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $userType = auth()->user()->role()->first()->name;
-        
+    {        
         $userType = auth()->user()->role()->first()->name;
         $listUrl = 'superadmin.product-category.index';
         if($userType!=config('custom.superadminrole')){
