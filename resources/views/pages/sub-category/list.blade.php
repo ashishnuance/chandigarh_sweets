@@ -66,7 +66,7 @@
                     </select>
                   </div>
             </div>
-            <a class="btn waves-effect waves-light right" href="{{route($exportUrl,[$userType])}}">{{__('locale.export_users')}}
+            <a class="btn waves-effect waves-light right" href="{{route($exportUrl,[$userType])}}">{{__('locale.export')}}
                 <i class="material-icons right"></i>
             </a>
             <div class="col s12 table-result">

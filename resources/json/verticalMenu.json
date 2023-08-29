@@ -115,8 +115,9 @@
         }
       ]
     },
+    
     {
-      "for" :["superadmin"],
+      "for" :["admin"],
       "url": "javascript:void(0)",
       "name": "Buyer",
       "i18n": "Buyer",
@@ -125,13 +126,13 @@
       "icon": "person_outline",
       "submenu": [
         {
-          "url": "javascript:void(0)",
+          "url": "buyer/create",
           "name": "Buyer Registration",
           "i18n": "Buyer Registration",
           "slug": "buyer-registration"
         },
         {
-          "url": "javascript:void(0)",
+          "url": "buyer",
           "name": "Buyer List",
           "i18n": "Buyer List",
           "slug": "buyer-list"
@@ -139,7 +140,7 @@
       ]
     },
     {
-      "for" :["superadmin"],
+      "for" :["superadminss"],
       "url": "javascript:void(0)",
       "name": "Buyer Type",
       "i18n": "Buyer Type",

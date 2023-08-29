@@ -243,6 +243,8 @@ return [
     "product mapping"=>"Product Mapping",
     "Select Company"=>"Select Company",
     "product category"=>"Product Category",
-    "name_exits"=>"Name already in use"
+    "name_exits"=>"Name already in use",
+    "export"=>"Export",
+    "add"=>"Add"
 ];
 ?>

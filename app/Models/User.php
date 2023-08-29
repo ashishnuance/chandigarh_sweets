@@ -31,6 +31,7 @@ class User extends Authenticatable
         'website_url',
         'image',
         'blocked',
+        'user_type',
     ];
 
     /**
@@ -61,6 +62,7 @@ class User extends Authenticatable
     {
     return $this->belongsToMany(Company::class, 'company_user_mappings', 'user_id', 'company_id');
     }
+
 
     
 }

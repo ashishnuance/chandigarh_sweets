@@ -15,7 +15,7 @@ class UserProductsExport implements FromCollection, WithHeadings
     public function collection()
     {
         $userType = auth()->user()->role()->first()->name;
-        $productResult = Products::select('product_code','product_name','description','product_slug','product_catid','product_subcatid','food_type','blocked',"created_at","updated_at");
+        $productResult = Products::select('product_code','product_name','description','product_slug','product_catid','product_subcatid','food_type','product_type','blocked',"created_at","updated_at");
 
         if($userType!=config('custom.superadminrole')){
             $company_id = Helper::loginUserCompanyId();
@@ -28,6 +28,6 @@ class UserProductsExport implements FromCollection, WithHeadings
 
     public function headings(): array
     {
-        return ['Product Code','Product Name','Description','Slug','Product Category','Product Subcategory','Food Type','Blocked',"Created date","Updated date"];
+        return ['Product Code','Product Name','Description','Slug','Product Category','Product Subcategory','Food Type','Product Type','Blocked',"Created date","Updated date"];
     }
 }

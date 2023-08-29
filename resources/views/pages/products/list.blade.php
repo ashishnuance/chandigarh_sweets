@@ -79,7 +79,7 @@
               <input id="serach" type="text" name="serach" data-error=".errorTxt12">
             </div>
           </div>
-          <a class="btn waves-effect waves-light right" href="{{route('product-export',[$userType])}}">{{__('locale.export_users')}}
+          <a class="btn waves-effect waves-light right" href="{{route('product-export',[$userType])}}">{{__('locale.export')}}
                 <i class="material-icons right"></i>
             </a>
         <div class="responsive-table table-result">

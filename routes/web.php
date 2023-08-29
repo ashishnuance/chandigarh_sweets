@@ -25,6 +25,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BuyerController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProductCategoryController;
+use App\Http\Controllers\BuyerUserController;
 
 use App\Http\Controllers\SubCategoryController;
 
@@ -87,6 +88,9 @@ Route::group(['middleware' => ['auth']], function () {
         /** new buyer routes start **/
         Route::resource('/buyer-type', BuyerController::class);
         Route::get('/buyer-type/delete/{id}', [BuyerController::class,'destroy'])->name('buyer-type.destroy');
+
+        /** new buyer registration routes start **/
+        // Route::resource('/buyer', BuyerUserController::class);
         
         /** new products routes **/
         Route::resource('/product',ProductsController::class);
@@ -172,6 +176,10 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/sub-category/destroy/{id}',[SubCategoryController::class,'destroy'])->name('sub-category.delete');
         Route::post('/sub-category-import',[SubCategoryController::class,'subcategoryimport'])->name('sub-category-import');
         // Route::get('/sub-category-export/{type?}',[SubCategoryController::class,'subCategoryexportFile'])->name('sub-category-export');
+
+        /** new buyer registration routes start **/
+        Route::resource('/buyer', BuyerUserController::class);
+        
 
     });
     /** state and city **/
