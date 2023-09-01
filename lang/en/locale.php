@@ -15,6 +15,8 @@ return [
     "Buyer Type"=>"Buyer Type",
     "Buyer Type Add"=>"Buyer Type Add",
     "Buyer Type List"=>"Buyer Type List",
+    "Registration"=>"Registration",
+    "List"=>"List",
 
     "Profile"=>"Profile",
     "Profile Edit"=>"Create",
@@ -252,6 +254,7 @@ return [
     "product category"=>"Product Category",
     "name_exits"=>"Name already in use",
     "export"=>"Export",
-    "add"=>"Add"
+    "add"=>"Add",
+    "invite_code"=>"Invite Code",
 ];
 ?>

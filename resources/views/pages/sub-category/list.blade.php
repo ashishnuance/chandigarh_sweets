@@ -58,7 +58,7 @@
           <div class="row">
             <div class="col s12">
                   <div class="col s4">
-                    <select name="category_id" id="category_id" data-url='{{route("sub-category.store")}}'>
+                    <select name="category_id" id="category_id">
                       <option value="Select" disabled selected>Select Category</option>
                       @foreach($category_list as $categoryname)
                       <option value="{{$categoryname->id}}" {{ (request()->route()->id == $categoryname->id) ? 'selected' : '' }}>{{$categoryname->category_name}}</option>

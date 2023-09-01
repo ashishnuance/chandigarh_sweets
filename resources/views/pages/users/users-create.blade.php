@@ -64,7 +64,7 @@
                     <small class="errorTxt2"></small>
                   </div>
                   <div class="col s12 m6 input-field">
-                    <input id="email" name="email" type="email" class="validate" value="{{(isset($user_result->email)) ? $user_result->email : old('email')}}"
+                    <input id="email" name="email" type="email" class="validate" {{(isset($user_result->email)) ? 'readonly disabled' : '' }} value="{{(isset($user_result->email)) ? $user_result->email : old('email')}}"
                       data-error=".errorTxt3">
                     <label for="email">{{__('locale.email')}}</label>
                     <small class="errorTxt3"></small>

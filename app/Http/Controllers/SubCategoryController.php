@@ -31,9 +31,9 @@ class SubCategoryController extends Controller
         // Urls
         $perpage = config('app.perpage');
         $userType = auth()->user()->role()->first()->name;
-        $editUrl = 'superadmin.sub-category.edit';
-        $deleteUrl = 'superadmin.sub-category.delete';
-        $paginationUrl = 'superadmin.sub-category.index';
+        $editUrl = 'superadmin.product-subcategory.edit';
+        $deleteUrl = 'superadmin.product-subcategory.delete';
+        $paginationUrl = 'superadmin.product-subcategory.index';
         $importUrl = 'superadmin.sub-category-import';
         $exportUrl = 'sub-category-export';
         $breadcrumbs = [
@@ -47,11 +47,11 @@ class SubCategoryController extends Controller
         $subCategory_List = ProductSubCategory::with('categoryname')->orderBy('id','DESC');
         $categoryResult = ProductCategoryModel::get();
 
-        // echo '<pre>'; print_r($subCategoryList); die;
+        
         if($userType!=config('custom.superadminrole')){
-            $editUrl = 'sub-category.edit';
-            $deleteUrl = 'sub-category.delete';
-            $paginationUrl = 'sub-category.index';
+            $editUrl = 'product-subcategory.edit';
+            $deleteUrl = 'product-subcategory.delete';
+            $paginationUrl = 'product-subcategory.index';
             $importUrl = 'sub-category-import';
             $exportUrl = 'sub-category-export';
 
@@ -69,36 +69,46 @@ class SubCategoryController extends Controller
 
         }
 
-        // whereHas('categoryname',function($query) use ($request) {
-        //     $query->where('category_name','like', '%'.$request->seach_term.'%');
-        // })
+        
         if($request->ajax()){
             $sub_category_list = $subCategory_List->when($request->seach_term, function($q)use($request){
                 $q->where('procat_id',$request->seach_term);
             })->paginate($perpage);
-            // echo $sub_category_list->toSql(); exit();
+            if($sub_category_list->count()>0){
+                $sub_category_list = $sub_category_list;
+            }else{
+                $sub_category_list = [];
+            }
+           
             return view('pages.sub-category.ajax-list', compact('sub_category_list','editUrl','deleteUrl'))->render();
         }
 
+        
         $sub_Category_List = $subCategory_List->paginate($perpage);
 
-        // $categoryResult = ProductCategoryModel::get();
+        
   
         return view('pages.sub-category.list',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'sub_category_list'=>$sub_Category_List, 'category_list'=>$categoryResult,'editUrl'=>$editUrl,'deleteUrl'=>$deleteUrl,'userType'=>$userType,'exportUrl'=>$exportUrl,'importUrl'=>$importUrl]);
     }
  
     public function create()
     {
-        $breadcrumbs = [
-            ['link' => "/", 'name' => "Home"], ['link' => route("superadmin.sub-category.index"), 'name' => __('locale.Sub Category')], ['name' => "Add"],
-        ];
         $userType = auth()->user()->role()->first()->name;
-        $formUrl = 'superadmin.sub-category.store';
+        $listUrl = 'superadmin.product-subcategory.index';
+        $formUrl = 'superadmin.product-subcategory.store';
         if($userType!=config('custom.superadminrole')){
-            $formUrl = 'sub-category.store';
+            $formUrl = 'product-subcategory.store';
+            $company_id = Helper::loginUserCompanyId();
+            $category = ProductCategoryModel::where('company_id',$company_id)->get();
+            $listUrl = 'product-subcategory.index';
         }
-        //Pageheader set true for breadcrumbs
+        $breadcrumbs = [
+            ['link' => "/", 'name' => "Home"], ['link' => route($listUrl), 'name' => __('locale.Sub Category')], ['name' => "Add"],
+        ];
+
         $category = ProductCategoryModel::get();
+        //Pageheader set true for breadcrumbs
+        
 
         $pageConfigs = ['pageHeader' => true];
         $pageTitle = __('locale.Product category Add');
@@ -108,9 +118,9 @@ class SubCategoryController extends Controller
     public function store(Request $request)
     {
         $userType = auth()->user()->role()->first()->name;
-        $listUrl = 'superadmin.sub-category.index';
+        $listUrl = 'superadmin.product-subcategory.index';
         if($userType!=config('custom.superadminrole')){
-            $listUrl = 'sub-category.index';
+            $listUrl = 'product-subcategory.index';
         }
 
         $validator = Validator::make($request->all(), [
@@ -152,14 +162,14 @@ class SubCategoryController extends Controller
     public function edit($id=0)
     {
         $breadcrumbs = [
-            ['link' => "/", 'name' => "Home"], ['link' => route("superadmin.sub-category.index"), 'name' => __('locale.Sub Category')], ['name' => "Add"],
+            ['link' => "/", 'name' => "Home"], ['link' => route("superadmin.product-subcategory.index"), 'name' => __('locale.Sub Category')], ['name' => "Add"],
         ];
 
         $userType = auth()->user()->role()->first()->name;
-        $formUrl = 'superadmin.sub-category.update';
+        $formUrl = 'superadmin.product-subcategory.update';
         
         if($userType!=config('custom.superadminrole')){
-            $formUrl = 'sub-category.update';
+            $formUrl = 'product-subcategory.update';
         }
 
         $category = ProductCategoryModel::get();
@@ -184,9 +194,9 @@ class SubCategoryController extends Controller
     {
 
         $userType = auth()->user()->role()->first()->name;
-        $listUrl = 'superadmin.sub-category.index';
+        $listUrl = 'superadmin.product-subcategory.index';
         if($userType!=config('custom.superadminrole')){
-            $listUrl = 'sub-category.index';
+            $listUrl = 'product-subcategory.index';
         }
         
     
@@ -213,14 +223,14 @@ class SubCategoryController extends Controller
         try{
             $import = new SubCategoryImport;
             Excel::import($import, request()->file('importfile'));
-            // print_r($import); exit();
+            
             return redirect()->back()->with('success', __('locale.import_message'));
         }
         catch(\Maatwebsite\Excel\Validators\ValidationException $e){
-            $listUrl = 'superadmin.sub-category.index';
+            $listUrl = 'superadmin.product-subcategory.index';
         
             if($userType!=config('custom.superadminrole')){
-                $listUrl = 'sub-category.index';
+                $listUrl = 'product-subcategory.index';
             }
             return redirect()->route($returnUrl)->with('error', __('locale.try_again'));
         }
@@ -232,7 +242,7 @@ class SubCategoryController extends Controller
         }else{
             $categoryAdmin = new SubCategoryExport;
         }
-        return Excel::download($categoryAdmin, 'sub-category-'.$type.time().'.xlsx');
+        return Excel::download($categoryAdmin, 'product-subcategory-'.$type.time().'.xlsx');
     }
 
     // public function subCategoryexportFile($type=''){

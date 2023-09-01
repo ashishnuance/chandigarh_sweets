@@ -54,21 +54,31 @@ class ProductCategoryController extends Controller
                 $query->where('company_id',$company_id);
             });
 
-            $companyResult = ProductCategoryModel::where('company_id',$company_id)->get();
+            $companyResult = Company::select('id','company_code','company_name')->where('id',$company_id)->get();
    
         }
 
         if($request->ajax()){
-            $product_category_list = $productCategoryList->whereHas('companyname',function($query) use ($request) {
-                $query->where('company_name','like', '%'.$request->seach_term.'%');
-            })->when($request->seach_term, function($q)use($request){
-                $q->where('category_name', 'like', '%'.$request->seach_term.'%');
-            })->paginate($perpage);
+            if($userType==config('custom.superadminrole')){
+                
+                $productCategoryList = $productCategoryList->whereHas('companyname',function($query) use ($request) {
+                    
+                    $query->when($request->seach_term, function($q1)use($request){
+                        $q1->where('company_id',$request->seach_term);
+                    });
+                });
+            }else{
+                $productCategoryList = $productCategoryList->when($request->seach_term, function($q)use($request){
+                    $q->where('category_name', 'like', '%'.$request->seach_term.'%');
+                });
+            }
+            $product_category_list = $productCategoryList->paginate($perpage); 
+            
             return view('pages.product-category.ajax-list', compact('product_category_list','editUrl','deleteUrl'))->render();
         }
 
         $productCategoryList = $productCategoryList->paginate($perpage);
-        
+        // dd($companyResult);
         return view('pages.product-category.list',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'product_category_list'=>$productCategoryList, 'company_list'=>$companyResult,'editUrl'=>$editUrl,'deleteUrl'=>$deleteUrl,'userType'=>$userType,'exportUrl'=>$exportUrl,'importUrl'=>$importUrl]);
     }
     public function create()
