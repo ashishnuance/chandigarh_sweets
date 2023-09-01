@@ -69,7 +69,7 @@ class ProfileController extends Controller
             'name' => 'required|max:250',
             'phone' => 'required|max:20',
             'address' => 'max:250',
-            'password' => 'max:6',
+            'password' => 'max:10',
         ]);
         
         if ($validator->fails()) {

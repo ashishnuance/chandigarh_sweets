@@ -137,6 +137,13 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/buyer/import', [BuyerUserController::class,'buyerImport'])->name('superadmin.buyer.import');
         Route::get('/buyer/export/{type}', [BuyerUserController::class,'buyerExport'])->name('superadmin.buyer.export');
 
+
+        /** profile admin side **/
+
+        Route::get('/profile-edit', [ProfileController::class, 'edit'])->name('superadmin.profile-edit');
+
+        Route::match(['post', 'patch'], '/profile-update/{id}', [ProfileController::class, 'update'])->name('superadmin.profile-update');
+
         
     });
 
@@ -196,11 +203,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('/buyer', BuyerUserController::class);
 
         
-          /** profile user side **/
+        /** profile user side **/
 
-          Route::get('/profile-edit', [ProfileController::class, 'edit'])->name('profile-edit');
-      
-          Route::match(['post', 'patch'], '/profile-update/{id}', [ProfileController::class, 'update'])->name('profile-update');
+        Route::get('/profile-edit', [ProfileController::class, 'edit'])->name('profile-edit');
+    
+        Route::match(['post', 'patch'], '/profile-update/{id}', [ProfileController::class, 'update'])->name('profile-update');
         
         Route::get('/buyer/destroy/{id}',[BuyerUserController::class,'destroy'])->name('buyer.delete');
         Route::post('/buyer/import', [BuyerUserController::class,'buyerImport'])->name('buyer.import');
