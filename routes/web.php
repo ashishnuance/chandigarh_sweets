@@ -115,12 +115,12 @@ Route::group(['middleware' => ['auth']], function () {
 
         /** sub category admin side **/
 
-        Route::resource('/sub-category',SubCategoryController::class);
-        Route::get('/sub-category',[SubCategoryController::class,'index'])->name('superadmin.sub-category.index');
-        Route::get('/sub-category/{$id}/edit',[SubCategoryController::class,'index'])->name('superadmin.sub-category.edit');
-        Route::post('/sub-category',[SubCategoryController::class,'store'])->name('superadmin.sub-category.store');
-        Route::put('/sub-category/{$id}',[SubCategoryController::class,'update'])->name('superadmin.sub-category.update');
-        Route::get('/sub-category/destroy/{id}',[SubCategoryController::class,'destroy'])->name('superadmin.sub-category.delete');
+        Route::resource('/product-subcategory',SubCategoryController::class);
+        Route::get('/product-subcategory',[SubCategoryController::class,'index'])->name('superadmin.product-subcategory.index');
+        Route::get('/product-subcategory/{$id}/edit',[SubCategoryController::class,'index'])->name('superadmin.product-subcategory.edit');
+        Route::post('/product-subcategory',[SubCategoryController::class,'store'])->name('superadmin.product-subcategory.store');
+        Route::put('/product-subcategory/{$id}',[SubCategoryController::class,'update'])->name('superadmin.product-subcategory.update');
+        Route::get('/product-subcategory/destroy/{id}',[SubCategoryController::class,'destroy'])->name('superadmin.product-subcategory.delete');
         Route::post('/sub-category-import',[SubCategoryController::class,'subcategoryimport'])->name('superadmin.sub-category-import');
           
         /** new buyer registration routes start **/
@@ -131,6 +131,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/buyer',[BuyerUserController::class,'store'])->name('superadmin.buyer.store');
         Route::patch('/buyer/{id}',[BuyerUserController::class,'update'])->name('superadmin.buyer.update');
         Route::get('/buyer/destroy/{id}',[BuyerUserController::class,'destroy'])->name('superadmin.buyer.delete');
+        /** buyer import and export **/
+        Route::post('/buyer/import', [BuyerUserController::class,'buyerImport'])->name('superadmin.buyer.import');
+        Route::get('/buyer/export/{type}', [BuyerUserController::class,'buyerExport'])->name('superadmin.buyer.export');
 
         
     });
@@ -138,7 +141,10 @@ Route::group(['middleware' => ['auth']], function () {
     /** product category import and export **/
     Route::get('/sub-category-export/{type?}',[SubCategoryController::class,'subcategoryexport'])->name('sub-category-export');
 
-     Route::get('/product-category-export/{type?}',[ProductCategoryController::class,'productCategoryexport'])->name('product-category-export');
+    Route::get('/product-category-export/{type?}',[ProductCategoryController::class,'productCategoryexport'])->name('product-category-export');
+
+    
+    
 
     /** product import and export **/
     Route::post('/product-import', [ProductsController::class,'productImport']);
@@ -176,19 +182,19 @@ Route::group(['middleware' => ['auth']], function () {
        
 
         /** sub category user side **/
-        Route::resource('/sub-category',SubCategoryController::class);
-        Route::get('/sub-category/destroy/{id}',[SubCategoryController::class,'destroy'])->name('sub-category.delete');
+        Route::resource('/product-subcategory',SubCategoryController::class);
+        Route::get('/product-subcategory/destroy/{id}',[SubCategoryController::class,'destroy'])->name('product-subcategory.delete');
 
-        Route::resource('/sub-category',SubCategoryController::class);
-        Route::get('/sub-category/destroy/{id}',[SubCategoryController::class,'destroy'])->name('sub-category.delete');
+        // Route::resource('/sub-category',SubCategoryController::class);
+        // Route::get('/sub-category/destroy/{id}',[SubCategoryController::class,'destroy'])->name('sub-category.delete');
         Route::post('/sub-category-import',[SubCategoryController::class,'subcategoryimport'])->name('sub-category-import');
         // Route::get('/sub-category-export/{type?}',[SubCategoryController::class,'subCategoryexportFile'])->name('sub-category-export');
 
         /** new buyer registration routes start **/
         Route::resource('/buyer', BuyerUserController::class);
         Route::get('/buyer/destroy/{id}',[BuyerUserController::class,'destroy'])->name('buyer.delete');
-
-        
+        Route::post('/buyer/import', [BuyerUserController::class,'buyerImport'])->name('buyer.import');
+        Route::get('/buyer/export/{type}', [BuyerUserController::class,'buyerExport'])->name('buyer.export');
 
     });
     /** state and city **/

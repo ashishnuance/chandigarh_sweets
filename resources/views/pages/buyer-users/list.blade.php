@@ -29,7 +29,37 @@
           @include('panels.flashMessages')
           <div class="card-content">
             
-            
+            <div class="card-title">
+              <div class="row">
+                <div class="col s12 m6 l10">
+                  <h4 class="card-title">{{__('locale.imports')}} {{__('locale.Buyer')}}</h4>
+                </div>
+              </div>
+            </div>
+            <div id="view-file-input">
+              <div class="row">
+                <div class="col s12">
+                  <form action="{{route($importUrl)}}" method="post" enctype="multipart/form-data">
+                    @csrf()
+                    <div class="file-field input-field">
+                      <div class="btn">
+                        <span>File</span>
+                        <input type="file" name="importfile" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                      </div>
+                      <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text">
+                      </div>
+                    </div>
+                    <a class="waves-effect waves-light left submit" target="_blank" href="{{asset('data-import-files').'/'.$samplefile}}" download>{{__('locale.download_sample_file')}}
+                        <i class="material-icons">download</i>
+                    </a>
+                    <button class="btn waves-effect waves-light right submit" type="submit" name="action">Submit
+                        <i class="material-icons right">send</i>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
             
           </div>
         </div>
@@ -50,7 +80,9 @@
               <input id="serach" type="text" name="serach" data-error=".errorTxt12">
             </div>
           </div>
-          
+          <a class="btn waves-effect waves-light right" href="{{route($exportUrl,[$userType])}}">{{__('locale.export')}}
+            <i class="material-icons right"></i>
+          </a>
         <div class="responsive-table table-result">
           @include('pages.buyer-users.ajax-list')
           

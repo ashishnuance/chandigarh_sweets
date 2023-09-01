@@ -10,9 +10,9 @@ use App\Models\{Country, State, City};
 use App\Models\{User,Role};
 use App\Models\Company;
 use App\Models\CompanyUserMapping;
-use App\Imports\UsersImport;
-use App\Exports\UsersExport;
-use App\Exports\AdminExport;
+use App\Imports\BuyerImport;
+use App\Exports\BuyerExport;
+use App\Exports\BuyerCompanyExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Helper;
 
@@ -27,10 +27,12 @@ class BuyerUserController extends Controller
     {
         $userType = auth()->user()->role()->first()->name;
         $perpage = config('app.perpage');
-        
+        $samplefile = 'buyer-import.csv';
         $paginationUrl = 'superadmin.buyer.index';
         $editUrl = 'superadmin.buyer.edit';
         $deleteUrl = 'superadmin.buyer.delete';
+        $importUrl = 'superadmin.buyer.import';
+        $exportUrl = 'superadmin.buyer.export';
         $breadcrumbs = [
             ['link' => "modern", 'name' => "Home"], ['link' => "javascript:void(0)", 'name' => __('locale.Buyer')], ['name' => __('locale.add')]];
         //Pageheader set true for breadcrumbs
@@ -53,22 +55,24 @@ class BuyerUserController extends Controller
             $paginationUrl = 'buyer.index';
             $editUrl = 'buyer.edit';
             $deleteUrl = 'buyer.delete';
+            $samplefile = 'buyer-company-import.csv';
+            $importUrl = 'buyer.import';
+            $exportUrl = 'buyer.export';
         }
         
         if($request->ajax()){
             $usersResult = $usersResult->when($request->seach_term, function($q)use($request){
-                $q->where('id', 'like', '%'.$request->seach_term.'%')
-                            ->orWhere('name', 'like', '%'.$request->seach_term.'%')
-                            ->orWhere('email', 'like', '%'.$request->seach_term.'%');
-                        })
-                        ->paginate($perpage);
-                        
+                $q->where(function ($query) use ($request) {
+                    $query->where('name', 'like', '%'.$request->seach_term.'%')
+                        ->orWhere('email', 'like', '%'.$request->seach_term.'%');
+                });
+            })->paginate($perpage);
             return view('pages.buyer-users.ajax-list', compact('usersResult','editUrl','deleteUrl','userType'))->render();
         }
-        
+                    
         $usersResult = $usersResult->paginate($perpage);
         
-        return view('pages.buyer-users.list', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'usersResult'=>$usersResult,'pageTitle'=>$pageTitle,'userType'=>$userType,'editUrl'=>$editUrl,'paginationUrl'=>$paginationUrl,'deleteUrl'=>$deleteUrl]);
+        return view('pages.buyer-users.list', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'usersResult'=>$usersResult,'pageTitle'=>$pageTitle,'userType'=>$userType,'editUrl'=>$editUrl,'paginationUrl'=>$paginationUrl,'deleteUrl'=>$deleteUrl,'importUrl'=>$importUrl,'samplefile'=>$samplefile,'exportUrl'=>$exportUrl]);
     }
 
     /**
@@ -211,5 +215,28 @@ class BuyerUserController extends Controller
         }else{
             return redirect()->back()->with('error',__('locale.try_again'));
         }
+    }
+
+    public function buyerImport(Request $request){
+        try{
+            $import = new BuyerImport;
+            Excel::import($import, request()->file('importfile'));
+            return redirect()->back()->with('success', __('locale.import_message'));
+        }catch(\Maatwebsite\Excel\Validators\ValidationException $e){
+            
+            return redirect()->route('company.index')->with('error', __('locale.try_again'));
+        }
+            
+    }
+
+    public function buyerExport($type) 
+    {
+        if($type=='superadmin'){
+            $companyUser = new BuyerCompanyExport;
+        }else{
+            $companyUser = new BuyerExport;   
+        }
+        return Excel::download($companyUser, 'buyer-'.$type.time().'.xlsx');
+        
     }
 }
