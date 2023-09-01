@@ -211,30 +211,6 @@
     },
 
     {
-      "for" :["admin"],
-      "url": "javascript:void(0)",
-      "name": "Product Category",
-      "i18n": "Product Category",
-      "class": "collapsible-header waves-effect waves-cyan",
-      "slug": "Product Category",
-      "icon": "person_outline",
-      "submenu": [
-        {
-          "url": "product-category/create",
-          "name": "Product Category Create",
-          "i18n": "Product Category Create",
-          "slug": "product-category-create"
-        },
-        {
-          "url": "product-category",
-          "name": "Product Category List",
-          "i18n": "Product Category List",
-          "slug": "product-category-list"
-        }
-      ]
-    },
-
-    {
       "for" :["admin","user"],
       "url": "javascript:void(0)",
       "name": "Product Category",
@@ -304,6 +280,43 @@
       ]
     },
     
+    {
+      "for" :["superadmin"],
+      "url": "javascript:void(0)",
+      "name": "Profile",
+      "i18n": "Profile",
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "Profile",
+      "icon": "person_outline",
+      "submenu": [
+        {
+          "url": "superadmin/profile-edit",
+          "name": "Profile Edit",
+          "i18n": "superadmin/profile/edit",
+          "slug": "profile-edit"
+        }
+        
+      ]
+    },
+
+    {
+      "for" :["admin"],
+      "url": "javascript:void(0)",
+      "name": "Profile",
+      "i18n": "Profile",
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "Profile",
+      "icon": "person_outline",
+      "submenu": [
+        {
+          "url": "profile-edit",
+          "name": "Profile Edit",
+          "i18n": "profile/edit",
+          "slug": "profile-edit"
+        }
+      
+      ]
+    },
 
     {
       "for" :["superadmin","user","admin"],

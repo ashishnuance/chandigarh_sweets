@@ -28,6 +28,8 @@ use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\BuyerUserController;
 
 use App\Http\Controllers\SubCategoryController;
+use App\Http\Controllers\ProfileController;
+
 
 
 
@@ -124,7 +126,14 @@ Route::group(['middleware' => ['auth']], function () {
           Route::put('/sub-category/{$id}',[SubCategoryController::class,'update'])->name('superadmin.sub-category.update');
           Route::get('/sub-category/destroy/{id}',[SubCategoryController::class,'destroy'])->name('superadmin.sub-category.delete');
           Route::post('/sub-category-import',[SubCategoryController::class,'subcategoryimport'])->name('superadmin.sub-category-import');
-          
+
+
+          /** profile admin side **/
+
+          Route::get('/profile-edit', [ProfileController::class, 'edit'])->name('superadmin.profile-edit');
+        
+          Route::match(['post', 'patch'], '/profile-update/{id}', [ProfileController::class, 'update'])->name('superadmin.profile-update');
+
         
     });
 
@@ -179,6 +188,13 @@ Route::group(['middleware' => ['auth']], function () {
 
         /** new buyer registration routes start **/
         Route::resource('/buyer', BuyerUserController::class);
+
+        
+          /** profile user side **/
+
+          Route::get('/profile-edit', [ProfileController::class, 'edit'])->name('profile-edit');
+      
+          Route::match(['post', 'patch'], '/profile-update/{id}', [ProfileController::class, 'update'])->name('profile-update');
         
 
     });
