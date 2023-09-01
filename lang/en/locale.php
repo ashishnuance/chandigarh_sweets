@@ -18,6 +18,12 @@ return [
     "Registration"=>"Registration",
     "List"=>"List",
 
+    "Profile"=>"Profile",
+    "Profile Edit"=>"Create",
+    "Profile List"=>"List",
+    "Profile Add"=>"Profile Add",
+    "profile_success"=>"Profile Updated Successfully",
+
     "Product Category"=>"Product Category",
     "Product Category Create"=>"Create",
     "Product Category List"=>"List",
@@ -26,6 +32,7 @@ return [
     "product_category_success"=>"Product category Successfully",
 
     "Sub Category"=>"Sub Category",  
+    "profile"=>"Profile",
     "sub category"=>"sub category",  
     "Sub Category Create"=>"Create",
     "Sub Category List"=>"List",

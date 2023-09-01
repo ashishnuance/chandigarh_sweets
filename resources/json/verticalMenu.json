@@ -307,6 +307,43 @@
     
     
     
+    {
+      "for" :["superadmin"],
+      "url": "javascript:void(0)",
+      "name": "Profile",
+      "i18n": "Profile",
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "Profile",
+      "icon": "person_outline",
+      "submenu": [
+        {
+          "url": "superadmin/profile-edit",
+          "name": "Profile Edit",
+          "i18n": "superadmin/profile/edit",
+          "slug": "profile-edit"
+        }
+        
+      ]
+    },
+
+    {
+      "for" :["admin"],
+      "url": "javascript:void(0)",
+      "name": "Profile",
+      "i18n": "Profile",
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "Profile",
+      "icon": "person_outline",
+      "submenu": [
+        {
+          "url": "profile-edit",
+          "name": "Profile Edit",
+          "i18n": "profile/edit",
+          "slug": "profile-edit"
+        }
+      
+      ]
+    },
 
     
     {
