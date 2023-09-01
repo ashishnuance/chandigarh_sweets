@@ -53,7 +53,7 @@
       "i18n": "Company Admin",
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "company-admin",
-      "icon": "format_list_bulleted",
+      "icon": "person_outline",
       "submenu": [
         {
           "url": "superadmin/company-admin-create",
@@ -76,7 +76,7 @@
       "i18n": "Company User",
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "company-user",
-      "icon": "format_list_bulleted",
+      "icon": "person_outline",
       "submenu": [
         {
           "url": "superadmin/company-user-create",
@@ -99,7 +99,7 @@
       "i18n": "Company User",
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "company-user",
-      "icon": "format_list_bulleted",
+      "icon": "person_outline",
       "submenu": [
         {
           "url": "company-user-create",
@@ -191,7 +191,7 @@
       "i18n": "Items",
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "Items",
-      "icon": "person_outline",
+      "icon": "view_list",
       "submenu": [
         {
           "url": "superadmin/product/create",
@@ -214,7 +214,7 @@
       "i18n": "Items",
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "Items",
-      "icon": "person_outline",
+      "icon": "view_list",
       "submenu": [
         {
           "url": "product/create",
@@ -238,7 +238,7 @@
       "i18n": "Product Company Mapping",
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "Product Company Mapping",
-      "icon": "person_outline",
+      "icon": "view_list",
       "submenu": [
         {
           "url": "superadmin/product-mapping/create",
@@ -262,7 +262,7 @@
       "i18n": "Product Category",
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "Product category",
-      "icon": "person_outline",
+      "icon": "view_list",
       "submenu": [
         {
           "url": "superadmin/product-category/create",
@@ -288,7 +288,7 @@
       "i18n": "Product Category",
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "Product category",
-      "icon": "person_outline",
+      "icon": "view_list",
       "submenu": [
         {
           "url": "product-category/create",
@@ -307,45 +307,7 @@
     
     
     
-    {
-      "for" :["superadmin"],
-      "url": "javascript:void(0)",
-      "name": "Profile",
-      "i18n": "Profile",
-      "class": "collapsible-header waves-effect waves-cyan",
-      "slug": "Profile",
-      "icon": "person_outline",
-      "submenu": [
-        {
-          "url": "superadmin/profile-edit",
-          "name": "Profile Edit",
-          "i18n": "superadmin/profile/edit",
-          "slug": "profile-edit"
-        }
-        
-      ]
-    },
-
-    {
-      "for" :["admin"],
-      "url": "javascript:void(0)",
-      "name": "Profile",
-      "i18n": "Profile",
-      "class": "collapsible-header waves-effect waves-cyan",
-      "slug": "Profile",
-      "icon": "person_outline",
-      "submenu": [
-        {
-          "url": "profile-edit",
-          "name": "Profile Edit",
-          "i18n": "profile/edit",
-          "slug": "profile-edit"
-        }
       
-      ]
-    },
-
-    
     {
       "for" :["superadmin"],
       "url": "javascript:void(0)",
@@ -353,7 +315,7 @@
       "i18n": "Sub Category",
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "Sub category",
-      "icon": "person_outline",
+      "icon": "view_list",
       "submenu": [
         {
           "url": "superadmin/product-subcategory/create",
@@ -377,7 +339,7 @@
       "i18n": "Sub Category",
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "Sub Category",
-      "icon": "person_outline",
+      "icon": "view_list",
       "submenu": [
         {
           "url": "product-subcategory/create",
@@ -402,6 +364,24 @@
       "class": "waves-effect waves-cyan",
       "icon": "add_shopping_cart",
       "slug": "orders"
+    },
+    {
+      "for" :["superadmin"],
+      "url": "superadmin/profile-edit",
+      "name": "Profile",
+      "i18n": "Profile",
+      "class": "waves-effect waves-cyan",
+      "slug": "Profile",
+      "icon": "person_outline"
+    },
+    {
+      "for" :["admin","user"],
+      "url": "superadmin/profile-edit",
+      "name": "Profile",
+      "i18n": "Profile",
+      "class": "waves-effect waves-cyan",
+      "slug": "Profile",
+      "icon": "person_outline"
     }
   ]
 }

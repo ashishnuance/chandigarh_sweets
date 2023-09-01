@@ -111,8 +111,9 @@
                         <label for="textarea2">{{__('locale.description')}}</label>
                     </div>
                 </div>
-                <div class="step-actions">
+               
                   <div class="row">
+                  <div class="step-actions">
                     <div class="col m4 s12 mb-3">
                       <button class="red btn btn-reset" type="reset">
                         <i class="material-icons left">clear</i>Reset
@@ -157,7 +158,7 @@
                         @endif
                         <div class="col s12 m4 clone-image mb-2">
                             <input type="file" name="product_image[]" class="dropify" data-default-file="" accept="image/*"/>
-                            <button type="button" class="btn btn-primary mt-1 remove-image">Remove</button>
+                            <button type="button" class="btn btn-primary mt-1 mb-1 remove-image">Remove</button>
                         </div>
                         
                       </div>
@@ -236,7 +237,7 @@
                           @endif
                         </select>
                       </div>
-                      <button type="button" class="btn btn-primary mt-1 remove-variation">Remove</button>
+                      <button type="button" class="btn btn-primary mt-1 mb-1 remove-variation">Remove</button>
                     </div>
                     <script>
                       var option_value = "{{(isset($provar_value->variation_type) && $provar_value->variation_type!=NULL) ? $provar_value->variation_type : old('variation_type')}}";
@@ -278,7 +279,7 @@
                           @endif
                         </select>
                       </div>
-                      <button type="button" class="btn btn-primary mt-1 remove-variation">Remove</button>
+                      <button type="button" class="btn btn-primary mt-1 mb-1 remove-variation">Remove</button>
                     </div>
                     @endif
                   </div>
@@ -346,7 +347,7 @@
 <div class="cloneimagesection hide" style="display:none">
   <div class="col s12 m4 clone-image mb-2">
       <input type="file" name="product_image[]" class="dropify" data-default-file="" accept="image/*"/>
-      <button type="button" class="btn btn-primary mt-1 remove-image">Remove</button>
+      <button type="button" class="btn btn-primary mt-1 mb-1 remove-image">Remove</button>
   </div>
 
   <div class="product-variation">
@@ -380,7 +381,7 @@
         @endif
       </select>
     </div>
-    <button type="button" class="btn btn-primary mt-1 remove-variation">Remove</button>
+    <button type="button" class="btn btn-primary mt-1 mb-1 remove-variation">Remove</button>
   </div>
 </div>
 {{-- vendor script --}}

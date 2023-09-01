@@ -100,10 +100,12 @@ class ProductsController extends Controller
         $formUrl = 'superadmin.product.store';
         $companies = Company::get(["company_name", "id","company_code"]);
         $productCategoryResult = ProductCategoryModel::get(["category_name", "id"]);
+        $deleteImageUrl = 'superadmin/product/imagedelete';
         if($userType!=config('custom.superadminrole')){
             $company_id = Helper::loginUserCompanyId();
             $productCategoryResult = ProductCategoryModel::where('company_id',$company_id)->get(["category_name", "id"]);
             $formUrl = 'product.store';
+            $deleteImageUrl = 'product/imagedelete';
         }
         $productsVariationsOptions = ProductsVariationsOptions::select('id','name')->get();
 
@@ -121,7 +123,7 @@ class ProductsController extends Controller
             }
         }
         
-        return view('pages.products.create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'pageTitle'=>$pageTitle,'companies'=>$companies,'product_result'=>$product_result,'userType'=>$userType,'productCategoryResult'=>$productCategoryResult,'productSubCategoryResult'=>$productSubCategoryResult,'foodTypeResult'=>$foodTypeResult,'productCode'=>$productCode,'formUrl'=>$formUrl,'productsVariationsOptions'=>$productsVariationsOptions]);
+        return view('pages.products.create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'pageTitle'=>$pageTitle,'companies'=>$companies,'product_result'=>$product_result,'userType'=>$userType,'productCategoryResult'=>$productCategoryResult,'productSubCategoryResult'=>$productSubCategoryResult,'foodTypeResult'=>$foodTypeResult,'productCode'=>$productCode,'formUrl'=>$formUrl,'productsVariationsOptions'=>$productsVariationsOptions,'deleteImageUrl'=>$deleteImageUrl]);
     }
 
     /**
@@ -270,7 +272,7 @@ class ProductsController extends Controller
             $productCode = $product_result->product_code;
             
         }
-        // dd($product_result);
+        
         
         return view('pages.products.create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'pageTitle'=>$pageTitle,'companies'=>$companies,'product_result'=>$product_result,'userType'=>$userType,'productCategoryResult'=>$productCategoryResult,'productSubCategoryResult'=>$productSubCategoryResult,'foodTypeResult'=>$foodTypeResult,'productCode'=>$productCode,'formUrl'=>$formUrl,'productsVariationsOptions'=>$productsVariationsOptions,'deleteImageUrl'=>$deleteImageUrl]);
     }
