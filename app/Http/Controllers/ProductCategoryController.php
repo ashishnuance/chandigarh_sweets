@@ -198,7 +198,12 @@ class ProductCategoryController extends Controller
         try{
             $import = new ProductCategoryImport;
             Excel::import($import, request()->file('importfile'));
-            // print_r($import); exit();
+            $import->getRowCount();
+            
+            if($import->getRowCount()==0){
+                
+                return redirect()->back()->with('error',implode('<br>',$import->getErrorMessage()));
+            }
             return redirect()->back()->with('success', __('locale.import_message'));
         }catch(\Maatwebsite\Excel\Validators\ValidationException $e){
             $listUrl = 'superadmin.product-category.index';

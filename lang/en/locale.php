@@ -249,5 +249,6 @@ return [
     "export"=>"Export",
     "add"=>"Add",
     "invite_code"=>"Invite Code",
+    "import_company_errormsg"=>"not match"
 ];
 ?>

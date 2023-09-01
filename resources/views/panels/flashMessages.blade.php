@@ -30,4 +30,28 @@
     </div>
 
 </div>
+
+@elseif (session()->get('error'))
+
+<div class="alert-container header-alert-msg common-danger-message" id="flash-message">
+
+    <div class="alert alert-danger">
+        
+        <div class="alert-description" >
+
+            @if(is_array(json_decode(session()->get('error'), true)))
+
+                {!! implode('', session()->get('error')->all(':message<br/>')) !!}
+
+            @else
+
+                {!! session()->get('error') !!}
+
+            @endif
+
+        </div>
+
+    </div>
+
+</div>
 @endif
