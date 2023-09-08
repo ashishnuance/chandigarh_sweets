@@ -13,6 +13,7 @@ use App\Imports\UsersImport;
 use App\Exports\UsersExport;
 use App\Exports\AdminExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Permission;
 use Helper;
 
 
@@ -101,8 +102,28 @@ class UserController extends Controller
         $random_password = Str::random(6);
         $request['password'] = Hash::make($random_password);
         $user = User::create($request->all());
+
         $user->company()->attach($request->company);
         $user->role()->attach( $role->id);
+        if($request->has('permission_allow')){
+            $i=0;
+            $permissionInsert = [];
+            foreach($request->input('permission_allow') as $key => $permissionVal){
+                // echo '<pre>';print_r($permissionVal['guard_name']);
+                if(isset($permissionVal['guard_name'])){
+                    for($g=0;$g<count($permissionVal['guard_name']);$g++){
+                        $permissionInsert[$i]['user_id'] = $id;
+                        $permissionInsert[$i]['name'] = $key;
+                        $permissionInsert[$i]['guard_name'] = $permissionVal['guard_name'][$g];
+                        $i++;
+                    }
+                }
+            }
+            if(!empty($permissionInsert)){
+                Permission::insert($permissionInsert);
+            }
+        }
+        
         return redirect()->route('company-admin-list')->with('success',__('locale.company_admin_create_success'));
     }
 
@@ -133,7 +154,26 @@ class UserController extends Controller
         unset($request['action']);
         unset($request['company']);
         unset($request['importcompany']);
-
+        
+        if($request->has('permission_allow')){
+            $i=0;
+            $permissionInsert = [];
+            foreach($request->input('permission_allow') as $key => $permissionVal){
+                // echo '<pre>';print_r($permissionVal['guard_name']);
+                if(isset($permissionVal['guard_name'])){
+                    for($g=0;$g<count($permissionVal['guard_name']);$g++){
+                        $permissionInsert[$i]['user_id'] = $id;
+                        $permissionInsert[$i]['name'] = $key;
+                        $permissionInsert[$i]['guard_name'] = $permissionVal['guard_name'][$g];
+                        $i++;
+                    }
+                }
+            }
+            if(!empty($permissionInsert)){
+                Permission::insert($permissionInsert);
+            }
+        }
+        unset($request['permission_allow']);
         if(isset($request['password']) && $request['password']!=''){
             $request['password'] = Hash::make($request['password']);
         }else{

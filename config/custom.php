@@ -26,4 +26,5 @@ return [
     
     "superadminrole"=>"superadmin",
     "buyerTypeArray"=>['domestic','Foreign'],
+    "modulePermissionArray"=>['company_user','buyer','product','order','product_category'],
 ];

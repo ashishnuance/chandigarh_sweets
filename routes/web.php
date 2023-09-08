@@ -171,7 +171,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/company-user-update/{id}', [UserController::class, 'usersUpdate'])->name('company-user-update');
         Route::get('/company-user-list', [UserController::class, 'usersList'])->name('company-user-list');
         Route::post('/company-user-create', [UserController::class, 'userStore'])->name('company-user-create');
-
+        Route::get('/permision-edit', [UserController::class, 'usersPermission']);
         /** new products routes **/
         //Route::resource('/product',ProductsController::class);
 

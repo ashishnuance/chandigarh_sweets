@@ -64,7 +64,7 @@
                     <small class="errorTxt2"></small>
                   </div>
                   <div class="col s12 m6 input-field">
-                    <input id="email" name="email" type="email" class="validate" {{(isset($user_result->email)) ? 'readonly disabled' : '' }} value="{{(isset($user_result->email)) ? $user_result->email : old('email')}}"
+                    <input id="email" name="email" type="email" class="validate" {{(isset($user_result->email)) ? 'readonly' : '' }} value="{{(isset($user_result->email)) ? $user_result->email : old('email')}}"
                       data-error=".errorTxt3">
                     <label for="email">{{__('locale.email')}}</label>
                     <small class="errorTxt3"></small>
@@ -141,6 +141,56 @@
                       </div>
                     </div>
                   </div>
+                  <!-- permission start -->
+                  <div class="col s12">
+                    <table class="mt-1">
+                      <thead>
+                        <tr>
+                          <th>Module Permission</th>
+                          <th>Read</th>
+                          <th>Create</th>
+                          <th>Update</th>
+                          <th>Delete</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @if(config('custom.modulePermissionArray') && is_array(config('custom.modulePermissionArray')))
+                        @foreach(config('custom.modulePermissionArray') as $moduleValue)
+                        <tr>
+                          <td>{{ucwords(str_replace('_',' ',$moduleValue))}}</td>
+                          <td>
+                            <label>
+                              <input type="checkbox" checked name="permission_allow[{{$moduleValue}}][guard_name][]" value="index" />
+                              <span></span>
+                            </label>
+                          </td>
+                          <td>
+                            <label>
+                              <input type="checkbox" name="permission_allow[{{$moduleValue}}][guard_name][]" value="create"/>
+                              <span></span>
+                            </label>
+                          </td>
+                          <td>
+                            <label>
+                              <input type="checkbox" name="permission_allow[{{$moduleValue}}][guard_name][]" value="update"/>
+                              <span></span>
+                            </label>
+                          </td>
+                          <td>
+                            <label>
+                              <input type="checkbox" checked name="permission_allow[{{$moduleValue}}][guard_name][]" value="delete"/>
+                              <span></span>
+                            </label>
+                          </td>
+                        </tr>
+                        @endforeach
+                        @endif
+                        
+                      </tbody>
+                    </table>
+                    <!-- </div> -->
+                  </div>
+                  <!-- permission end -->
                 </div>
               </div>
               
