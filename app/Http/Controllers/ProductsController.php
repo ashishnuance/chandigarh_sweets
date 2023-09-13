@@ -136,7 +136,8 @@ class ProductsController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'product_name' => 'required|max:250',
-            'product_code' => 'required',
+            'product_code' => 'required|unique:products',
+            'company' => 'required',
         ]);
         
         
@@ -158,10 +159,8 @@ class ProductsController extends Controller
         ];
         $redirectUrl = 'superadmin.product.index';
         $product = Products::create($product_info);
-        if($userType!=config('custom.superadminrole')){
-            $product->company()->attach($request->company);
-            $redirectUrl = 'product.index';
-        }
+        $product->company()->attach($request->company);
+        
         
         if($request->has('product_image')) {
             $allowedfileExtension=['pdf','jpg','png'];

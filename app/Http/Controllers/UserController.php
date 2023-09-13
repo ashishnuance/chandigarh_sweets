@@ -24,7 +24,7 @@ class UserController extends Controller
     {
         $userType = auth()->user()->role()->first()->name;
         $listUrl = 'company-admin-list';
-        
+        $deleteUrl = 'company-admin-delete';
         $perpage = config('app.perpage');
         $breadcrumbs = [
             ['link' => "modern", 'name' => "Home"], ['link' => "javascript:void(0)", 'name' => __('locale.Company Admin')], ['name' => __('locale.Company Admin').__('locale.List')]];
@@ -50,12 +50,12 @@ class UserController extends Controller
                         })
                         ->paginate($perpage);
                         
-            return view('pages.users.users-list-ajax', compact('usersResult','editUrl'))->render();
+            return view('pages.users.users-list-ajax', compact('usersResult','editUrl','deleteUrl'))->render();
         }
 
         $usersResult = $usersResult->paginate($perpage);
         
-        return view('pages.users.users-list', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'usersResult'=>$usersResult,'pageTitle'=>$pageTitle,'userType'=>$userType,'editUrl'=>$editUrl]);
+        return view('pages.users.users-list', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'usersResult'=>$usersResult,'pageTitle'=>$pageTitle,'userType'=>$userType,'editUrl'=>$editUrl,'deleteUrl'=>$deleteUrl]);
     }
 
 
@@ -222,7 +222,7 @@ class UserController extends Controller
     public function usersList(Request $request)
     {
         $userType = auth()->user()->role()->first()->name;
-        
+        $deleteUrl = 'superadmin.company-user-delete';
         $perpage = config('app.perpage');
         $breadcrumbs = [
             ['link' => "modern", 'name' => "Home"], ['link' => "javascript:void(0)", 'name' => __('locale.Company User')], ['name' => __('locale.Company User').__('locale.List')]];
@@ -235,6 +235,7 @@ class UserController extends Controller
         if($userType!=config('custom.superadminrole')){
             $paginationUrl = 'superadmin.company-user-list';
             $editUrl = 'company-user-edit';
+            $deleteUrl = 'company-user-delete';
         }
         
         $usersResult = User::with('company')->whereHas(
@@ -258,12 +259,12 @@ class UserController extends Controller
                         })
                         ->paginate($perpage);
                         
-            return view('pages.users.users-list-ajax', compact('usersResult','currentPage','editUrl'))->render();
+            return view('pages.users.users-list-ajax', compact('usersResult','currentPage','editUrl','deleteUrl'))->render();
         }
 
         $usersResult = $usersResult->paginate($perpage);
         
-        return view('pages.users.users-list', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'usersResult'=>$usersResult,'pageTitle'=>$pageTitle,'paginationUrl'=>$paginationUrl,'currentPage'=>$currentPage,'userType'=>$userType,'editUrl'=>$editUrl]);
+        return view('pages.users.users-list', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'usersResult'=>$usersResult,'pageTitle'=>$pageTitle,'paginationUrl'=>$paginationUrl,'currentPage'=>$currentPage,'userType'=>$userType,'editUrl'=>$editUrl,'deleteUrl'=>$deleteUrl]);
     }
 
     public function usersCreate($id='')
@@ -367,6 +368,42 @@ class UserController extends Controller
             $listUrl = 'company-user-list';
         }
         return redirect()->route($listUrl)->with('success',__('locale.company_admin_create_success'));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {   
+        
+        $companyId = companyUserMapping::where('user_id',$id)->first()->company_id;
+        if(companyUserMapping::where('company_id',$companyId)->where('user_id','!=',$id)->count()==0){
+            if(User::where('id',$id)->delete()){
+                return redirect()->back()->with('success',__('locale.delete_message'));
+            }else{
+                return redirect()->back()->with('error',__('locale.try_again'));
+            }
+        }else{
+            return redirect()->back()->with('error',__('locale.company_admin_delete_error_msg'));
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyUser($id)
+    {   
+        if(User::where('id',$id)->delete()){
+            return redirect()->back()->with('success',__('locale.delete_message'));
+        }else{
+            return redirect()->back()->with('error',__('locale.try_again'));
+        }
     }
 
 }

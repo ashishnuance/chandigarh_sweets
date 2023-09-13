@@ -80,12 +80,14 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/company-admin-update/{id}', [UserController::class, 'update'])->name('company-admin-update');
         Route::get('/company-admin-list', [UserController::class, 'index'])->name('company-admin-list');
         Route::post('/company-admin-create', [UserController::class, 'store'])->name('company-admin-create');
+        Route::get('/company-admin-delete/{id}', [UserController::class, 'destroy'])->name('company-admin-delete');
 
         Route::get('/company-user-create', [UserController::class, 'usersCreate'])->name('superadmin.company-user-create');
         Route::get('/company-user-edit/{id}', [UserController::class, 'usersCreate'])->name('superadmin.company-user-edit');
         Route::post('/company-user-update/{id}', [UserController::class, 'usersUpdate'])->name('superadmin.company-user-update');
         Route::get('/company-user-list', [UserController::class, 'usersList'])->name('superadmin.company-user-list');
         Route::post('/company-user-create', [UserController::class, 'userStore'])->name('superadmin.company-user-create');
+        Route::get('/company-user-delete/{id}', [UserController::class, 'destroyUser'])->name('superadmin.company-user-delete');
 
         /** new buyer routes start **/
         Route::resource('/buyer-type', BuyerController::class);
@@ -147,21 +149,6 @@ Route::group(['middleware' => ['auth']], function () {
         
     });
 
-    /** product category import and export **/
-    Route::get('/sub-category-export/{type?}',[SubCategoryController::class,'subcategoryexport'])->name('sub-category-export');
-
-    Route::get('/product-category-export/{type?}',[ProductCategoryController::class,'productCategoryexport'])->name('product-category-export');
-
-    
-    
-
-    /** product import and export **/
-    Route::post('/product-import', [ProductsController::class,'productImport']);
-    Route::get('/product-export/{type?}', [ProductsController::class,'productExport'])->name('product-export');
-    
-    Route::post('/company-user-import', [UserController::class,'companyUserImport']);
-    Route::get('/company-user-export/{type?}', [UserController::class,'companyUserExport'])->name('company-user-export');
-    Route::get('/company-user-import', [UserController::class,'companyUserExport'])->name('company-user-import');
 
     Route::middleware(['companyadmin'])->group(function () {
         Route::get('/', [DashboardController::class, 'dashboardModern']);
@@ -171,10 +158,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/company-user-update/{id}', [UserController::class, 'usersUpdate'])->name('company-user-update');
         Route::get('/company-user-list', [UserController::class, 'usersList'])->name('company-user-list');
         Route::post('/company-user-create', [UserController::class, 'userStore'])->name('company-user-create');
+        Route::get('/company-user-delete/{id}', [UserController::class, 'destroyUser'])->name('company-user-delete');
+
         Route::get('/permision-edit', [UserController::class, 'usersPermission']);
         /** new products routes **/
-        //Route::resource('/product',ProductsController::class);
-
+        
          /** product category user side **/
          Route::resource('/product-category',ProductCategoryController::class);
          Route::get('/product-category/destroy/{id}',[ProductCategoryController::class,'destroy'])->name('product-category.delete');
@@ -194,11 +182,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('/product-subcategory',SubCategoryController::class);
         Route::get('/product-subcategory/destroy/{id}',[SubCategoryController::class,'destroy'])->name('product-subcategory.delete');
 
-        // Route::resource('/sub-category',SubCategoryController::class);
-        // Route::get('/sub-category/destroy/{id}',[SubCategoryController::class,'destroy'])->name('sub-category.delete');
+        
         Route::post('/sub-category-import',[SubCategoryController::class,'subcategoryimport'])->name('sub-category-import');
-        // Route::get('/sub-category-export/{type?}',[SubCategoryController::class,'subCategoryexportFile'])->name('sub-category-export');
-
+        
         /** new buyer registration routes start **/
         Route::resource('/buyer', BuyerUserController::class);
 
@@ -214,6 +200,25 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/buyer/export/{type}', [BuyerUserController::class,'buyerExport'])->name('buyer.export');
 
     });
+
+
+    /** product category import and export **/
+    Route::get('/sub-category-export/{type?}',[SubCategoryController::class,'subcategoryexport'])->name('sub-category-export');
+
+    Route::get('/product-category-export/{type?}',[ProductCategoryController::class,'productCategoryexport'])->name('product-category-export');
+
+    
+    
+
+    /** product import and export **/
+    Route::post('/product-import', [ProductsController::class,'productImport']);
+    Route::get('/product-export/{type?}', [ProductsController::class,'productExport'])->name('product-export');
+    
+    Route::post('/company-user-import', [UserController::class,'companyUserImport']);
+    Route::get('/company-user-export/{type?}', [UserController::class,'companyUserExport'])->name('company-user-export');
+    Route::get('/company-user-import', [UserController::class,'companyUserExport'])->name('company-user-import');
+
+    
     /** state and city **/
     Route::post('api/user-fetch-states', [DashboardController::class, 'user_fetchState']);
     Route::post('api/user-fetch-cities', [DashboardController::class, 'user_fetchCity']);

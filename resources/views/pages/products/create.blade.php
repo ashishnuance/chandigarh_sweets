@@ -54,6 +54,19 @@
                   
                   @if(isset($userType) && $userType!=config('custom.superadminrole'))
                   <input type="hidden" name="company" value="{{Helper::loginUserCompanyId()}}"/>
+                  @else
+                  <div class="col s12 input-field">
+                    <select class="error" id="company" name="company" data-error=".errorTxt7" required>
+                      <option value="">Choose {{__('locale.Company')}}</option>
+                      @if(isset($companies) && !empty($companies))
+                        @foreach ($companies as $company_value)
+                          <option value="{{$company_value->id}}">{{$company_value->company_name}} ({{$company_value->company_code}})</option>
+                        @endforeach
+                      @endif
+                    </select>
+                    <label for="company">{{__('locale.Companies')}}</label>
+                    <small class="errorTxt7"></small>
+                  </div>
                   @endif
                   <div class="input-field col m6 s12">
                     <label for="product_name">{{__('locale.product name')}}: <span class="red-text">*</span></label>
@@ -61,7 +74,7 @@
                   </div>
                   <div class="input-field col m6 s12">
                     <label for="product_code">{{__('locale.product code')}}: <span class="red-text">*</span></label>
-                    <input type="text" id="product_code" class="validate" name="product_code" required value="{{(isset($product_result->product_code)) ? $product_result->product_code : $productCode }}">
+                    <input type="text" id="product_code" class="validate" name="product_code" required value="{{(isset($product_result->product_code)) ? $product_result->product_code : $productCode }}" oninput="this.value=this.value.replace(/[^a-zA-Z0-9-]/g,'');">
                   </div>
                 </div>
                 <div class="row">
@@ -212,6 +225,7 @@
                         <label for="sku">{{__('locale.SKU')}}: <span class="red-text">*</span></label>
                         <input type="text" class="validate sku" name="variation[sku][]" value="{{(isset($provar_value->sku)) ? $provar_value->sku : '' }}" required>
                       </div>
+                      {{-- 
                       <div class="input-field col m6 s12">
                         <label for="main_price">{{__('locale.Main Price')}}: <span class="red-text">*</span></label>
                         <input type="text" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" class="validate main_price" name="variation[main_price][]" value="{{(isset($provar_value->main_price)) ? $provar_value->main_price : '' }}" required>
@@ -219,7 +233,8 @@
                       <div class="input-field col m6 s12">
                         <label for="offer_price">{{__('locale.Offer Price')}}: <span class="red-text">*</span></label>
                         <input type="text" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" class="validate offer_price" name="variation[offer_price][]" value="{{(isset($provar_value->offer_price)) ? $provar_value->offer_price : '' }}">
-                      </div>
+                      </div> 
+                      --}}
                       <div class="input-field col m6 s12">
                         <label for="quantity">{{__('locale.Quantity')}}: <span class="red-text">*</span></label>
                         <input type="text" class="validate quantity" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" name="variation[quantity][]" value="{{(isset($provar_value->quantity)) ? $provar_value->quantity : '' }}">
@@ -257,6 +272,7 @@
                         <label for="sku">{{__('locale.SKU')}}: <span class="red-text">*</span></label>
                         <input type="text" class="validate sku" name="variation[sku][]" required>
                       </div>
+                      {{--
                       <div class="input-field col m6 s12">
                         <label for="main_price">{{__('locale.Main Price')}}: <span class="red-text">*</span></label>
                         <input type="text" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" class="validate main_price" name="variation[main_price][]" required>
@@ -265,6 +281,7 @@
                         <label for="offer_price">{{__('locale.Offer Price')}}: <span class="red-text">*</span></label>
                         <input type="text" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" class="validate offer_price" name="variation[offer_price][]" required>
                       </div>
+                      --}}
                       <div class="input-field col m6 s12">
                         <label for="quantity">{{__('locale.Quantity')}}: <span class="red-text">*</span></label>
                         <input type="text" class="validate quantity" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" name="variation[quantity][]" required>
@@ -359,6 +376,7 @@
       <label for="sku">{{__('locale.SKU')}}: <span class="red-text">*</span></label>
       <input type="text" class="validate sku" name="variation[sku][]" required>
     </div>
+    {{--
     <div class="input-field col m6 s12">
       <label for="main_price">{{__('locale.Main Price')}}: <span class="red-text">*</span></label>
       <input type="text" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" class="validate main_price" name="variation[main_price][]" required>
@@ -367,6 +385,7 @@
       <label for="offer_price">{{__('locale.Offer Price')}}: <span class="red-text">*</span></label>
       <input type="text" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" class="validate offer_price" name="variation[offer_price][]">
     </div>
+    --}}
     <div class="input-field col m6 s12">
       <label for="quantity">{{__('locale.Quantity')}}: <span class="red-text">*</span></label>
       <input type="text" class="validate quantity" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" name="variation[quantity][]">
@@ -401,7 +420,7 @@
     var category_value = "{{(isset($product_result->product_catid) && $product_result->product_catid!='NULL') ? $product_result->product_catid : old('product_catid')}}";
     var subcategory_value = "{{(isset($product_result->product_subcatid) && $product_result->product_subcatid!='NULL') ? $product_result->product_subcatid : old('product_subcatid')}}";
     var food_type = "{{(isset($product_result->food_type) && $product_result->food_type!='NULL') ? $product_result->food_type : old('food_type')}}";
-
+    var company_value = "{{(isset($user_result->company[0]->id) && $user_result->company[0]->id!='NULL') ? $user_result->company[0]->id : old('company')}}";
     
     $('#product_catid').val(category_value);
     $('#product_catid').formSelect();
@@ -409,6 +428,8 @@
     $('#product_subcatid').formSelect();
     $('.food_type').val(food_type);
     $('.food_type').formSelect();
+    $('#company').val(company_value);
+    $('#company').formSelect();
     
 
     //$('.variation_type').formSelect();
