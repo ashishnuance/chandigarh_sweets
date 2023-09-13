@@ -15,6 +15,14 @@ return [
     "Buyer Type"=>"Buyer Type",
     "Buyer Type Add"=>"Buyer Type Add",
     "Buyer Type List"=>"Buyer Type List",
+    "Registration"=>"Registration",
+    "List"=>"List",
+
+    "Profile"=>"Profile",
+    "Profile Edit"=>"Create",
+    "Profile List"=>"List",
+    "Profile Add"=>"Profile Add",
+    "profile_success"=>"Profile Updated Successfully",
 
     "Product Category"=>"Product Category",
     "Product Category Create"=>"Create",
@@ -24,6 +32,7 @@ return [
     "product_category_success"=>"Product category Successfully",
 
     "Sub Category"=>"Sub Category",  
+    "profile"=>"Profile",
     "sub category"=>"sub category",  
     "Sub Category Create"=>"Create",
     "Sub Category List"=>"List",
@@ -259,6 +268,10 @@ return [
     "product mapping"=>"Product Mapping",
     "Select Company"=>"Select Company",
     "product category"=>"Product Category",
-    "name_exits"=>"Name already in use"
+    "name_exits"=>"Name already in use",
+    "export"=>"Export",
+    "add"=>"Add",
+    "invite_code"=>"Invite Code",
+    "import_company_errormsg"=>"not match"
 ];
 ?>

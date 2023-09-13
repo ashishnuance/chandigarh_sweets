@@ -58,24 +58,31 @@
           <div class="row">
             <div class="col s12">
                   <div class="col s4">
-                    <select name="company_id" id="company_id" onchange="filtercompany(this)" data-url='{{route("product-category.store")}}'>
+                    @if($userType==config('custom.superadminrole'))
+                    <select name="company_id" id="company_id">
                       <option value="Select" disabled selected>Select Company</option>
                       @foreach($company_list as $company)
                       <option value="{{$company->id}}" {{ (request()->route()->id == $company->id) ? 'selected' : '' }}>{{$company->company_name}}</option>
                       @endforeach
                     </select>
+                    <input type="hidden" id="search" name="search"/>
+                    @else
+                    <label for="search">{{__('locale.search')}}</label>
+                    <input id="search" type="text" name="search" data-error=".errorTxt12">
+                    <small class="errorTxt12"></small>
+                    @endif
                  </div>
             </div>
-            <a class="btn waves-effect waves-light right" href="{{route($exportUrl,[$userType])}}">{{__('locale.export_users')}}
+            <a class="btn waves-effect waves-light right" href="{{route($exportUrl,[$userType])}}">{{__('locale.export')}}
                 <i class="material-icons right"></i>
             </a>
             <div class="col s12 table-result">
                 
-              <div class="responsive-table table-result">
+              <div class="responsive-table table-result" id="table-result">
                 @include('pages.product-category.ajax-list')
                 
               </div>
-              <input type="hidden" name="hidden_page" id="hidden_page" value="{{(isset($currentPage) && $currentPage>0) ? $currentPage : 1}}" />
+              <input type="hidden" name="hidden_page" id="hidden_page" value="1" />
 
             </div>
           </div>
@@ -101,22 +108,24 @@
             url: paginationUrl+"?page="+page+"&status="+status+"&seach_term="+seach_term,
             success:function(data){
               console.log(data);
-                $('.table-result').html('');
-                $('.table-result').html(data);
+                $('#table-result').html('');
+                $('#table-result').html(data);
             }
         })
     }
 
-    $('body').on('keyup', '#serach', function(){
+    $('body').on('keyup', '#search', function(){
         var status = $('#status').val();
-        var seach_term = $('#serach').val();
+        var seach_term = $('#search').val();
         var page = $('#hidden_page').val();
         fetch_data(page, status, seach_term);
     });
 
-    $('body').on('change', '#users-list-status', function(){
+    $('body').on('change', '#company_id', function(){
         var status = $('#users-list-status').val();
-        var seach_term = $('#serach').val();
+        var seach_term = $(this).val();
+        console.log('seach_term',seach_term);
+        $(this).parent().parent().find('#search').val(seach_term);
         var page = $('#hidden_page').val();
         fetch_data(page, status, seach_term);
     });
@@ -126,8 +135,8 @@
         event.preventDefault();
         var page = $(this).attr('href').split('page=')[1];
         $('#hidden_page').val(page);
-        var serach = $('#serach').val();
-        var seach_term = $('#status').val();
+        var search = $('#status').val();
+        var seach_term = $('#company_id').parent().parent().find('#search').val();
         fetch_data(page,status, seach_term);
     });
 });

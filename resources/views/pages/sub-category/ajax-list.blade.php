@@ -9,7 +9,7 @@
      </tr>
    </thead>
    <tbody>
-        @if(isset($sub_category_list) && !empty($sub_category_list))
+    @if(isset($sub_category_list) && !empty($sub_category_list))
         @foreach($sub_category_list as $key => $sub_category_data)
 
         <tr>
@@ -24,14 +24,15 @@
             </td>    
         </tr>
         @endforeach
-        @else
-        <tr>
-            <td colspan="10"><p class="center">{{__('locale.no_record_found')}}</p></td>
-        </tr>
-        @endif
+    @else
+    <tr>
+        <td colspan="10"><p class="center">{{__('locale.no_record_found')}}</p></td>
+    </tr>
+    @endif
    </tbody>
 </table>
 
 @if(isset($sub_category_list) && !empty($sub_category_list))
 {!! $sub_category_list->links('panels.paginationCustom') !!}
 @endif
+

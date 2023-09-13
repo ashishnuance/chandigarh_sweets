@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('product_code');
             $table->string('product_name')->nullable();
             $table->string('product_slug')->nullable();
-            $table->string('foodType')->default('veg');
+            $table->string('food_type')->default('veg');
+            $table->string('product_type')->default('domestic');
             $table->text('description')->nullable();
             $table->bigInteger('product_catid')->unsigned();
             $table->bigInteger('product_subcatid')->unsigned();

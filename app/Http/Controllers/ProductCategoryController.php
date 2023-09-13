@@ -30,7 +30,7 @@ class ProductCategoryController extends Controller
         $deleteUrl = 'superadmin.product-category.delete';
         $paginationUrl = 'superadmin.product-category.index';
         $importUrl = 'superadmin.product-category-import';
-        $exportUrl = 'superadmin.product-category-export';
+        $exportUrl = 'product-category-export';
         
         // Breadcrumbs
         $breadcrumbs = [
@@ -40,6 +40,8 @@ class ProductCategoryController extends Controller
         $pageConfigs = ['pageHeader' => true];
         $pageTitle = __('locale.Company List');
         $productCategoryList = ProductCategoryModel::with('companyname')->orderBy('id','DESC');
+        $companyResult = Company::get();
+
         
         if($userType!=config('custom.superadminrole')){
             $editUrl = 'product-category.edit';
@@ -51,23 +53,32 @@ class ProductCategoryController extends Controller
             $productCategoryList = $productCategoryList->whereHas('companyname',function($query) use ($company_id) {
                 $query->where('company_id',$company_id);
             });
-            
+
+            $companyResult = Company::select('id','company_code','company_name')->where('id',$company_id)->get();
+   
         }
 
         if($request->ajax()){
-            $product_category_list = $productCategoryList->whereHas('companyname',function($query) use ($request) {
-                $query->where('company_name','like', '%'.$request->seach_term.'%');
-            })->when($request->seach_term, function($q)use($request){
-                $q->where('category_name', 'like', '%'.$request->seach_term.'%');
-            })->paginate($perpage);
+            if($userType==config('custom.superadminrole')){
+                
+                $productCategoryList = $productCategoryList->whereHas('companyname',function($query) use ($request) {
+                    
+                    $query->when($request->seach_term, function($q1)use($request){
+                        $q1->where('company_id',$request->seach_term);
+                    });
+                });
+            }else{
+                $productCategoryList = $productCategoryList->when($request->seach_term, function($q)use($request){
+                    $q->where('category_name', 'like', '%'.$request->seach_term.'%');
+                });
+            }
+            $product_category_list = $productCategoryList->paginate($perpage); 
+            
             return view('pages.product-category.ajax-list', compact('product_category_list','editUrl','deleteUrl'))->render();
         }
 
         $productCategoryList = $productCategoryList->paginate($perpage);
-        
-        $companyResult = Company::get();
-
-        
+        // dd($companyResult);
         return view('pages.product-category.list',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'product_category_list'=>$productCategoryList, 'company_list'=>$companyResult,'editUrl'=>$editUrl,'deleteUrl'=>$deleteUrl,'userType'=>$userType,'exportUrl'=>$exportUrl,'importUrl'=>$importUrl]);
     }
     public function create()
@@ -94,8 +105,12 @@ class ProductCategoryController extends Controller
     }
 
     public function store(Request $request)
+<<<<<<< HEAD
     {
         
+=======
+    {        
+>>>>>>> b6a9ad7fac5bad7e1c0c029bef7bac3f08d4bf94
         $userType = auth()->user()->role()->first()->name;
         $listUrl = 'superadmin.product-category.index';
         if($userType!=config('custom.superadminrole')){
@@ -188,7 +203,12 @@ class ProductCategoryController extends Controller
         try{
             $import = new ProductCategoryImport;
             Excel::import($import, request()->file('importfile'));
-            // print_r($import); exit();
+            $import->getRowCount();
+            
+            if($import->getRowCount()==0){
+                
+                return redirect()->back()->with('error',implode('<br>',$import->getErrorMessage()));
+            }
             return redirect()->back()->with('success', __('locale.import_message'));
         }catch(\Maatwebsite\Excel\Validators\ValidationException $e){
             $listUrl = 'superadmin.product-category.index';

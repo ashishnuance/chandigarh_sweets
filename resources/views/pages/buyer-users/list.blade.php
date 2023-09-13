@@ -28,28 +28,29 @@
         <div id="file-input" class="card card-tabs">
           @include('panels.flashMessages')
           <div class="card-content">
+            
             <div class="card-title">
               <div class="row">
                 <div class="col s12 m6 l10">
-                  <h4 class="card-title">{{__('locale.imports')}} {{__('locale.users')}}</h4>
+                  <h4 class="card-title">{{__('locale.imports')}} {{__('locale.Buyer')}}</h4>
                 </div>
               </div>
             </div>
             <div id="view-file-input">
               <div class="row">
                 <div class="col s12">
-                  <form action="{{asset('company-user-import')}}" method="post" enctype="multipart/form-data">
+                  <form action="{{route($importUrl)}}" method="post" enctype="multipart/form-data">
                     @csrf()
                     <div class="file-field input-field">
                       <div class="btn">
                         <span>File</span>
-                        <input type="file" name="importcompany" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                        <input type="file" name="importfile" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                       </div>
                       <div class="file-path-wrapper">
                         <input class="file-path validate" type="text">
                       </div>
                     </div>
-                    <a class="waves-effect waves-light left submit" target="_blank" href="{{asset('data-import-files/company-user-import.csv')}}" download>{{__('locale.download_sample_file')}}
+                    <a class="waves-effect waves-light left submit" target="_blank" href="{{asset('data-import-files').'/'.$samplefile}}" download>{{__('locale.download_sample_file')}}
                         <i class="material-icons">download</i>
                     </a>
                     <button class="btn waves-effect waves-light right submit" type="submit" name="action">Submit
@@ -79,11 +80,11 @@
               <input id="serach" type="text" name="serach" data-error=".errorTxt12">
             </div>
           </div>
-          <a class="btn waves-effect waves-light right" href="{{route('company-user-export',[$userType])}}">{{__('locale.export_users')}}
-                <i class="material-icons right"></i>
-            </a>
+          <a class="btn waves-effect waves-light right" href="{{route($exportUrl,[$userType])}}">{{__('locale.export')}}
+            <i class="material-icons right"></i>
+          </a>
         <div class="responsive-table table-result">
-          @include('pages.users.users-list-ajax')
+          @include('pages.buyer-users.ajax-list')
           
         </div>
         <input type="hidden" name="hidden_page" id="hidden_page" value="{{(isset($currentPage) && $currentPage>0) ? $currentPage : 1}}" />
@@ -106,7 +107,7 @@
 <script src="{{asset('js/scripts/page-users.js')}}"></script>
 <script>
   $(document).ready(function(){
-    var paginationUrl = '{{(isset($paginationUrl) && $paginationUrl!='') ? route($paginationUrl) : route("company-admin-list") }}';
+    var paginationUrl = '{{(isset($paginationUrl) && $paginationUrl!='') ? route($paginationUrl) : route("buyer.index") }}';
     const fetch_data = (page, status, seach_term) => {
         if(status === undefined){
             status = "";

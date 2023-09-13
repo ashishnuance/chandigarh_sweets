@@ -9,16 +9,20 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Role;
 use App\Models\Company;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable,SoftDeletes;
+
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
+    protected $dates = ['deleted_at'];
+    
     protected $fillable = [
         'name',
         'email',
@@ -31,6 +35,8 @@ class User extends Authenticatable
         'website_url',
         'image',
         'blocked',
+        'user_type',
+        'invite_code'
     ];
 
     /**
@@ -61,6 +67,7 @@ class User extends Authenticatable
     {
     return $this->belongsToMany(Company::class, 'company_user_mappings', 'user_id', 'company_id');
     }
+
 
     
 }

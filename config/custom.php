@@ -25,4 +25,5 @@ return [
     ],
     
     "superadminrole"=>"superadmin",
+    "buyerTypeArray"=>['domestic','Foreign'],
 ];

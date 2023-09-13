@@ -22,6 +22,7 @@ class ProductsExport implements FromCollection,WithHeadings
                 'product_category'=>(isset($product->category)) ? $product->category->category_name : '',
                 'product_subcategory'=>(isset($product->subcategory)) ? $product->subcategory->subcat_name : '',
                 'food_type'=>$product->food_type,
+                'product_type'=>$product->product_type,
                 'company_name'=>(isset($product->company[0]->company_name) && $product->company[0]->company_name!='') ? $product->company[0]->company_name : '' ,
                 'blocked'=>$product->blocked,
                 'created_at'=>$product->created_at,

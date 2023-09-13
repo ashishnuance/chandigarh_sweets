@@ -53,7 +53,7 @@
       "i18n": "Company Admin",
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "company-admin",
-      "icon": "format_list_bulleted",
+      "icon": "person_outline",
       "submenu": [
         {
           "url": "superadmin/company-admin-create",
@@ -76,7 +76,7 @@
       "i18n": "Company User",
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "company-user",
-      "icon": "format_list_bulleted",
+      "icon": "person_outline",
       "submenu": [
         {
           "url": "superadmin/company-user-create",
@@ -99,7 +99,7 @@
       "i18n": "Company User",
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "company-user",
-      "icon": "format_list_bulleted",
+      "icon": "person_outline",
       "submenu": [
         {
           "url": "company-user-create",
@@ -125,13 +125,36 @@
       "icon": "person_outline",
       "submenu": [
         {
-          "url": "javascript:void(0)",
+          "url": "superadmin/buyer/create",
+          "name": "Registration",
+          "i18n": "Buyer Registration",
+          "slug": "buyer-registration"
+        },
+        {
+          "url": "superadmin/buyer",
+          "name": "List",
+          "i18n": "Buyer List",
+          "slug": "buyer-list"
+        }
+      ]
+    },
+    {
+      "for" :["admin"],
+      "url": "javascript:void(0)",
+      "name": "Buyer",
+      "i18n": "Buyer",
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "Buyer",
+      "icon": "person_outline",
+      "submenu": [
+        {
+          "url": "buyer/create",
           "name": "Buyer Registration",
           "i18n": "Buyer Registration",
           "slug": "buyer-registration"
         },
         {
-          "url": "javascript:void(0)",
+          "url": "buyer",
           "name": "Buyer List",
           "i18n": "Buyer List",
           "slug": "buyer-list"
@@ -139,7 +162,7 @@
       ]
     },
     {
-      "for" :["superadmin"],
+      "for" :["superadminss"],
       "url": "javascript:void(0)",
       "name": "Buyer Type",
       "i18n": "Buyer Type",
@@ -168,7 +191,7 @@
       "i18n": "Items",
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "Items",
-      "icon": "person_outline",
+      "icon": "view_list",
       "submenu": [
         {
           "url": "superadmin/product/create",
@@ -184,6 +207,7 @@
         }
       ]
     },
+<<<<<<< HEAD
 
     {
       "for" :["superadmin"],
@@ -233,6 +257,8 @@
       ]
     },
 
+=======
+>>>>>>> b6a9ad7fac5bad7e1c0c029bef7bac3f08d4bf94
     {
       "for" :["admin","user"],
       "url": "javascript:void(0)",
@@ -240,7 +266,7 @@
       "i18n": "Items",
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "Items",
-      "icon": "person_outline",
+      "icon": "view_list",
       "submenu": [
         {
           "url": "product/create",
@@ -256,14 +282,15 @@
         }
       ]
     },
+
     {
       "for" :["superadmin"],
       "url": "javascript:void(0)",
       "name": "Product Company Mapping",
       "i18n": "Product Company Mapping",
       "class": "collapsible-header waves-effect waves-cyan",
-      "slug": "Product category",
-      "icon": "person_outline",
+      "slug": "Product Company Mapping",
+      "icon": "view_list",
       "submenu": [
         {
           "url": "superadmin/product-mapping/create",
@@ -280,16 +307,59 @@
       ]
     },
     
+    {
+      "for" :["superadmin"],
+      "url": "javascript:void(0)",
+      "name": "Product Category",
+      "i18n": "Product Category",
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "Product category",
+      "icon": "view_list",
+      "submenu": [
+        {
+          "url": "superadmin/product-category/create",
+          "name": "Product Category Create",
+          "i18n": "superadmin/product-category/create",
+          "slug": "product-category-create"
+        },
+        {
+          "url": "superadmin/product-category",
+          "name": "Product Category List",
+          "i18n": "superadmin/product-category",
+          "slug": "product-category-list"
+        }
+      ]
+    },
+
+    
 
     {
-      "for" :["superadmin","user","admin"],
-      "url": "#",
-      "name": "Orders",
-      "i18n": "Orders",
-      "class": "waves-effect waves-cyan",
-      "icon": "add_shopping_cart",
-      "slug": "orders"
+      "for" :["admin","user"],
+      "url": "javascript:void(0)",
+      "name": "Product Category",
+      "i18n": "Product Category",
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "Product category",
+      "icon": "view_list",
+      "submenu": [
+        {
+          "url": "product-category/create",
+          "name": "Product Category Create",
+          "i18n": "product-category/create",
+          "slug": "product-category-create"
+        },
+        {
+          "url": "product-category",
+          "name": "Product Category List",
+          "i18n": "product-category",
+          "slug": "product-category-list"
+        }
+      ]
     },
+    
+    
+    
+      
     {
       "for" :["superadmin"],
       "url": "javascript:void(0)",
@@ -297,16 +367,16 @@
       "i18n": "Sub Category",
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "Sub category",
-      "icon": "person_outline",
+      "icon": "view_list",
       "submenu": [
         {
-          "url": "superadmin/sub-category/create",
+          "url": "superadmin/product-subcategory/create",
           "name": "Sub Category Create",
           "i18n": "Sub Category Create",
           "slug": "sub-category-create"
         },
         {
-          "url": "superadmin/sub-category",
+          "url": "superadmin/product-subcategory",
           "name": "Sub Category List",
           "i18n": "Sub Category List",
           "slug": "Sub-category-list"
@@ -315,22 +385,22 @@
     },
 
     {
-      "for" :["admin"],
+      "for" :["admin","user"],
       "url": "javascript:void(0)",
       "name": "Sub Category",
       "i18n": "Sub Category",
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "Sub Category",
-      "icon": "person_outline",
+      "icon": "view_list",
       "submenu": [
         {
-          "url": "sub-category/create",
+          "url": "product-subcategory/create",
           "name": "Sub Category Create",
           "i18n": "Sub Category Create",
           "slug": "sub-category-create"
         },
         {
-          "url": "sub-category",
+          "url": "product-subcategory",
           "name": "Sub Category List",
           "i18n": "Sub Category List",
           "slug": "Sub-category-list"
@@ -338,6 +408,7 @@
       ]
     },
 
+<<<<<<< HEAD
     {
       "for" :["superadmin"],
       "url": "javascript:void(0)",
@@ -434,6 +505,8 @@
       ]
     },
 
+=======
+>>>>>>> b6a9ad7fac5bad7e1c0c029bef7bac3f08d4bf94
     {
       "for" :["superadmin","admin","user"],
       "url": "#",
@@ -442,6 +515,24 @@
       "class": "waves-effect waves-cyan",
       "icon": "add_shopping_cart",
       "slug": "orders"
+    },
+    {
+      "for" :["superadmin"],
+      "url": "superadmin/profile-edit",
+      "name": "Profile",
+      "i18n": "Profile",
+      "class": "waves-effect waves-cyan",
+      "slug": "Profile",
+      "icon": "person_outline"
+    },
+    {
+      "for" :["admin","user"],
+      "url": "superadmin/profile-edit",
+      "name": "Profile",
+      "i18n": "Profile",
+      "class": "waves-effect waves-cyan",
+      "slug": "Profile",
+      "icon": "person_outline"
     }
   ]
 }

@@ -29,10 +29,10 @@
           <!-- users edit media object ends -->
           <!-- users edit account form start -->
           @include('panels.flashMessages')
-          @if(isset($user_result->id))
+          @if(isset($user_result) && $user_result->id>0)
           <?php //$formUrl = (isset($formUrl) && $formUrl!='') ? $formUrl : 'company-admin-update'; ?>
             <form class="formValidate" action="{{route($formUrl,$user_result->id)}}" id="formValidateCompany" method="post">
-            {!! method_field('post') !!}
+            {!! method_field('patch') !!}
             @else
             <?php //$formUrl = (isset($formUrl) && $formUrl!='') ? $formUrl : 'company-admin-create'; ?>
           <form id="accountForm" action="{{route($formUrl)}}" method="post">
@@ -69,84 +69,30 @@
                     <label for="email">{{__('locale.email')}}</label>
                     <small class="errorTxt3"></small>
                   </div>
+                  
                   <div class="col s12 m6 input-field">
-                    <input id="phonenumber" type="text" name="phone" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" class="validate" value="{{(isset($user_result->phone)) ? $user_result->phone : old('phone')}}" data-error=".errorTxt4">
-                    <label for="phonenumber">{{__('locale.phone')}}</label>
-                    <small class="errorTxt4"></small>
-                  </div>
-                  <div class="col s12 m6 input-field">
-                    <input id="address" name="address" type="text" class="validate" data-error=".errorTxt5" value="{{(isset($user_result->address)) ? $user_result->address : old('address')}}">
-                    <label for="address">{{__('locale.address')}}</label>
-                    <small class="errorTxt5"></small>
-                  </div>
-                  <div class="col s12 m4 input-field">
-                    <select name="country" id="country">
-                      <option value="">Choose {{__('locale.country')}}</option>
-                      @if(isset($countries) && !empty($countries))
-                        @foreach ($countries as $country_value)
-                          <option value="{{$country_value->id}}">{{$country_value->name}}</option>
-                        @endforeach
-                      @endif
+                    <select name="user_type" id="user_type" require>
+                        <option value="">Choose {{__('locale.type')}}</option>
+                        <option value="domestic">Domestic</option>
+                        <option value="foreign">Foreign</option>
+                      
                     </select>
-                    <label for="country">{{__('locale.country')}}</label>
-                  </div>
-                  <div class="col s12 m4 input-field">
-                    <select name="state" id="state">
-                    <option value="">Choose {{__('locale.state')}}</option>
-                      @if(isset($user_result->state) && isset($states) && !empty($states))
-                        @foreach ($states as $state_value)
-                          <option value="{{$state_value->id}}">{{$state_value->name}}</option>
-                        @endforeach
-                      @endif
-                    </select>
-                    <label for="state">{{__('locale.state')}}</label>
-                  </div>
-                  <div class="col s12 m4 input-field">
-                    <select name="city" id="city">
-                      <option value="">Choose {{__('locale.city')}}</option>
-                      @if(isset($user_result->city) && isset($cities) && !empty($cities))
-                        @foreach ($cities as $city_value)
-                          <option value="{{$city_value->id}}">{{$city_value->name}}</option>
-                        @endforeach
-                      @endif
-                    </select>
-                    <label for="city">{{__('locale.city')}}</label>
-                  </div>
-                  <div class="col s12 m6 input-field">
-                    <input id="website_url" name="website_url" type="text" value="{{(isset($user_result->website_url)) ? $user_result->website_url : old('website_url')}}">
-                    <label for="website_url">{{__('locale.website_url')}}</label>
+                    <label for="user_type">{{__('locale.type')}}</label>
                   </div>
                   
                   <div class="col s12 m6 input-field">
-                    <select name="blocked">
+                    <select name="blocked" id="blocked">
                       <option value="1">Blocked</option>
                       <option value="0">Un-Blocked</option>
                     </select>
-                    <label>{{__('locale.status')}}</label>
-                  </div>
-                  @if(isset($user_result->name) && $user_result->name!='')
-                  <div class="col s12 m6 input-field">
-                    <input id="password" name="password" type="password">
-                    <label for="password">{{__('locale.Password')}}</label>
-                  </div>
-                  @endif
-                  <div class="col s12 m6 input-field">
-                    <div class="file-field input-field">
-                      <div class="btn">
-                        <span>File</span>
-                        <input type="file" name="importcompany" accept="image/*">
-                      </div>
-                      <div class="file-path-wrapper">
-                        <input class="file-path validate" type="text">
-                      </div>
-                    </div>
+                    <label for="blocked">{{__('locale.status')}}</label>
                   </div>
                 </div>
               </div>
               
               <div class="col s12 display-flex justify-content-end mt-3">
                 <button type="submit" class="btn indigo">
-                  Save changes</button>
+                 Save changes</button>
                 <button type="reset" class="btn btn-light">Cancel</button>
               </div>
             </div>
@@ -173,23 +119,19 @@
 <script src="{{asset('js/scripts/form-validation.js')}}"></script>
 <script>
   window.onload=function(){
-    var country_value = "{{(isset($user_result->country) && $user_result->country!='NULL') ? $user_result->country : old('country')}}";
-    var country_value_edit = "{{(isset($user_result->country) && $user_result->country!='NULL') ? $user_result->country : ''}}";
-    var state_value = "{{(isset($user_result->state) && $user_result->state!='NULL') ? $user_result->state : old('state')}}";
-    var city_value = "{{(isset($user_result->city) && $user_result->city!='NULL') ? $user_result->city : old('state')}}";
-    var company_value = "{{(isset($user_result->company[0]->id) && $user_result->company[0]->id!='NULL') ? $user_result->company[0]->id : old('company')}}";
-    console.log(state_value);
-    $('#country').val(country_value);
-    $('#country').formSelect();
-    $('#state').val(state_value);
-    $('#state').formSelect();
-    $('#city').val(city_value);
-    $('#city').formSelect();
-    $('#company').val(company_value);
-    if(country_value_edit && country_value_edit!=''){
-      $('#company').attr('disabled',true);
-    }
+    var user_type = "{{(isset($user_result->user_type) && $user_result->user_type!='NULL') ? $user_result->user_type : old('user_type')}}";
+    $('#user_type').val(user_type);
+    $('#user_type').formSelect();
+    
+    var blocked = "{{(isset($user_result->blocked) && $user_result->blocked!='NULL') ? $user_result->blocked : old('blocked')}}";
+    $('#blocked').val(blocked);
+    $('#blocked').formSelect();
+    
+    var company = "{{(isset($user_result->company[0]->id) && $user_result->company[0]->id!='NULL') ? $user_result->company[0]->id : old('company')}}";
+    $('#company').val(company);
     $('#company').formSelect();
+    
+    
   }
     $(document).ready(function () {
       

@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->integer('blocked')->default(1);
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
