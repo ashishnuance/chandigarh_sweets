@@ -207,7 +207,6 @@
         }
       ]
     },
-<<<<<<< HEAD
 
     {
       "for" :["superadmin"],
@@ -257,8 +256,6 @@
       ]
     },
 
-=======
->>>>>>> b6a9ad7fac5bad7e1c0c029bef7bac3f08d4bf94
     {
       "for" :["admin","user"],
       "url": "javascript:void(0)",
@@ -408,7 +405,6 @@
       ]
     },
 
-<<<<<<< HEAD
     {
       "for" :["superadmin"],
       "url": "javascript:void(0)",
@@ -505,8 +501,6 @@
       ]
     },
 
-=======
->>>>>>> b6a9ad7fac5bad7e1c0c029bef7bac3f08d4bf94
     {
       "for" :["superadmin","admin","user"],
       "url": "#",
