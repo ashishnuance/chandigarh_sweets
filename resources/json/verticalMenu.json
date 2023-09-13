@@ -236,29 +236,6 @@
     {
       "for" :["admin","user"],
       "url": "javascript:void(0)",
-      "name": "Product Category",
-      "i18n": "Product Category",
-      "class": "collapsible-header waves-effect waves-cyan",
-      "slug": "Product category",
-      "icon": "person_outline",
-      "submenu": [
-        {
-          "url": "product-category/create",
-          "name": "Product Category Create",
-          "i18n": "product-category/create",
-          "slug": "product-category-create"
-        },
-        {
-          "url": "product-category",
-          "name": "Product Category List",
-          "i18n": "product-category",
-          "slug": "product-category-list"
-        }
-      ]
-    },
-    {
-      "for" :["admin","user"],
-      "url": "javascript:void(0)",
       "name": "Items",
       "i18n": "Items",
       "class": "collapsible-header waves-effect waves-cyan",
@@ -361,11 +338,101 @@
       ]
     },
 
+    {
+      "for" :["superadmin"],
+      "url": "javascript:void(0)",
+      "name": "Buyer Type Channel",
+      "i18n": "Buyer Type Channel",
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "Buyer Type Channel",
+      "icon": "person_outline",
+      "submenu": [
+        {
+          "url": "superadmin/buyer-type-channel/create",
+          "name": "create",
+          "i18n": "Buyer Type Channel",
+          "slug": "buyer-type-channel-create"
+        },
+        {
+          "url": "superadmin/buyer-type-channel",
+          "name": "list",
+          "i18n": "Buyer Type Channel",
+          "slug": "buyer-type-channel-list"
+        }
+      ]
+    },
 
+    {
+      "for" :["admin"],
+      "url": "javascript:void(0)",
+      "name": "Buyer Type Channel",
+      "i18n": "Buyer Type Channel",
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "Buyer Type Channel",
+      "icon": "person_outline",
+      "submenu": [
+        {
+          "url": "buyer-type-channel/create",
+          "name": "create",
+          "i18n": "Buyer Type Channel",
+          "slug": "buyer-type-channel-create"
+        },
+        {
+          "url": "buyer-type-channel",
+          "name": "list",
+          "i18n": "Buyer Type Channel",
+          "slug": "buyer-type-channel-list"
+        }
+      ]
+    },
 
+    {
+      "for" :["superadmin"],
+      "url": "javascript:void(0)",
+      "name": "Product Variation Type",
+      "i18n": "Product Variation Type",
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "Product Variation Type",
+      "icon": "person_outline",
+      "submenu": [
+        {
+          "url": "superadmin/product-variation-type/create",
+          "name": "create",
+          "i18n": "Product Variation Type",
+          "slug": "product-variation-type-create"
+        },
+        {
+          "url": "superadmin/product-variation-type",
+          "name": "list",
+          "i18n": "Product Variation Type",
+          "slug": "product-variation-type-list"
+        }
+      ]
+    },
 
-
-
+    {
+      "for" :["admin"],
+      "url": "javascript:void(0)",
+      "name": "Product Variation Type",
+      "i18n": "Product Variation Type",
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "Product Variation Type",
+      "icon": "person_outline",
+      "submenu": [
+        {
+          "url": "product-variation-type/create",
+          "name": "create",
+          "i18n": "Product Variation Type",
+          "slug": "product-variation-type-create"
+        },
+        {
+          "url": "product-variation-type",
+          "name": "list",
+          "i18n": "Product Variation Type",
+          "slug": "product-variation-type-list"
+        }
+      ]
+    },
 
     {
       "for" :["superadmin","admin","user"],
