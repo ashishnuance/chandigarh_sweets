@@ -220,7 +220,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/sub-category-import',[SubCategoryController::class,'subcategoryimport'])->name('sub-category-import');
         // Route::get('/sub-category-export/{type?}',[SubCategoryController::class,'subCategoryexportFile'])->name('sub-category-export');
 
-<<<<<<< HEAD
 
         /** user side Buyer Type Channel**/
 
@@ -232,7 +231,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/product-variation-type/destroy/{id}',[ProductVariationTypeController::class,'destroy'])->name('product-variation-type.delete');
         Route::post('/product-variation-type-import',[ProductVariationTypeController::class,'productvariationtypeimport'])->name('product-variation-type-import');
     
-=======
         /** new buyer registration routes start **/
         Route::resource('/buyer', BuyerUserController::class);
 
@@ -246,7 +244,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/buyer/destroy/{id}',[BuyerUserController::class,'destroy'])->name('buyer.delete');
         Route::post('/buyer/import', [BuyerUserController::class,'buyerImport'])->name('buyer.import');
         Route::get('/buyer/export/{type}', [BuyerUserController::class,'buyerExport'])->name('buyer.export');
->>>>>>> b6a9ad7fac5bad7e1c0c029bef7bac3f08d4bf94
 
     });
 
