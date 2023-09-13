@@ -59,7 +59,7 @@
                 </div> 
               @else
               <input type="hidden" name="company_id" value="{{Helper::loginUserCompanyId()}}"/>
-              @endif
+              @endif 
               <div class="input-field col m6 s12">
                 <label for="category_name">Category Name</label>
                 <input id="category_name" class="validate" name="category_name" type="text" data-error=".errorTxt1" value="{{ (isset($result['category_name']) && $result['category_name'] !='' ) ? $result['category_name'] :  old('category_name') }}">

@@ -76,13 +76,12 @@ class SubCategoryController extends Controller
 
 
         //   $company_id = auth()->user()->company->id;
-         
-
-        
+                 
         // $user = Auth::user(); 
         // $company_id =Company::select('id')->$user->id; 
-        $company_id = auth()->user()->company()->first()->id;
-        dd($company_id); 
+        // $company_id = auth()->user()->company()->first()->id;
+
+        // dd($company_id); 
         
         // $company_id = Helper::loginUserCompanyId();
         // $categoryResult = ProductCategoryModel::whereHas('companyname', function ($query) use ($company_id) {

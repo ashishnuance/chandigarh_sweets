@@ -95,7 +95,6 @@ class ProductCategoryController extends Controller
 
     public function store(Request $request)
     {
-        $userType = auth()->user()->role()->first()->name;
         
         $userType = auth()->user()->role()->first()->name;
         $listUrl = 'superadmin.product-category.index';
