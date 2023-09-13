@@ -25,18 +25,18 @@ class SubCategoryImport implements ToCollection, WithStartRow
         $userType = auth()->user()->role()->first()->name;
         foreach ($collection as $row) 
         {
-            if(count($row)==2){
+            if(count($row)==3){
                 if($userType!=config('custom.superadminrole')){
                     $category_id = ProductCategoryModel::select('id');
                 }else{
-                    $category_id = $row[0];
+                    $category_id = $row[1];
                 }
 
                 $checkCatgoryName = ProductSubCategory::where('procat_id',$category_id)->where('subcat_name','like',$row[1]);
                 if($checkCatgoryName->count()==0){
                     $subCategory[] = [
                         'procat_id'     => $category_id,
-                        'subcat_name'    => $row[1],
+                        'subcat_name'    => $row[2],
                     ];
                 }
             }
