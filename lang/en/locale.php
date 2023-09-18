@@ -212,6 +212,9 @@ return [
     "company_create_success"=>"Company Created Successfully",
 
     "company_admin_create_success"=>"Company Admin Created Successfully",
+    "company_admin_update_success"=>"Company Admin Updated Successfully",
+    "company_user_update_success"=>"Company User Updated Success",
+    "company_user_create_success"=>"Company User Create Success",
     "buyer_create_success"=>"Buyer Created Successfully",
     "try_again"=>"Please try again!",
     "no_record_found"=>"No record found",
