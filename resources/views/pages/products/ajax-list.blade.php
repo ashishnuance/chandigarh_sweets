@@ -5,6 +5,7 @@
       <th>{{__('locale.name')}}</th>
       <th>{{__('locale.product code')}}</th>
       <th>{{__('locale.slug')}}</th>
+      <th>{{__('locale.Variationtype')}}</th>
       @if(isset($userType) && $userType==config('custom.superadminrole'))
       <th>{{__('locale.company_name')}}</th>
       @endif
@@ -16,13 +17,23 @@
     </tr>
   </thead>
   <tbody>
+
+    <?php //echo '<pre>'; print_r($product_value->product_variation[0]->productvariationName->name); ?>
+    
     @if(isset($productResult) && !empty($productResult))
+    
+    
     @foreach($productResult as $product_key => $product_value)
     <tr>
-    <td>{{$product_key+1}}</td>
-    <td>{{$product_value->product_name}}</td>
-    <td>{{$product_value->product_code}}</td>
-    <td>{{$product_value->product_slug}}</td>
+      <td>{{$product_key+1}}</td>
+      <td>{{$product_value->product_name}}</td>
+      <td>{{$product_value->product_code}}</td>
+      <td>{{$product_value->product_slug}}</td>
+      <td>
+        {{isset($product_value->product_variation[0]->productvariationName->name) ? ucwords($product_value->product_variation[0]->productvariationName->name) : ''}}
+      </td>
+
+      {{--<td>{{$product_value->product_variation[0]->productvariationName->name}}</td> --}}
     @if(isset($userType) && $userType==config('custom.superadminrole'))
     <td>{{isset($product_value->company[0]->company_name) ? $product_value->company[0]->company_name : '' }}</td>
     @endif

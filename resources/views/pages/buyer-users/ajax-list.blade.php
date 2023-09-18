@@ -14,13 +14,14 @@
     </tr>
   </thead>
   <tbody>
+    
     @if(isset($usersResult) && !empty($usersResult->items()))
     @foreach($usersResult as $user_key => $user_value)
     <tr>
     <td>{{$user_key+1}}</td>
     <td>{{$user_value->name}}</td>
     <td>{{$user_value->email}}</td>
-    <td>{{ucwords($user_value->user_type)}}</td>
+    <td>{{isset($user_value->buyertypechannelName[0]->name) ? ucwords($user_value->buyertypechannelName[0]->name) : ''}}</td>
     <td>{{$user_value->invite_code}}</td>
     @if(isset($userType) && $userType==config('custom.superadminrole'))
     

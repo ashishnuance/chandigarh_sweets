@@ -54,6 +54,19 @@
                   
                   @if(isset($userType) && $userType!=config('custom.superadminrole'))
                   <input type="hidden" name="company" value="{{Helper::loginUserCompanyId()}}"/>
+                  @else
+                  <div class="col s12 input-field">
+                    <select class="error" id="company" name="company" data-error=".errorTxt7" required>
+                      <option value="">Choose {{__('locale.Company')}}</option>
+                      @if(isset($companies) && !empty($companies))
+                        @foreach ($companies as $company_value)
+                          <option value="{{$company_value->id}}">{{$company_value->company_name}} ({{$company_value->company_code}})</option>
+                        @endforeach
+                      @endif
+                    </select>
+                    <label for="company">{{__('locale.Companies')}}</label>
+                    <small class="errorTxt7"></small>
+                  </div>
                   @endif
                   <div class="input-field col m6 s12">
                     <label for="product_name">{{__('locale.product name')}}: <span class="red-text">*</span></label>
@@ -61,7 +74,7 @@
                   </div>
                   <div class="input-field col m6 s12">
                     <label for="product_code">{{__('locale.product code')}}: <span class="red-text">*</span></label>
-                    <input type="text" id="product_code" class="validate" name="product_code" required value="{{(isset($product_result->product_code)) ? $product_result->product_code : $productCode }}">
+                    <input type="text" id="product_code" class="validate" name="product_code" required value="{{(isset($product_result->product_code)) ? $product_result->product_code : $productCode }}" oninput="this.value=this.value.replace(/[^a-zA-Z0-9-]/g,'');">
                   </div>
                 </div>
                 <div class="row">
@@ -212,6 +225,7 @@
                         <label for="sku">{{__('locale.SKU')}}: <span class="red-text">*</span></label>
                         <input type="text" class="validate sku" name="variation[sku][]" value="{{(isset($provar_value->sku)) ? $provar_value->sku : '' }}" required>
                       </div>
+                      {{-- 
                       <div class="input-field col m6 s12">
                         <label for="main_price">{{__('locale.Main Price')}}: <span class="red-text">*</span></label>
                         <input type="text" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" class="validate main_price" name="variation[main_price][]" value="{{(isset($provar_value->main_price)) ? $provar_value->main_price : '' }}" required>
@@ -219,22 +233,31 @@
                       <div class="input-field col m6 s12">
                         <label for="offer_price">{{__('locale.Offer Price')}}: <span class="red-text">*</span></label>
                         <input type="text" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" class="validate offer_price" name="variation[offer_price][]" value="{{(isset($provar_value->offer_price)) ? $provar_value->offer_price : '' }}">
-                      </div>
+                      </div> 
+                      --}}
                       <div class="input-field col m6 s12">
                         <label for="quantity">{{__('locale.Quantity')}}: <span class="red-text">*</span></label>
                         <input type="text" class="validate quantity" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" name="variation[quantity][]" value="{{(isset($provar_value->quantity)) ? $provar_value->quantity : '' }}">
                       </div>
                       <?php 
                      // echo"<pre>"; print_r($productsVariationsOptions); die; ?>
+                      <?php //echo 'abc'; ?> 
+                       {{-- edit type drop down --}}
                       <div class="input-field col m6 s12">
-                        <select name="variation[variation_type][]" class="variation_type" >
+                        <select name="variation[variation_type][]" class="variation_type_new" >
                           <option value="" disabled selected>{{__('locale.select type')}}</option>
-                          @if(isset($productsVariationsOptions) && !empty($productsVariationsOptions))
+                          <!-- @if(isset($productsVariationsOptions) && !empty($productsVariationsOptions))
                           @foreach($productsVariationsOptions as $option_value)
                           <option value="{{$option_value->id}}" {{($provar_value->variation_type == $option_value->id) ? 'selected="selected"' : '' }}>{{$option_value->name}}</option>
                           
                           @endforeach
-                          @endif
+                          @endif -->
+                          @if(isset($product_variation_type) && !empty($product_variation_type))
+                                @foreach($product_variation_type as $edit_data)
+                                    <option value="{{ $edit_data->id }}"
+                                    {{ ($provar_value->variation_type == $edit_data->id) ?'selected="selected"' : '' }}>{{ $edit_data->name }}</option>
+                                @endforeach
+                            @endif
                         </select>
                       </div>
                       <button type="button" class="btn btn-primary mt-1 mb-1 remove-variation">Remove</button>
@@ -257,6 +280,7 @@
                         <label for="sku">{{__('locale.SKU')}}: <span class="red-text">*</span></label>
                         <input type="text" class="validate sku" name="variation[sku][]" required>
                       </div>
+                      {{--
                       <div class="input-field col m6 s12">
                         <label for="main_price">{{__('locale.Main Price')}}: <span class="red-text">*</span></label>
                         <input type="text" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" class="validate main_price" name="variation[main_price][]" required>
@@ -265,18 +289,32 @@
                         <label for="offer_price">{{__('locale.Offer Price')}}: <span class="red-text">*</span></label>
                         <input type="text" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" class="validate offer_price" name="variation[offer_price][]" required>
                       </div>
+                      --}}
                       <div class="input-field col m6 s12">
                         <label for="quantity">{{__('locale.Quantity')}}: <span class="red-text">*</span></label>
                         <input type="text" class="validate quantity" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" name="variation[quantity][]" required>
                       </div>
+
+                      <?php //echo '123'; ?> 
+                       {{--add type dropdown--}}
                       <div class="input-field col m6 s12">
                         <select name="variation[variation_type][]" class="variation_type" id="productsVariations" required>
-                          <option value="" disabled selected>{{__('locale.select type')}}</option>
-                          @if(isset($productsVariationsOptions) && !empty($productsVariationsOptions))
-                          @foreach($productsVariationsOptions as $option_value)
+                          <option value="" disabled selected>{{__('locale.select type')}}</option> 
+                           @if(isset($product_variation_type) && !empty($product_variation_type))
+                          @foreach($product_variation_type as $option_value)
+                          
                           <option value="{{$option_value->id}}">{{$option_value->name}}</option>
                           @endforeach
                           @endif
+                          <!-- <select name="product_type" class="variation_type" id="product_type" required>
+                          <option value="" disabled selected>{{__('locale.select type')}}</option>
+
+                          @if(isset($product_variation_type_name) && !empty($product_variation_type_name))
+                          @foreach($product_variation_type_name as $productvariationtype_name)
+                          <option value="{{ $productvariationtype_name->id }}">{{ $productvariationtype_name->name }}</option>
+                          @endforeach
+                          @endif -->
+
                         </select>
                       </div>
                       <button type="button" class="btn btn-primary mt-1 mb-1 remove-variation">Remove</button>
@@ -344,6 +382,12 @@
   
 </div>
 @endsection
+<div class="image-clone-new-section" style="display: none;">
+    <div class="col s12 m4 clone-image mb-2">
+        <input type="file" name="product_image[]" class="dropify" data-default-file="" accept="image/*"/>
+        <button type="button" class="btn btn-primary mt-1 mb-1 remove-image">Remove</button>
+    </div>
+</div>
 <div class="cloneimagesection hide" style="display:none">
   <div class="col s12 m4 clone-image mb-2">
       <input type="file" name="product_image[]" class="dropify" data-default-file="" accept="image/*"/>
@@ -359,6 +403,7 @@
       <label for="sku">{{__('locale.SKU')}}: <span class="red-text">*</span></label>
       <input type="text" class="validate sku" name="variation[sku][]" required>
     </div>
+    {{--
     <div class="input-field col m6 s12">
       <label for="main_price">{{__('locale.Main Price')}}: <span class="red-text">*</span></label>
       <input type="text" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" class="validate main_price" name="variation[main_price][]" required>
@@ -367,22 +412,41 @@
       <label for="offer_price">{{__('locale.Offer Price')}}: <span class="red-text">*</span></label>
       <input type="text" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" class="validate offer_price" name="variation[offer_price][]">
     </div>
+    --}}
     <div class="input-field col m6 s12">
       <label for="quantity">{{__('locale.Quantity')}}: <span class="red-text">*</span></label>
       <input type="text" class="validate quantity" oninput="this.value=this.value.replace(/[^0-9.,]/g,'');" name="variation[quantity][]">
     </div>
+    
+   {{-- clone drop down --}}
     <div class="input-field col m6 s12">
-      <select name="variation[variation_type][]" class="variation_type">
-        <option value="" disabled selected>{{__('locale.select type')}}</option>
-        @if(isset($productsVariationsOptions) && !empty($productsVariationsOptions))
-        @foreach($productsVariationsOptions as $option_value)
-        <option value="{{$option_value->id}}">{{$option_value->name}}</option>
-        @endforeach
-        @endif
+      <select name="variation[variation_type][]" class="variation_type new" {{(isset($product_value->id) && $product_value->id!='') ? $product_value->id : 'else'}}>
+        <option value="Select" disabled selected>{{__('locale.select type')}}</option>
+          
+              @if(isset($product_variation_type) && !empty($product_variation_type))
+                  @foreach($product_variation_type as $productvariation_type)
+                      <option value="{{ $productvariation_type->id }}">{{ $productvariation_type->name }}</option>
+                  @endforeach
+              @endif
+          
       </select>
     </div>
     <button type="button" class="btn btn-primary mt-1 mb-1 remove-variation">Remove</button>
   </div>
+</div>
+
+
+<div class="product-vari-type-clone-section" style="display:none">
+<div class="input-field col m6 s12">
+      <select name="variation[variation_type][]" class="variation_type new">
+        <option value="Select" disabled selected>{{__('locale.select type')}}</option>
+          @if(isset($product_variation_type) && !empty($product_variation_type))
+              @foreach($product_variation_type as $productvariation_type)
+                  <option value="{{ $productvariation_type->id }}">{{ $productvariation_type->name }}</option>
+              @endforeach
+          @endif
+      </select>
+    </div>
 </div>
 {{-- vendor script --}}
 <?php //echo '<pre>';print_r($provar_value->variation_type); exit(); ?>
@@ -401,38 +465,53 @@
     var category_value = "{{(isset($product_result->product_catid) && $product_result->product_catid!='NULL') ? $product_result->product_catid : old('product_catid')}}";
     var subcategory_value = "{{(isset($product_result->product_subcatid) && $product_result->product_subcatid!='NULL') ? $product_result->product_subcatid : old('product_subcatid')}}";
     var food_type = "{{(isset($product_result->food_type) && $product_result->food_type!='NULL') ? $product_result->food_type : old('food_type')}}";
+    var company_value = "{{(isset($product_result->company[0]->id) && $product_result->company[0]->id!='NULL') ? $product_result->company[0]->id : old('company')}}";
 
-    
     $('#product_catid').val(category_value);
     $('#product_catid').formSelect();
     $('#product_subcatid').val(subcategory_value);
     $('#product_subcatid').formSelect();
     $('.food_type').val(food_type);
     $('.food_type').formSelect();
+    $('#company').val(company_value);
+    $('#company').formSelect();
     
 
     //$('.variation_type').formSelect();
 
   }
 
-  $(document).ready(function(){
-    $('#add-product-image').click(function(){
-      
-      let image_clone_html = $('.clone-product-image-section .clone-image:first-child').clone(true);
-      
+  
+    $(document).ready(function(){
+      $('#add-product-image').click(function(){
+        
+      let image_clone_html = $('.image-clone-new-section > div').clone(true);
+
       console.log('image_clone_html',image_clone_html.html());
       image_clone_html.appendTo('.clone-product-image-section');//.find('img').remove();
+      $('.dropify').dropify()
+      })
 
-    })
 
     $('#add-product-variation').click(function(){
       
       // let variation_clone_html = $('.clone-product-variation').find('.product-variation').eq(0).clone();
       let variation_clone_html = $('.cloneimagesection').find('.product-variation').eq(0).clone();
-      console.log(variation_clone_html.html());
-      
+      // console.log(variation_clone_html.html());
+      console.log('variation_clone_html',variation_clone_html.html());
+      let product_var_clone_length = $('.clone-product-variation .product-variation').length;
+      console.log('product_var_clone_length',product_var_clone_length);
+      variation_clone_html.find('div:first-child').parents('.product-variation').addClass('new'+product_var_clone_length)
+      // variation_clone_html.find('.product-variation').addClass('new'+product_var_clone_length);
       variation_clone_html.appendTo('.clone-product-variation');
-      $('.variation_type').formSelect();
+
+      // let product_vari_type_clone_section = $('.product-vari-type-clone-section > div').clone();
+      // product_vari_type_clone_section.find('.variation_type').addClass('new'+product_var_clone_length);
+      // $('.clone-product-variation').append(product_vari_type_clone_section);
+      $('select').formSelect();
+      $('.new'+product_var_clone_length).find('.select-wrapper:first-child > input').remove();
+      // $( "select, input:checkbox, input:radio, input:file").uniform();
+      // $('.clone-product-variation .new'+product_var_clone_length).formSelect();
 
     })
     

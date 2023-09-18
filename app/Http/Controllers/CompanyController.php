@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Company;
+use App\Models\{Company,User,companyUserMapping,ProductCompanyMapping};
 use Illuminate\Support\Facades\Validator;
 use App\Imports\CompanyImport;
 use App\Exports\CompanyExport;
@@ -187,11 +187,14 @@ class CompanyController extends Controller
      */
     public function destroy($id)
     {
-        
-        if(Company::where('id',$id)->delete()){
-            return redirect()->back()->with('success',__('locale.delete_message'));
+        if(companyUserMapping::where('company_id',$id)->count()==0 && ProductCompanyMapping::where('company_id',$id)->count()==0){
+            if(Company::where('id',$id)->delete()){
+                return redirect()->back()->with('success',__('locale.delete_message'));
+            }else{
+                return redirect()->back()->with('error',__('locale.try_again'));
+            }
         }else{
-            return redirect()->back()->with('error',__('locale.try_again'));
+            return redirect()->back()->with('error',__('locale.company_delete_error_msg'));
         }
     }
 

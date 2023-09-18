@@ -12,6 +12,7 @@ use App\Exports\ProductsExport;
 use App\Exports\UserProductsExport;
 use App\Imports\ProductsImport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\ProductVariationType;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Helper;
@@ -52,7 +53,11 @@ class ProductsController extends Controller
         $editUrl = 'superadmin.product.edit';
         $deleteUrl = 'superadmin.product.delete';
         $sampleFileName = 'product-import.csv';
-        $productResult = Products::with(['category','subcategory','company'])->select(['id','product_code','product_name','product_slug','product_catid','product_subcatid','food_type','blocked'])->orderBy('id','DESC');
+        $productResult = Products::with('product_variation')->with(['category','subcategory','company'])->select(['id','product_code','product_name','product_slug','product_catid','product_subcatid','food_type','blocked'])->orderBy('id','DESC');
+
+        // dd($productResult[0]->product_variation[0]->productvariationName); exit();
+
+        // dd($productResult); exit();
 
         if($userType!=config('custom.superadminrole')){
             $company_id = Helper::loginUserCompanyId();
@@ -64,10 +69,12 @@ class ProductsController extends Controller
         }
         // dd($productResult->get()); exit();
         if($request->ajax()){
+            // exit('abc');
             $productResult = $productResult->when($request->seach_term, function($q)use($request){
                             $q->where('product_name', 'like', '%'.$request->seach_term.'%')
                             ->orWhere('product_code', 'like', '%'.$request->seach_term.'%')
                             ->orWhere('food_type', 'like', '%'.$request->seach_term.'%');
+
                         })
                         ->when($request->status, function($q)use($request){
                             $q->where('blocked',$request->status);
@@ -101,13 +108,22 @@ class ProductsController extends Controller
         $companies = Company::get(["company_name", "id","company_code"]);
         $productCategoryResult = ProductCategoryModel::get(["category_name", "id"]);
         $deleteImageUrl = 'superadmin/product/imagedelete';
+
+        $product_Variation_type =  ProductVariationType::get();
+
         if($userType!=config('custom.superadminrole')){
-            $company_id = Helper::loginUserCompanyId();
-            $productCategoryResult = ProductCategoryModel::where('company_id',$company_id)->get(["category_name", "id"]);
             $formUrl = 'product.store';
             $deleteImageUrl = 'product/imagedelete';
+            $company_id = Helper::loginUserCompanyId();
+            $productCategoryResult = ProductCategoryModel::where('company_id',$company_id)->get(["category_name", "id"]);
+
+            $product_Variation_type =  ProductVariationType::where('company_id',$company_id)->get();
+
         }
         $productsVariationsOptions = ProductsVariationsOptions::select('id','name')->get();
+
+
+            //echo '<pre>'; print_r($productsVariationsOptions); exit();
 
         $foodTypeResult = ['veg','non-veg'];
         $pageTitle = __('locale.Items'); 
@@ -123,7 +139,7 @@ class ProductsController extends Controller
             }
         }
         
-        return view('pages.products.create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'pageTitle'=>$pageTitle,'companies'=>$companies,'product_result'=>$product_result,'userType'=>$userType,'productCategoryResult'=>$productCategoryResult,'productSubCategoryResult'=>$productSubCategoryResult,'foodTypeResult'=>$foodTypeResult,'productCode'=>$productCode,'formUrl'=>$formUrl,'productsVariationsOptions'=>$productsVariationsOptions,'deleteImageUrl'=>$deleteImageUrl]);
+        return view('pages.products.create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'pageTitle'=>$pageTitle,'companies'=>$companies,'product_result'=>$product_result,'userType'=>$userType,'productCategoryResult'=>$productCategoryResult,'productSubCategoryResult'=>$productSubCategoryResult,'foodTypeResult'=>$foodTypeResult,'productCode'=>$productCode,'formUrl'=>$formUrl,'productsVariationsOptions'=>$productsVariationsOptions,'deleteImageUrl'=>$deleteImageUrl,'product_variation_type'=>$product_Variation_type]);
     }
 
     /**
@@ -134,9 +150,13 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
+
+       //echo '<pre>'; print_r($request->all()); die;
+
         $validator = Validator::make($request->all(), [
             'product_name' => 'required|max:250',
-            'product_code' => 'required',
+            'product_code' => 'required|unique:products',
+            'company' => 'required',
         ]);
         
         
@@ -157,11 +177,12 @@ class ProductsController extends Controller
             'product_slug'=>str_replace(' ','-',$request->product_name),
         ];
         $redirectUrl = 'superadmin.product.index';
-        $product = Products::create($product_info);
-        if($userType!=config('custom.superadminrole')){
-            $product->company()->attach($request->company);
+        if(isset($userType) && $userType!=config('custom.superadminrole')){
             $redirectUrl = 'product.index';
         }
+        $product = Products::create($product_info);
+        $product->company()->attach($request->company);
+        
         
         if($request->has('product_image')) {
             $allowedfileExtension=['pdf','jpg','png'];
@@ -200,10 +221,18 @@ class ProductsController extends Controller
                 for($i=0; $i<count($request->variation[$key]); $i++){
                     $product_variation[$i]['product_id'] = $product->id;
                     $product_variation[$i][$key] = $request->variation[$key][$i];
+                    $product_variation[$i]['variation_type'] = isset($request->variation['variation_type'][$i]) ? $request->variation['variation_type'][$i] : '';
+
+                    $product_variation[$i]['main_price'] = 0;
+                    $product_variation[$i]['offer_price'] = 0; 
+
                 }
                 if(count($request->variation[$key])<count($request->variation['name'])){
                     $index = count($request->variation['name'])-count($request->variation[$key]);
                     $product_variation[$index][$key] = 0;
+                    $product_variation[$i]['main_price'] = 0;
+                    $product_variation[$i]['offer_price'] = 0; 
+
                 }
                 
 
@@ -211,6 +240,30 @@ class ProductsController extends Controller
             
         }
         $product_variation_result = ProductsVariations::insert($product_variation);
+        
+        // if ($request->has('variation')) {
+        //     $product_variation = [];
+        
+        //     foreach ($request->variation as $key => $variation_val) {
+        //         //echo '<pre>'; print_r($key); die;
+        //         for ($i = 0; $i < count($request->variation[$key]); $i++) {
+        //             // $product_variation[$i]['product_id'] = $product->id;
+        //             $product_variation[$i]['name'] = $request->variation[$key];
+
+        //             $product_variation[$i]['main_price'] = 0; // Set a default value for main_price
+        //             $product_variation[$i]['offer_price'] = 0; 
+        //         }
+        
+        //         if (count($request->variation[$key]) < count($request->variation['name'])) {
+        //             $index = count($request->variation['name']) - count($request->variation[$key]);
+        //             $product_variation[$index][$key] = 0;
+        //             $product_variation[$index]['main_price'] = 0; // Set a default value for 
+        //             $product_variation[$index]['offer_price'] = 0;
+        //         }
+        //     }
+        // }
+        
+        // $product_variation_result = ProductsVariations::insert($product_variation);
         
         return redirect()->route($redirectUrl)->with('success',__('locale.success common add'));
         
@@ -246,13 +299,18 @@ class ProductsController extends Controller
         $companies = Company::get(["company_name", "id","company_code"]);
         $productCategoryResult = ProductCategoryModel::get(["category_name", "id"]);
 
+        $product_variation_type =  ProductVariationType::get();
+        
         if($userType!=config('custom.superadminrole')){
-            $company_id = Helper::loginUserCompanyId();
-            $productCategoryResult = ProductCategoryModel::where('company_id',$company_id)->get(["category_name", "id"]);
             $listUrl = 'product.index';
             $deleteImageUrl = 'product/imagedelete';
-        }
+            $company_id = Helper::loginUserCompanyId();
+            $productCategoryResult = ProductCategoryModel::where('company_id',$company_id)->get(["category_name", "id"]);
 
+            $product_variation_type =  ProductVariationType::where('company_id',$company_id)->get();
+            
+        }
+        
         $productsVariationsOptions = ProductsVariationsOptions::get(['id','name']);
         // echo"<pre>"; print_r($productsVariationsOptions); die;
         $foodTypeResult = ['veg','non-veg'];
@@ -273,8 +331,9 @@ class ProductsController extends Controller
             
         }
         
-        
-        return view('pages.products.create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'pageTitle'=>$pageTitle,'companies'=>$companies,'product_result'=>$product_result,'userType'=>$userType,'productCategoryResult'=>$productCategoryResult,'productSubCategoryResult'=>$productSubCategoryResult,'foodTypeResult'=>$foodTypeResult,'productCode'=>$productCode,'formUrl'=>$formUrl,'productsVariationsOptions'=>$productsVariationsOptions,'deleteImageUrl'=>$deleteImageUrl]);
+        // echo '<pre>'; print_r($product_variation_type); die; 
+
+        return view('pages.products.create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'pageTitle'=>$pageTitle,'companies'=>$companies,'product_result'=>$product_result,'userType'=>$userType,'productCategoryResult'=>$productCategoryResult,'productSubCategoryResult'=>$productSubCategoryResult,'foodTypeResult'=>$foodTypeResult,'productCode'=>$productCode,'formUrl'=>$formUrl,'productsVariationsOptions'=>$productsVariationsOptions,'deleteImageUrl'=>$deleteImageUrl,'product_variation_type'=>$product_variation_type]);
     }
 
     /**
@@ -345,10 +404,17 @@ class ProductsController extends Controller
                 for($i=0; $i<count($request->variation[$key]); $i++){
                     $product_variation[$i]['product_id'] = $id;
                     $product_variation[$i][$key] = $request->variation[$key][$i];
+                    $product_variation[$i]['main_price'] = 0;
+                    $product_variation[$i]['offer_price'] = 0; 
+
+
                 }
                 if(count($request->variation[$key])<count($request->variation['name'])){
                     $index = count($request->variation['name'])-count($request->variation[$key]);
                     $product_variation[$index][$key] = 0;
+                    $product_variation[$i]['main_price'] = 0;
+                    $product_variation[$i]['offer_price'] = 0; 
+
                 }
                 
 

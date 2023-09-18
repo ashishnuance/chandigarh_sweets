@@ -64,7 +64,7 @@
                     <small class="errorTxt2"></small>
                   </div>
                   <div class="col s12 m6 input-field">
-                    <input id="email" name="email" type="email" class="validate" {{(isset($user_result->email)) ? 'readonly disabled' : '' }} value="{{(isset($user_result->email)) ? $user_result->email : old('email')}}"
+                    <input id="email" name="email" type="email" class="validate" {{(isset($user_result->email)) ? 'readonly' : '' }} value="{{(isset($user_result->email)) ? $user_result->email : old('email')}}"
                       data-error=".errorTxt3">
                     <label for="email">{{__('locale.email')}}</label>
                     <small class="errorTxt3"></small>
@@ -141,6 +141,126 @@
                       </div>
                     </div>
                   </div>
+                  <!-- permission start -->
+                  <div class="col s12">
+                    <table class="mt-1">
+                      <thead>
+                        <tr>
+                          <th>Module Permission</th>
+                          <th>Read</th>
+                          <th>Create</th>
+                          <th>Update</th>
+                          <th>Delete</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+
+                      <?php //echo '<pre>'; print_r($user_result); die; ?>
+                        @if(config('custom.modulePermissionArray') && is_array(config('custom.modulePermissionArray')))
+                        @foreach(config('custom.modulePermissionArray') as $key => $moduleValue)
+                        
+                        <?php //echo '<pre>'; print_r($user_result->permission); ?>
+                        <tr>
+                          <td>{{ucwords(str_replace('_',' ',$moduleValue))}}</td>
+                          <td>
+                            <label>
+                            <input type="checkbox" name="permission_allow[{{ $moduleValue }}][guard_name][]" value="read" {{ (isset($user_result->permission[$moduleValue]) && !empty($user_result->permission[$moduleValue]) && in_array('read',$user_result->permission[$moduleValue])) ? 'checked="checked"' :'' }}/>
+                              <span></span>
+                          </label>
+                          </td>
+                         
+                          <?php //echo '<pre>'; print_r($user_result->permission[$key]->name); ?>
+                          <td>
+                            <label>
+                              
+                              <input type="checkbox" name="permission_allow[{{ $moduleValue }}][guard_name][]" value="create" {{ (isset($user_result->permission[$moduleValue]) && !empty($user_result->permission[$moduleValue]) && in_array('create',$user_result->permission[$moduleValue])) ? 'checked="checked"' :'' }}/>
+                              
+                              <span></span>
+                            </label>
+                          </td>
+                          <td>
+                            <label>
+                             
+                              <input type="checkbox" name="permission_allow[{{ $moduleValue }}][guard_name][]" value="update" {{ (isset($user_result->permission[$moduleValue]) && !empty($user_result->permission[$moduleValue]) && in_array('update',$user_result->permission[$moduleValue])) ? 'checked="checked"' :'' }}/>
+                             
+                              <span></span>
+                            </label>
+                          </td>
+                          <td>
+                            <label>
+                             
+                              <input type="checkbox" name="permission_allow[{{ $moduleValue }}][guard_name][]" value="delete" {{ (isset($user_result->permission[$moduleValue]) && !empty($user_result->permission[$moduleValue]) && in_array('delete',$user_result->permission[$moduleValue])) ? 'checked="checked"' :'' }}/>
+                              
+                              <span></span>
+                            </label>
+                          </td>
+                        </tr>
+                        @endforeach
+                        @endif
+                      <?php /*
+                      //echo '<pre>'; print_r($user_result); die; ?>
+                        @if(isset($user_result->permission) && !empty($user_result->permission))
+
+                        <?php //echo $editData = user_result) ?>
+                        @foreach($user_result->permission as $moduleValue)
+
+                        <tr>
+
+                          <td>{{ucwords(str_replace('_',' ',$moduleValue->name))}}</td>
+
+                          <td>
+                          <label>
+                              @if ($moduleValue->guard_name == 'read')
+                              <input type="checkbox" name="permission_allow[{{ $moduleValue }}][guard_name][]" value="index" checked />
+                              @else
+                                  <input type="checkbox" name="permission_allow[{{ $moduleValue }}][guard_name][]" value="index" />
+                              @endif
+                              <span></span>
+                          </label>
+                          </td>
+                          <?php //echo '<pre>'; print_r($moduleValue); die; ?>
+                          <td>
+                            <label>
+                              
+                              @if ($moduleValue->guard_name == 'create')
+                              <input type="checkbox" name="permission_allow[{{ $moduleValue }}][guard_name][]" value="create" checked />
+                              @else
+                                  <input type="checkbox" name="permission_allow[{{ $moduleValue }}][guard_name][]" value="create" />
+                              @endif
+                              <span></span>
+                            </label>
+                          </td>
+                          <td>
+                            <label>
+                             
+                              @if ($moduleValue->guard_name == 'update')
+                              <input type="checkbox" name="permission_allow[{{ $moduleValue }}][guard_name][]" value="update" checked />
+                              @else
+                                  <input type="checkbox" name="permission_allow[{{ $moduleValue }}][guard_name][]" value="update" />
+                              @endif
+                              <span></span>
+                            </label>
+                          </td>
+                          <td>
+                            <label>
+                            
+                              @if ($moduleValue->guard_name == 'delete')
+                              <input type="checkbox" name="permission_allow[{{ $moduleValue }}][guard_name][]" value="delete" checked />
+                              @else
+                                  <input type="checkbox" name="permission_allow[{{ $moduleValue }}][guard_name][]" value="delete" />
+                              @endif
+                              <span></span>
+                            </label>
+                          </td>
+                        </tr>
+                        @endforeach
+                        @endif
+                        */ ?>
+                      </tbody>
+                    </table>
+                    <!-- </div> -->
+                  </div>
+                  <!-- permission end -->
                 </div>
               </div>
               

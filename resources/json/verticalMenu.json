@@ -281,7 +281,7 @@
     },
 
     {
-      "for" :["superadmin"],
+      "for" :["superadmin1"],
       "url": "javascript:void(0)",
       "name": "Product Company Mapping",
       "i18n": "Product Company Mapping",

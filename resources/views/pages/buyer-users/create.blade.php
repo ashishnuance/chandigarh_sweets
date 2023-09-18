@@ -72,14 +72,27 @@
                   
                   <div class="col s12 m6 input-field">
                     <select name="user_type" id="user_type" require>
-                        <option value="">Choose {{__('locale.type')}}</option>
-                        <option value="domestic">Domestic</option>
-                        <option value="foreign">Foreign</option>
-                      
+                        <option value="Select" disabled selected>Choose {{__('locale.Channel')}}</option>
+                        @if(isset($user_result->id))
+                            @if(isset($buyer_type_channel_edit) && !empty($buyer_type_channel_edit))
+                                @foreach($buyer_type_channel_edit as $edit_data)
+                                    <option value="{{ $edit_data->id }}"
+                                    {{ ($user_result->user_type == $edit_data->id) ?'selected="selected"' : '' }}>{{ $edit_data->name }}</option>
+                                @endforeach
+                            @endif
+                        @else
+                            @if(isset($buyer_type_channel_data) && !empty($buyer_type_channel_data))
+                                @foreach($buyer_type_channel_data as $buyertypechannel_data)
+
+                                    <option value="{{ $buyertypechannel_data->id }}">{{ $buyertypechannel_data->name }}</option>
+                                @endforeach
+                            @endif
+                        @endif
+
                     </select>
-                    <label for="user_type">{{__('locale.type')}}</label>
+                    <label for="user_type">{{__('locale.Channel')}}</label>
                   </div>
-                  
+  
                   <div class="col s12 m6 input-field">
                     <select name="blocked" id="blocked">
                       <option value="1">Blocked</option>
@@ -95,6 +108,8 @@
                  Save changes</button>
                 <button type="reset" class="btn btn-light">Cancel</button>
               </div>
+
+
             </div>
           </form>
           <!-- users edit account form ends -->

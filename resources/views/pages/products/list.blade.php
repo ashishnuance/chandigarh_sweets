@@ -145,8 +145,9 @@
         $('#hidden_page').val(page);
         var serach = $('#serach').val();
         var seach_term = $('#status').val();
-        fetch_data(page,status, seach_term);
+        fetch_data(page, search, seach_term);
     });
+
 });
 </script>
 @endsection

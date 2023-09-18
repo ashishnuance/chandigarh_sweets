@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\{ProductCategoryModel,ProductSubCategory,ProductImagesModel,ProductsVariations};
+use App\Models\ProductVariationType;
 
 
 class Products extends Model
@@ -28,7 +29,7 @@ class Products extends Model
     }
 
     public function product_variation(){
-        return $this->hasMany(ProductsVariations::class, 'product_id', 'id');
+        return $this->hasMany(ProductsVariations::class, 'product_id', 'id')->with('productvariationName');
     }
 
     public function company()

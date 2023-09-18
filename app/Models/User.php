@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Role;
 use App\Models\Company;
+use App\Models\Permission;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
@@ -68,6 +69,17 @@ class User extends Authenticatable
     return $this->belongsToMany(Company::class, 'company_user_mappings', 'user_id', 'company_id');
     }
 
+    public function permission()
+    {
+        return $this->hasMany(Permission::class,'user_id');
+
+    }
+
+    public function buyertypechannelName()
+    {
+        return $this->hasMany(BuyerTypeChannel::class,'id','user_type');
+
+    }
 
     
 }

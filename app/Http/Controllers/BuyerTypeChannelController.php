@@ -36,7 +36,7 @@ class BuyerTypeChannelController extends Controller
         $deleteUrl = 'superadmin.buyer-type-channel.delete';
         $paginationUrl = 'superadmin.buyer-type-channel.index';
         $importUrl = 'superadmin.buyer-type-channel-import';
-        $exportUrl = 'buyer-type-channel-export';
+        $exportUrl = 'buyer-type-channelexport';
         $breadcrumbs = [
             ['link' => "/superadmin", 'name' => "Home"], ['link' => "superadmin/buyer type channel", 'name' => 'Buyer Type Channel'], ['name' => "List"],
         ];
@@ -52,7 +52,7 @@ class BuyerTypeChannelController extends Controller
             $deleteUrl = 'buyer-type-channel.delete';
             $paginationUrl = 'buyer-type-channel.index';
             $importUrl = 'buyer-type-channel-import';
-            $exportUrl = 'buyer-type-channel-export';
+            $exportUrl = 'buyer-type-channelexport';
             $company_id = Helper::loginUserCompanyId();
 
             $buyertypechannel_List = $buyertypechannel_List->whereHas('companyname',function($query) use ($company_id) {
@@ -223,7 +223,7 @@ class BuyerTypeChannelController extends Controller
             return redirect()->route($returnUrl)->with('error', __('locale.try_again'));
         }
     }
-    public function buyertypechannelexport($type=''){
+    public function buyertypechannel_export($type=''){
         
         if($type=='superadmin'){
             $buyertypeAdmin = new AdminBuyerTypeChannelExport;   

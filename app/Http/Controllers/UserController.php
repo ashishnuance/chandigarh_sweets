@@ -13,6 +13,7 @@ use App\Imports\UsersImport;
 use App\Exports\UsersExport;
 use App\Exports\AdminExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Permission;
 use Helper;
 
 
@@ -23,7 +24,7 @@ class UserController extends Controller
     {
         $userType = auth()->user()->role()->first()->name;
         $listUrl = 'company-admin-list';
-        
+        $deleteUrl = 'company-admin-delete';
         $perpage = config('app.perpage');
         $breadcrumbs = [
             ['link' => "modern", 'name' => "Home"], ['link' => "javascript:void(0)", 'name' => __('locale.Company Admin')], ['name' => __('locale.Company Admin').__('locale.List')]];
@@ -49,12 +50,12 @@ class UserController extends Controller
                         })
                         ->paginate($perpage);
                         
-            return view('pages.users.users-list-ajax', compact('usersResult','editUrl'))->render();
+            return view('pages.users.users-list-ajax', compact('usersResult','editUrl','deleteUrl'))->render();
         }
 
         $usersResult = $usersResult->paginate($perpage);
         
-        return view('pages.users.users-list', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'usersResult'=>$usersResult,'pageTitle'=>$pageTitle,'userType'=>$userType,'editUrl'=>$editUrl]);
+        return view('pages.users.users-list', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'usersResult'=>$usersResult,'pageTitle'=>$pageTitle,'userType'=>$userType,'editUrl'=>$editUrl,'deleteUrl'=>$deleteUrl]);
     }
 
 
@@ -71,7 +72,15 @@ class UserController extends Controller
         $companies = Company::get(["company_name", "id","company_code"]);
         $pageTitle = __('locale.Company Admin'); 
         if($id!=''){
-            $user_result = User::with('company')->find($id);
+            $permission_arr = [];
+            $user_result = User::with(['company','permission'])->find($id);
+            if($user_result->permission->count()>0){
+                foreach($user_result->permission as $permission_val){
+                    $permission_arr[$permission_val->name][] = $permission_val->guard_name;
+                }
+            }
+            $user_result->permission = $permission_arr;
+            // echo '<pre>';print_r($user_result);exit();
             if($user_result){
             $states = State::where('country_id',$user_result->country)->get(["name", "id"]);
             $cities = City::where('state_id',$user_result->state)->get(["name", "id"]);
@@ -79,6 +88,7 @@ class UserController extends Controller
             $formUrl = 'company-admin-update';
             // echo '<pre>';print_r($user_result); exit();
         }
+        // dd($user_result->permission);
         return view('pages.users.users-create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'countries'=>$countries,'pageTitle'=>$pageTitle,'companies'=>$companies,'user_result'=>$user_result,'states'=>$states,'cities'=>$cities,'userType'=>$userType,'formUrl'=>$formUrl]);
     }
 
@@ -101,13 +111,42 @@ class UserController extends Controller
         $random_password = Str::random(6);
         $request['password'] = Hash::make($random_password);
         $user = User::create($request->all());
+
         $user->company()->attach($request->company);
         $user->role()->attach( $role->id);
+
+        if($request->has('permission_allow')){
+            $i=0;
+            $permissionInsert = [];
+            foreach($request->input('permission_allow') as $key => $permissionVal){
+                // echo '<pre>';print_r($permissionVal['guard_name']);
+                if(isset($permissionVal['guard_name'])){
+                    for($g=0;$g<count($permissionVal['guard_name']);$g++){
+                        $permissionInsert[$i]['user_id'] = $id;
+                        $permissionInsert[$i]['name'] = $key;
+                        $permissionInsert[$i]['guard_name'] = $permissionVal['guard_name'][$g];
+                        $i++;
+                    }
+                }
+            }
+            if(!empty($permissionInsert)){
+                Permission::where('user_id',$user->id)->delete();
+                Permission::insert($permissionInsert);
+            }
+        }
+        
         return redirect()->route('company-admin-list')->with('success',__('locale.company_admin_create_success'));
     }
 
     public function update(Request $request, $id){
 
+        $userType = auth()->user()->role()->first()->name;
+        $listUrl = 'superadmin.product-subcategory.index';
+        if($userType!=config('custom.superadminrole')){
+            $listUrl = 'product-subcategory.index';
+        }
+        
+        // echo '<pre>'; print_r($request->all()); die;
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:250',
             'email' => 'required|max:250',
@@ -127,13 +166,35 @@ class UserController extends Controller
             ->withInput();
         }
         
-        
         unset($request['_method']);
         unset($request['_token']);
         unset($request['action']);
         unset($request['company']);
         unset($request['importcompany']);
+        
+        if ($request->has('permission_allow')) {
+            Permission::where('user_id',$id)->delete();
+            foreach ($request->input('permission_allow') as $key => $permissionVal) {
+                //echo '<pre>'; print_r($permissionVal['guard_name']); die;  
 
+                if (isset($permissionVal['guard_name'])) {
+                    $guardNames = $permissionVal['guard_name'];
+        
+                    foreach ($guardNames as $guardName) {
+                        Permission::updateOrInsert(
+                            [
+                                'name' => $key,
+                                'guard_name' => $guardName,
+                                'user_id' => $id,
+                            ]
+                          
+                        );
+                    }
+                }
+            }
+        }
+        
+        unset($request['permission_allow']);
         if(isset($request['password']) && $request['password']!=''){
             $request['password'] = Hash::make($request['password']);
         }else{
@@ -182,7 +243,7 @@ class UserController extends Controller
     public function usersList(Request $request)
     {
         $userType = auth()->user()->role()->first()->name;
-        
+        $deleteUrl = 'superadmin.company-user-delete';
         $perpage = config('app.perpage');
         $breadcrumbs = [
             ['link' => "modern", 'name' => "Home"], ['link' => "javascript:void(0)", 'name' => __('locale.Company User')], ['name' => __('locale.Company User').__('locale.List')]];
@@ -195,6 +256,7 @@ class UserController extends Controller
         if($userType!=config('custom.superadminrole')){
             $paginationUrl = 'superadmin.company-user-list';
             $editUrl = 'company-user-edit';
+            $deleteUrl = 'company-user-delete';
         }
         
         $usersResult = User::with('company')->whereHas(
@@ -218,12 +280,12 @@ class UserController extends Controller
                         })
                         ->paginate($perpage);
                         
-            return view('pages.users.users-list-ajax', compact('usersResult','currentPage','editUrl'))->render();
+            return view('pages.users.users-list-ajax', compact('usersResult','currentPage','editUrl','deleteUrl'))->render();
         }
 
         $usersResult = $usersResult->paginate($perpage);
         
-        return view('pages.users.users-list', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'usersResult'=>$usersResult,'pageTitle'=>$pageTitle,'paginationUrl'=>$paginationUrl,'currentPage'=>$currentPage,'userType'=>$userType,'editUrl'=>$editUrl]);
+        return view('pages.users.users-list', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'usersResult'=>$usersResult,'pageTitle'=>$pageTitle,'paginationUrl'=>$paginationUrl,'currentPage'=>$currentPage,'userType'=>$userType,'editUrl'=>$editUrl,'deleteUrl'=>$deleteUrl]);
     }
 
     public function usersCreate($id='')
@@ -245,19 +307,30 @@ class UserController extends Controller
         $companies = Company::get(["company_name", "id","company_code"]);
         $pageTitle = __('locale.Company User    '); 
         if($id!=''){
-            $formUrl = 'superadmin.company-user-update';
-            $user_result = User::with('company')->find($id);
+
+            $permission_arr = [];
+            $user_result = User::with(['company','permission'])->find($id);
+            if($user_result->permission->count()>0){
+                foreach($user_result->permission as $permission_val){
+                    $permission_arr[$permission_val->name][] = $permission_val->guard_name;
+                }
+            }
+            $user_result->permission = $permission_arr;
+
+            // $user_result = User::with('company')->find($id);
             if($user_result){
                 $states = State::where('country_id',$user_result->country)->get(["name", "id"]);
                 $cities = City::where('state_id',$user_result->state)->get(["name", "id"]);
             }
+
+            $formUrl = 'superadmin.company-user-update';
 
             if($userType!=config('custom.superadminrole')){
                 $company_id = Helper::loginUserCompanyId();
                 $formUrl = 'company-user-update';
             }
         }
-        
+   
         return view('pages.users.users-create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'countries'=>$countries,'pageTitle'=>$pageTitle,'companies'=>$companies,'user_result'=>$user_result,'states'=>$states,'cities'=>$cities,'formUrl'=>$formUrl,'userType'=>$userType]);
     }
 
@@ -286,18 +359,70 @@ class UserController extends Controller
         unset($request['action']);
         unset($request['company']);
         unset($request['importcompany']);
+             
+        $listUrl = 'superadmin.company-user-list';
+        if($userType!=config('custom.superadminrole')){
+            $listUrl = 'company-user-list';
+        }
+
+        // if ($request->has('permission_allow')) {
+        //     Permission::where('user_id',$id)->delete();
+        //     foreach ($request->input('permission_allow') as $key => $permissionVal) {
+        //         //echo '<pre>'; print_r($permissionVal); die;  
+
+        //         if (isset($permissionVal['guard_name'])) {
+        //             $guardNames = $permissionVal['guard_name'];
+        
+        //             foreach ($guardNames as $guardName) {
+        //                 Permission::updateOrInsert(
+        //                     [
+        //                         'name' => $key,
+        //                         'guard_name' => $guardName,
+        //                         'user_id' => $id,
+        //                     ]
+                          
+        //                 );
+        //             }
+        //         }
+        //     }
+        // }
+
+        // exit('abc');
+    
+        if ($request->has('permission_allow')) {
+            Permission::where('user_id',$id)->delete();
+            foreach ($request->input('permission_allow') as $key => $permissionVal) {
+                //echo '<pre>'; print_r($permissionVal['guard_name']); die;  
+
+                if (isset($permissionVal['guard_name'])) {
+                    $guardNames = $permissionVal['guard_name'];
+        
+                    foreach ($guardNames as $guardName) {
+                        Permission::updateOrInsert(
+                            [
+                                'name' => $key,
+                                'guard_name' => $guardName,
+                                'user_id' => $id,
+                            ]
+                          
+                        );
+                    }
+                }
+            }
+        }
+        
+    
+        
+        
+        unset($request['permission_allow']);
         if(isset($request['password']) && $request['password']!=''){
             $request['password'] = Hash::make($request['password']);
         }else{
             unset($request['password']);
         }
-        
+
         $user = User::where('id',$id)->update($request->all());
-        
-        $listUrl = 'superadmin.company-user-list';
-        if($userType!=config('custom.superadminrole')){
-            $listUrl = 'company-user-list';
-        }
+
         return redirect()->route($listUrl)->with('success',__('locale.company_admin_create_success'));
     }
 
@@ -326,7 +451,64 @@ class UserController extends Controller
             
             $listUrl = 'company-user-list';
         }
+        
+        if($request->has('permission_allow')){
+            $i=0;
+            $permissionInsert = [];
+            foreach($request->input('permission_allow') as $key => $permissionVal){
+                // echo '<pre>';print_r($permissionVal['guard_name']);
+                if(isset($permissionVal['guard_name'])){
+                    for($g=0;$g<count($permissionVal['guard_name']);$g++){
+                        $permissionInsert[$i]['user_id'] = $id;
+                        $permissionInsert[$i]['name'] = $key;
+                        $permissionInsert[$i]['guard_name'] = $permissionVal['guard_name'][$g];
+                        $i++;
+                    }
+                }
+            }
+            if(!empty($permissionInsert)){
+                Permission::where('user_id',$user->id)->delete();
+                Permission::insert($permissionInsert);
+            }
+        }
+
         return redirect()->route($listUrl)->with('success',__('locale.company_admin_create_success'));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {   
+        
+        $companyId = companyUserMapping::where('user_id',$id)->first()->company_id;
+        if(companyUserMapping::where('company_id',$companyId)->where('user_id','!=',$id)->count()==0){
+            if(User::where('id',$id)->delete()){
+                return redirect()->back()->with('success',__('locale.delete_message'));
+            }else{
+                return redirect()->back()->with('error',__('locale.try_again'));
+            }
+        }else{
+            return redirect()->back()->with('error',__('locale.company_admin_delete_error_msg'));
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyUser($id)
+    {   
+        if(User::where('id',$id)->delete()){
+            return redirect()->back()->with('success',__('locale.delete_message'));
+        }else{
+            return redirect()->back()->with('error',__('locale.try_again'));
+        }
     }
 
 }
