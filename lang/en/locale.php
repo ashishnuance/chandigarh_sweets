@@ -38,6 +38,16 @@ return [
     "Sub Category List"=>"List",
     "sub category list"=>"Sub Category List",
 
+    "Buyer Type Channel"=>"Buyer Type Channel",
+    "Buyer Type Channel Add"=>"Buyer Type Channel Add",
+    "buyer type channel list"=>"Buyer Type Channel List",
+    "buyer_type_channel_success"=>"Buyer Type Channel Successfully",
+
+    "Product Variation Type"=>"Product Variation Type",
+    "Product Variation Type Add"=>"Product Variation Type Add",
+    "product variation type list"=>"Product Variation Type List",
+    "product_variation_type_success"=>"Product Variation Type Successfully",
+
     "Sub category Add"=>"Sub category Add",
     "sub_category_success"=>"Sub category Successfully",
     "name_exits"=> "Sub Category Name Already Exist",
@@ -213,6 +223,9 @@ return [
     "company_update_success"=>"Company Updated Success",
     "sub_category_update_success"=>"Sub Category Updated Success",
     "buyer_update_success"=>"Buyer Updated Successfully",
+    "buyer_type_channel_update_success"=>"Buyer Type Channel Update Success",
+    "product_variation_type_update_success"=>"Product Variation Type Update Successfully",
+
     "Company Admin"=>"Company Admin",
     "Create"=>"Create",
     "name"=>"Name",
@@ -244,6 +257,9 @@ return [
     "product delete errormessage"=>"Product is not deleted because it is in the Cart and Order list",
     "product delete successmessage"=>"Product is deleted successfully",
     "sub category delete successmessage"=>"Sub Category is deleted successfully",
+    "buyer type channel delete successmessage"=>"Buyer Type Channel Delete Successfully",
+    "product_variation_type_delete_successmessage"=>"Product Variation Type Delete Successfully",
+
     "success common update"=>"Successfully Updated",
     "product edit error"=>"Product id not match",
     "Product Company Mapping"=>"Product Company Mapping",

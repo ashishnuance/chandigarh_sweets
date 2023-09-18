@@ -31,6 +31,8 @@ use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\ProfileController;
 
 
+use App\Http\Controllers\BuyerTypeChannelController;
+use App\Http\Controllers\ProductVariationTypeController;
 
 
 
@@ -144,7 +146,35 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::match(['post', 'patch'], '/profile-update/{id}', [ProfileController::class, 'update'])->name('superadmin.profile-update');
 
+        Route::resource('/sub-category',SubCategoryController::class);
+        Route::get('/sub-category',[SubCategoryController::class,'index'])->name('superadmin.sub-category.index');
+        Route::get('/sub-category/{$id}/edit',[SubCategoryController::class,'index'])->name('superadmin.sub-category.edit');
+        Route::post('/sub-category',[SubCategoryController::class,'store'])->name('superadmin.sub-category.store');
+        Route::put('/sub-category/{$id}',[SubCategoryController::class,'update'])->name('superadmin.sub-category.update');
+        Route::get('/sub-category/destroy/{id}',[SubCategoryController::class,'destroy'])->name('superadmin.sub-category.delete');
+        Route::post('/sub-category-import',[SubCategoryController::class,'subcategoryimport'])->name('superadmin.sub-category-import');
         
+        /**  admin side Buyer Type Channel**/
+
+        Route::resource('/buyer-type-channel',BuyerTypeChannelController::class);
+        Route::get('/buyer-type-channel',[BuyerTypeChannelController::class,'index'])->name('superadmin.buyer-type-channel.index');
+        Route::post('/buyer-type-channel',[BuyerTypeChannelController::class,'store'])->name('superadmin.buyer-type-channel.store');
+        Route::get('/buyer-type-channel/{$id}/edit',[BuyerTypeChannelController::class,'index'])->name('superadmin.buyer-type-channel.edit');
+        Route::get('/buyer-type-channel/destroy/{id}',[BuyerTypeChannelController::class,'destroy'])->name('superadmin.buyer-type-channel.delete');
+        Route::put('/buyer-type-channel/{$id}',[BuyerTypeChannelController::class,'update'])->name('superadmin.buyer-type-channel.update');
+        Route::post('/buyer-type-channel-import',[BuyerTypeChannelController::class,'buyertypechannelimport'])->name('superadmin.buyer-type-channel-import');
+
+         /**  admin side Product Variation Type**/
+
+         Route::resource('/product-variation-type',ProductVariationTypeController::class);
+         Route::get('/product-variation-type',[ProductVariationTypeController::class,'index'])->name('superadmin.product-variation-type.index');
+         Route::post('/product-variation-type',[ProductVariationTypeController::class,'store'])->name('superadmin.product-variation-type.store');
+         Route::get('/product-variation-type/{$id}/edit',[ProductVariationTypeController::class,'index'])->name('superadmin.product-variation-type.edit');
+         Route::get('/product-variation-type/destroy/{id}',[ProductVariationTypeController::class,'destroy'])->name('superadmin.product-variation-type.delete');
+         Route::put('/product-variation-type/{$id}',[ProductVariationTypeController::class,'update'])->name('superadmin.product-variation-type.update');
+
+         Route::post('/product-variation-type-import',[ProductVariationTypeController::class,'productvariationtypeimport'])->name('superadmin.product-variation-type-import');
+
     });
 
     /** product category import and export **/
@@ -155,6 +185,9 @@ Route::group(['middleware' => ['auth']], function () {
     
     
 
+    Route::get('/buyer-type-channel-export/{type?}',[BuyerTypeChannelController::class,'buyertypechannelexport'])->name('buyer-type-channel-export');
+
+    Route::get('/product-variation-type-export/{type?}',[ProductVariationTypeController::class,'productvariationtypeexport'])->name('product-variation-type-export');
     /** product import and export **/
     Route::post('/product-import', [ProductsController::class,'productImport']);
     Route::get('/product-export/{type?}', [ProductsController::class,'productExport'])->name('product-export');
@@ -213,7 +246,19 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/buyer/import', [BuyerUserController::class,'buyerImport'])->name('buyer.import');
         Route::get('/buyer/export/{type}', [BuyerUserController::class,'buyerExport'])->name('buyer.export');
 
+        /** user side Buyer Type Channel**/
+
+        Route::resource('/buyer-type-channel',BuyerTypeChannelController::class);
+        Route::get('/buyer-type-channel/destroy/{id}',[BuyerTypeChannelController::class,'destroy'])->name('buyer-type-channel.delete');
+        Route::post('/buyer-type-channel-import',[BuyerTypeChannelController::class,'buyertypechannelimport'])->name('buyer-type-channel-import');
+
+        Route::resource('/product-variation-type',ProductVariationTypeController::class);
+        Route::get('/product-variation-type/destroy/{id}',[ProductVariationTypeController::class,'destroy'])->name('product-variation-type.delete');
+        Route::post('/product-variation-type-import',[ProductVariationTypeController::class,'productvariationtypeimport'])->name('product-variation-type-import');
+    
+
     });
+
     /** state and city **/
     Route::post('api/user-fetch-states', [DashboardController::class, 'user_fetchState']);
     Route::post('api/user-fetch-cities', [DashboardController::class, 'user_fetchCity']);
