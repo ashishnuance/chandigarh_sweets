@@ -105,12 +105,9 @@ class ProductCategoryController extends Controller
     }
 
     public function store(Request $request)
-<<<<<<< HEAD
-    {
+    
         
-=======
     {        
->>>>>>> b6a9ad7fac5bad7e1c0c029bef7bac3f08d4bf94
         $userType = auth()->user()->role()->first()->name;
         $listUrl = 'superadmin.product-category.index';
         if($userType!=config('custom.superadminrole')){

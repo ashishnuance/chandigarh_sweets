@@ -86,7 +86,6 @@ class SubCategoryController extends Controller
         
         $sub_Category_List = $subCategory_List->paginate($perpage);
 
-<<<<<<< HEAD
         $categoryResult = ProductCategoryModel::get();
 
 
@@ -105,8 +104,6 @@ class SubCategoryController extends Controller
         // $categoryResult = ProductCategoryModel::whereHas('companyname', function ($query) use ($company_id) {
         //     $query->where('company_id', $company_id);
         // })->select('id', 'category_name')->get();
-=======
->>>>>>> b6a9ad7fac5bad7e1c0c029bef7bac3f08d4bf94
         
   
         return view('pages.sub-category.list',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'sub_category_list'=>$sub_Category_List, 'category_list'=>$categoryResult,'editUrl'=>$editUrl,'deleteUrl'=>$deleteUrl,'userType'=>$userType,'exportUrl'=>$exportUrl,'importUrl'=>$importUrl]);
@@ -220,7 +217,6 @@ class SubCategoryController extends Controller
             $listUrl = 'product-subcategory.index';
         }
         
-    
         $result = ProductSubCategory::findOrFail($id);
 
         $result->subcat_name = $request->input('subcat_name');
