@@ -5,6 +5,7 @@ use Config;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Models\Products;
+use App\Models\Permission;
 
 class Helpers
 {
@@ -214,5 +215,15 @@ class Helpers
         $number = mt_rand(100000, 999999);
      
         return Products::where('product_code', $number)->exists() ? $this->setNumber() : $number;
+    }
+
+    public static function authRole(){
+        return (Auth::check()) ?  auth()->user()->role()->first()->name : false;
+    }
+
+    public static function getUserPermissionsModule($modulename='company_user'){
+        
+        $user_id = auth()->user()->id;
+        return Permission::where('user_id',$user_id)->where('name',$modulename)->pluck('guard_name')->toArray();
     }
 }

@@ -139,7 +139,7 @@
       ]
     },
     {
-      "for" :["admin"],
+      "for" :["admin","user"],
       "url": "javascript:void(0)",
       "name": "Buyer",
       "i18n": "Buyer",
@@ -232,29 +232,7 @@
       ]
     },
 
-    {
-      "for" :["admin"],
-      "url": "javascript:void(0)",
-      "name": "Product Category",
-      "i18n": "Product Category",
-      "class": "collapsible-header waves-effect waves-cyan",
-      "slug": "Product Category",
-      "icon": "person_outline",
-      "submenu": [
-        {
-          "url": "product-category/create",
-          "name": "Product Category Create",
-          "i18n": "Product Category Create",
-          "slug": "product-category-create"
-        },
-        {
-          "url": "product-category",
-          "name": "Product Category List",
-          "i18n": "Product Category List",
-          "slug": "product-category-list"
-        }
-      ]
-    },
+    
 
     {
       "for" :["admin","user"],
@@ -430,7 +408,7 @@
     },
 
     {
-      "for" :["admin"],
+      "for" :["admin","user"],
       "url": "javascript:void(0)",
       "name": "Buyer Type Channel",
       "i18n": "Buyer Type Channel",
@@ -478,7 +456,7 @@
     },
 
     {
-      "for" :["admin"],
+      "for" :["admin","user"],
       "url": "javascript:void(0)",
       "name": "Product Variation Type",
       "i18n": "Product Variation Type",

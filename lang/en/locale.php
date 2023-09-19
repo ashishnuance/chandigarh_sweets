@@ -276,6 +276,7 @@ return [
     "invite_code"=>"Invite Code",
     "import_company_errormsg"=>"not match",
     "company_delete_error_msg"=>"Company deletion is only allowed after deleting associated products and users.",
-    "company_admin_delete_error_msg"=>"Company Admin deletion is only allowed after deleting associated company users."
+    "company_admin_delete_error_msg"=>"Company Admin deletion is only allowed after deleting associated company users.",
+    "user_permission_error"=>"User don't have permission for this module",
 ];
 ?>

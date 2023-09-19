@@ -20,7 +20,7 @@ class CompanyAdminMiddleware
     public function handle(Request $request, Closure $next)
     {
         // return redirect()->route('login');
-        if (Auth::check() && auth()->user()->role()->first()->name=='company-admin') {
+        if (Auth::check() && in_array(auth()->user()->role()->first()->name,array('company-admin','company-user'))) {
             // $user_detail=User::with('roles_admin')->find(Auth()->user()->id);
             // if(in_array($user_detail->roles_admin->role_id,[1,2])){
             //     return $next($request);

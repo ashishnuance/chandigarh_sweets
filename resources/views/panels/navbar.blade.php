@@ -20,7 +20,8 @@
           <a class="waves-effect waves-block waves-light profile-button" href="javascript:void(0);"
             data-target="profile-dropdown">
             <span class="avatar-status avatar-online">
-              <img src="{{asset('images/avatar/avatar-7.png')}}" alt="avatar"><i></i>
+              <i class="material-icons">person_outline</i>
+              {{--<img src="{{asset('images/avatar/avatar-7.png')}}" alt="avatar"><i></i>--}}
             </span>
           </a>
         </li>
@@ -45,7 +46,7 @@
       <!-- profile-dropdown-->
       <ul class="dropdown-content" id="profile-dropdown">
         <li>
-          <a class="grey-text text-darken-1" href="{{asset('user-profile-page')}}">
+          <a class="grey-text text-darken-1" href="{{(Helper::authRole() && Helper::authRole()=='superadmin') ? route('superadmin.profile-edit') : route('profile-edit')}}">
             <i class="material-icons">person_outline</i>
             Profile
           </a>

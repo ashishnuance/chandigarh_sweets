@@ -19,6 +19,14 @@ use Helper;
 
 class UserController extends Controller
 {
+    function __construct()
+    {
+        
+        //  $this->middleware('permission:company-user-create|company-user-list|company-user-edit|company-user-delete', ['only' => ['index','show']]);
+        //  $this->middleware('permission:company-user-create', ['only' => ['create','store']]);
+        //  $this->middleware('permission:product-edit', ['only' => ['edit','update']]);
+        //  $this->middleware('permission:product-delete', ['only' => ['destroy']]);
+    }
 
     public function index(Request $request)
     {
@@ -114,7 +122,6 @@ class UserController extends Controller
 
         $user->company()->attach($request->company);
         $user->role()->attach( $role->id);
-
         if($request->has('permission_allow')){
             $i=0;
             $permissionInsert = [];

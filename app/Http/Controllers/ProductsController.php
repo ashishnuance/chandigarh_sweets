@@ -7,7 +7,7 @@ use App\Models\Company;
 use Illuminate\Support\Facades\Validator;
 use App\Models\{Products,ProductsVariations,ProductImagesModel,ProductsVariationsOptions};
 use App\Models\{ProductCategoryModel,ProductSubCategory};
-use App\Models\{Cartlist,Orderlist};
+use App\Models\{Cartlist,Orderlist,User};
 use App\Exports\ProductsExport;
 use App\Exports\UserProductsExport;
 use App\Imports\ProductsImport;
@@ -24,13 +24,12 @@ class ProductsController extends Controller
     
     function __construct()
     {
-        
         //  $this->middleware('permission:product-list|product-create|product-edit|product-delete', ['only' => ['index','show']]);
-        //  $this->middleware('permission:product-create', ['only' => ['create','store']]);
+        //  $this->middleware('permission:product', ['only' => ['index','store']]);
         //  $this->middleware('permission:product-edit', ['only' => ['edit','update']]);
         //  $this->middleware('permission:product-delete', ['only' => ['destroy']]);
     }
-
+    
     
     /**
      * Display a listing of the resource.
@@ -39,6 +38,10 @@ class ProductsController extends Controller
      */
     public function index(Request $request)
     {
+        if(!$this->getUserPermissionsModule('product','create')){
+            return redirect()->route('superadmin.dashboard')->with('error',__('locale.user_permission_error'));
+        };
+        
         $userType = auth()->user()->role()->first()->name;
         $perpage = config('app.perpage');
         $productResultResponse = [];
@@ -97,7 +100,7 @@ class ProductsController extends Controller
      */
     public function create($id='')
     {
-        
+        $this->middleware('permission:buyer', ['only' => $this->getUserPermissionsModule('company_user')]);
         $userType = auth()->user()->role()->first()->name;
         $product_result=$states=$productSubCategoryResult=false;
         $breadcrumbs = [

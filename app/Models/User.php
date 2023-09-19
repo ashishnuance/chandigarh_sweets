@@ -11,10 +11,11 @@ use App\Models\Role;
 use App\Models\Company;
 use App\Models\Permission;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable,SoftDeletes;
+    use HasRoles, HasApiTokens, HasFactory, Notifiable,SoftDeletes;
 
 
     /**

@@ -22,6 +22,7 @@
 <div class="section">
    <!-- Current balance & total transactions cards-->
    <div class="row vertical-modern-dashboard">
+      @include('panels.flashMessages')
       <div class="col s12 m4 l4">
          <!-- Current Balance -->
          <div class="card animate fadeLeft">
