@@ -94,14 +94,15 @@ class UserController extends Controller
             $cities = City::where('state_id',$user_result->state)->get(["name", "id"]);
             }
             $formUrl = 'company-admin-update';
-            // echo '<pre>';print_r($user_result); exit();
         }
         // dd($user_result->permission);
         return view('pages.users.users-create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'countries'=>$countries,'pageTitle'=>$pageTitle,'companies'=>$companies,'user_result'=>$user_result,'states'=>$states,'cities'=>$cities,'userType'=>$userType,'formUrl'=>$formUrl]);
     }
-
-
+    
+    
     public function store(Request $request){
+        
+        //echo '<pre>';print_r($request->all()); exit();
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:250',
@@ -115,10 +116,13 @@ class UserController extends Controller
             ->withErrors($validator)
             ->withInput();
         }
+
         $role = Role::where('name', 'company-admin')->first();
         $random_password = Str::random(6);
         $request['password'] = Hash::make($random_password);
         $user = User::create($request->all());
+
+        $id = $user->id;
 
         $user->company()->attach($request->company);
         $user->role()->attach( $role->id);
@@ -210,7 +214,7 @@ class UserController extends Controller
 
         $user = User::where('id',$id)->update($request->all());
 
-        return redirect()->route('company-admin-list')->with('success',__('locale.company_admin_create_success'));
+        return redirect()->route('company-admin-list')->with('success',__('locale.company_admin_update_success'));
     }
 
     
@@ -418,9 +422,6 @@ class UserController extends Controller
             }
         }
         
-    
-        
-        
         unset($request['permission_allow']);
         if(isset($request['password']) && $request['password']!=''){
             $request['password'] = Hash::make($request['password']);
@@ -430,7 +431,7 @@ class UserController extends Controller
 
         $user = User::where('id',$id)->update($request->all());
 
-        return redirect()->route($listUrl)->with('success',__('locale.company_admin_create_success'));
+        return redirect()->route($listUrl)->with('success',__('locale.company_user_update_success'));
     }
 
     public function userStore(Request $request){
@@ -451,6 +452,7 @@ class UserController extends Controller
         $random_password = Str::random(6);
         $request['password'] = Hash::make($random_password);
         $user = User::create($request->all());
+        $id   = $user->id;
         $user->company()->attach($request->company);
         $user->role()->attach( $role->id);
         $listUrl = 'superadmin.company-user-list';
@@ -479,7 +481,7 @@ class UserController extends Controller
             }
         }
 
-        return redirect()->route($listUrl)->with('success',__('locale.company_admin_create_success'));
+        return redirect()->route($listUrl)->with('success',__('locale.company_user_create_success'));
     }
 
     /**
