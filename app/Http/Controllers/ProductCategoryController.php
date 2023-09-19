@@ -23,6 +23,10 @@ class ProductCategoryController extends Controller
  
     public function index(Request $request,$id='')
     {
+        if(!$this->getUserPermissionsModule('product_category','index') && !$this->getUserPermissionsModule('product_category','update') && !$this->getUserPermissionsModule('product_category','delete')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         // Urls
         $perpage = config('app.perpage');
         $userType = auth()->user()->role()->first()->name;
@@ -83,6 +87,10 @@ class ProductCategoryController extends Controller
     }
     public function create()
     {
+        if(!$this->getUserPermissionsModule('product_category','create')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         $userType = auth()->user()->role()->first()->name;
 
         $breadcrumbs = [
@@ -147,7 +155,10 @@ class ProductCategoryController extends Controller
 
     public function edit($id=0)
     {
-        
+        if(!$this->getUserPermissionsModule('product_category','update')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         $breadcrumbs = [
             ['link' => "/", 'name' => "Home"], ['link' => route("superadmin.product-category.index"), 'name' => __('locale.product category')], ['name' => "Add"],
         ];
@@ -191,6 +202,10 @@ class ProductCategoryController extends Controller
     
     public function destroy($id)
     {
+        if(!$this->getUserPermissionsModule('product_category','delete')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         ProductCategoryModel::find($id)->delete();
         return redirect()->back()->with('success','Data Deleted Successfully');
     } 

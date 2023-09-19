@@ -14,6 +14,7 @@
       "url": "/",
       "name": "Dashboard",
       "i18n": "superadmin",
+      "permission_name":"Dashboard",
       "class": "waves-effect waves-cyan",
       "slug": "dashboard",
       "icon": "settings_input_svideo"
@@ -97,6 +98,7 @@
       "url": "javascript:void(0)",
       "name": "Company User",
       "i18n": "Company User",
+      "permission_name":"company_user",
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "company-user",
       "icon": "person_outline",
@@ -105,12 +107,14 @@
           "url": "company-user-create",
           "name": "Add Company User",
           "i18n": "Add Company User",
+          "permission_guard_name":"create",
           "slug": "add-company-user"
         },
         {
           "url": "company-user-list",
           "name": "Company-user List",
           "i18n": "Company-user List",
+          "permission_guard_name":"read",
           "slug": "company-user-list"
         }
       ]
@@ -141,6 +145,7 @@
     {
       "for" :["admin","user"],
       "url": "javascript:void(0)",
+      "permission_name":"buyer",
       "name": "Buyer",
       "i18n": "Buyer",
       "class": "collapsible-header waves-effect waves-cyan",
@@ -151,12 +156,14 @@
           "url": "buyer/create",
           "name": "Buyer Registration",
           "i18n": "Buyer Registration",
+          "permission_guard_name":"create",
           "slug": "buyer-registration"
         },
         {
           "url": "buyer",
           "name": "Buyer List",
           "i18n": "Buyer List",
+          "permission_guard_name":"read",
           "slug": "buyer-list"
         }
       ]
@@ -237,6 +244,7 @@
     {
       "for" :["admin","user"],
       "url": "javascript:void(0)",
+      "permission_name":"product",
       "name": "Items",
       "i18n": "Items",
       "class": "collapsible-header waves-effect waves-cyan",
@@ -246,12 +254,14 @@
         {
           "url": "product/create",
           "name": "Item Add",
+          "permission_guard_name":"create",
           "i18n": "product/create",
           "slug": "item-add"
         },
         {
           "url": "product",
           "name": "Items List",
+          "permission_guard_name":"read",
           "i18n": "product/",
           "slug": "items-list"
         }
@@ -313,6 +323,7 @@
       "url": "javascript:void(0)",
       "name": "Product Category",
       "i18n": "Product Category",
+      "permission_name":"product_category",
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "Product category",
       "icon": "view_list",
@@ -320,12 +331,14 @@
         {
           "url": "product-category/create",
           "name": "Product Category Create",
+          "permission_guard_name":"create",
           "i18n": "product-category/create",
           "slug": "product-category-create"
         },
         {
           "url": "product-category",
           "name": "Product Category List",
+          "permission_guard_name":"read",
           "i18n": "product-category",
           "slug": "product-category-list"
         }
@@ -364,6 +377,7 @@
       "url": "javascript:void(0)",
       "name": "Sub Category",
       "i18n": "Sub Category",
+      "permission_name":"product_subcategory",
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "Sub Category",
       "icon": "view_list",
@@ -371,12 +385,14 @@
         {
           "url": "product-subcategory/create",
           "name": "Sub Category Create",
+          "permission_guard_name":"create",
           "i18n": "Sub Category Create",
           "slug": "sub-category-create"
         },
         {
           "url": "product-subcategory",
           "name": "Sub Category List",
+          "permission_guard_name":"read",
           "i18n": "Sub Category List",
           "slug": "Sub-category-list"
         }
@@ -412,6 +428,7 @@
       "url": "javascript:void(0)",
       "name": "Buyer Type Channel",
       "i18n": "Buyer Type Channel",
+      "permission_name":"buyer_type_channel",
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "Buyer Type Channel",
       "icon": "person_outline",
@@ -420,12 +437,14 @@
           "url": "buyer-type-channel/create",
           "name": "create",
           "i18n": "Buyer Type Channel",
+          "permission_guard_name":"create",
           "slug": "buyer-type-channel-create"
         },
         {
           "url": "buyer-type-channel",
           "name": "list",
           "i18n": "Buyer Type Channel",
+          "permission_guard_name":"read",
           "slug": "buyer-type-channel-list"
         }
       ]
@@ -460,6 +479,7 @@
       "url": "javascript:void(0)",
       "name": "Product Variation Type",
       "i18n": "Product Variation Type",
+      "permission_name":"product_variation_type",
       "class": "collapsible-header waves-effect waves-cyan",
       "slug": "Product Variation Type",
       "icon": "person_outline",
@@ -468,22 +488,34 @@
           "url": "product-variation-type/create",
           "name": "create",
           "i18n": "Product Variation Type",
+          "permission_guard_name":"create",
           "slug": "product-variation-type-create"
         },
         {
           "url": "product-variation-type",
           "name": "list",
           "i18n": "Product Variation Type",
+          "permission_guard_name":"read",
           "slug": "product-variation-type-list"
         }
       ]
     },
 
     {
-      "for" :["superadmin","admin","user"],
+      "for" :["superadmin"],
       "url": "#",
       "name": "Orders",
       "i18n": "Orders",
+      "class": "waves-effect waves-cyan",
+      "icon": "add_shopping_cart",
+      "slug": "orders"
+    },
+    {
+      "for" :["admin","user"],
+      "url": "#",
+      "name": "Orders",
+      "i18n": "Orders",
+      "permission_name":"orders",
       "class": "waves-effect waves-cyan",
       "icon": "add_shopping_cart",
       "slug": "orders"
@@ -502,6 +534,7 @@
       "url": "superadmin/profile-edit",
       "name": "Profile",
       "i18n": "Profile",
+      "permission_name":"Profile",
       "class": "waves-effect waves-cyan",
       "slug": "Profile",
       "icon": "person_outline"

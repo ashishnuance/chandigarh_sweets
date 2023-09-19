@@ -28,7 +28,10 @@ class ProductVariationTypeController extends Controller
 
     public function index(Request $request,$id='')
     {
-
+        if(!$this->getUserPermissionsModule('product_variation_type','index') && !$this->getUserPermissionsModule('product_variation_type','update') && !$this->getUserPermissionsModule('product_variation_type','delete')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         // Urls
         $perpage = config('app.perpage');
         $userType = auth()->user()->role()->first()->name;
@@ -77,6 +80,10 @@ class ProductVariationTypeController extends Controller
 
     public function create()
     {
+        if(!$this->getUserPermissionsModule('product_variation_type','create')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         $breadcrumbs = [
             ['link' => "/", 'name' => "Home"], ['link' =>route('superadmin.product-variation-type.index'),'name' => __('locale.Product Variation Type')], ['name' => "Add"],
         ];
@@ -142,6 +149,10 @@ class ProductVariationTypeController extends Controller
 
     public function edit($id=0)
     {
+        if(!$this->getUserPermissionsModule('product_variation_type','update')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         $breadcrumbs = [
             ['link' => "/", 'name' => "Home"], ['link' => route("superadmin.product-variation-type.index"), 'name' => __('locale.Product Variation Type')], ['name' => "Edit"],
         ];
@@ -192,7 +203,10 @@ class ProductVariationTypeController extends Controller
 
     public function destroy($id)
     {
-
+        if(!$this->getUserPermissionsModule('product_variation_type','delete')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         ProductVariationType::find($id)->delete();
         return redirect()->back()->with('success',__('locale.product_variation_type_delete_successmessage'));
 

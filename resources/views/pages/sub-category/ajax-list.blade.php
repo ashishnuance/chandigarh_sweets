@@ -19,8 +19,20 @@
             <td>{{$sub_category_data->categoryname->companyname->company_name}}</td>
 
             <td>
+                @if($editUrl=='product-subcategory.edit')
+                    @if(in_array('update',Helper::getUserPermissionsModule('company_user')))
+                    <a href="{{route($editUrl,$sub_category_data->id)}}"><i class="material-icons">edit</i></a>
+                    @endif
+                @else
                 <a href="{{route($editUrl,$sub_category_data->id)}}"><i class="material-icons">edit</i></a>
+                @endif
+                @if($deleteUrl=='product-subcategory.delete')
+                    @if(in_array('delete',Helper::getUserPermissionsModule('company_user')))
+                    <a href="{{route($deleteUrl,$sub_category_data->id)}}" onclick="return confirm('Are you sure?')"><i class="material-icons">delete</i></a>
+                    @endif
+                @else
                 <a href="{{route($deleteUrl,$sub_category_data->id)}}" onclick="return confirm('Are you sure?')"><i class="material-icons">delete</i></a>
+                @endif
             </td>    
         </tr>
         @endforeach

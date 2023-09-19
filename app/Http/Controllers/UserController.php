@@ -183,6 +183,7 @@ class UserController extends Controller
         unset($request['company']);
         unset($request['importcompany']);
         
+        // dd($request->input('permission_allow'));
         if ($request->has('permission_allow')) {
             Permission::where('user_id',$id)->delete();
             foreach ($request->input('permission_allow') as $key => $permissionVal) {
@@ -203,6 +204,8 @@ class UserController extends Controller
                     }
                 }
             }
+        }else{
+            Permission::where('user_id',$id)->delete();
         }
         
         unset($request['permission_allow']);
@@ -231,8 +234,7 @@ class UserController extends Controller
                 $returnUrl = 'company-user-list';
             }
             return redirect()->route($returnUrl)->with('error', __('locale.try_again'));
-        }
-            
+        }            
     }
 
     public function companyUserExport($type='superadmin') 
@@ -376,29 +378,7 @@ class UserController extends Controller
             $listUrl = 'company-user-list';
         }
 
-        // if ($request->has('permission_allow')) {
-        //     Permission::where('user_id',$id)->delete();
-        //     foreach ($request->input('permission_allow') as $key => $permissionVal) {
-        //         //echo '<pre>'; print_r($permissionVal); die;  
-
-        //         if (isset($permissionVal['guard_name'])) {
-        //             $guardNames = $permissionVal['guard_name'];
         
-        //             foreach ($guardNames as $guardName) {
-        //                 Permission::updateOrInsert(
-        //                     [
-        //                         'name' => $key,
-        //                         'guard_name' => $guardName,
-        //                         'user_id' => $id,
-        //                     ]
-                          
-        //                 );
-        //             }
-        //         }
-        //     }
-        // }
-
-        // exit('abc');
     
         if ($request->has('permission_allow')) {
             Permission::where('user_id',$id)->delete();

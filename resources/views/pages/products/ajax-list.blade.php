@@ -43,8 +43,21 @@
     <td>{{($product_value->blocked==1) ? 'Blocked' : 'Un-blocked'}}</td>
     <td>
     <td>
+      @if($editUrl=='product.edit')
+          @if(in_array('update',Helper::getUserPermissionsModule('product')))
+          <a href="{{route($editUrl,$product_value->id)}}"><i class="material-icons">edit</i></a>
+          @endif
+      @else
       <a href="{{route($editUrl,$product_value->id)}}"><i class="material-icons">edit</i></a>
+      @endif
+      @if($deleteUrl=='product.delete')
+          @if(in_array('delete',Helper::getUserPermissionsModule('product')))
+          <a href="{{route($deleteUrl,$product_value->id)}}" onclick="return confirm('Are you sure?')"><i class="material-icons">delete</i></a>
+          @endif
+      @else
       <a href="{{route($deleteUrl,$product_value->id)}}" onclick="return confirm('Are you sure?')"><i class="material-icons">delete</i></a>
+      @endif
+      
     </td>      
     </tr>
     @endforeach

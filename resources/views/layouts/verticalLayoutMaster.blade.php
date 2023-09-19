@@ -23,7 +23,7 @@
         </div>
         @else
         {{-- navabar large  --}}
-        <div class="content-wrapper-before {{$configData["navbarLargeColor"]}}">
+        <div class="content-wrapper-before {{$configData['navbarLargeColor']}}">
         </div>
         @endif
       @endif

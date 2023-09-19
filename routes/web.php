@@ -171,7 +171,7 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     Route::middleware(['companyadmin'])->group(function () {
-        Route::get('/', [DashboardController::class, 'dashboardModern'])->name('dashboard');;
+        Route::get('/', [DashboardController::class, 'dashboardModern'])->name('dashboard');
         /** company user **/
         Route::get('/company-user-create', [UserController::class, 'usersCreate'])->name('company-user-create');
         Route::get('/company-user-edit/{id}', [UserController::class, 'usersCreate'])->name('company-user-edit');

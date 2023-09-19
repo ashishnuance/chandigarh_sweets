@@ -28,8 +28,20 @@
     <td>{{($user_value->blocked==1) ? 'Blocked' : 'Un-blocked'}}</td>
     
     <td>
+      @if($editUrl=='company-user-edit')
+        @if(in_array('update',Helper::getUserPermissionsModule('company_user')))
+        <a href="{{route($editUrl,$user_value->id)}}"><i class="material-icons">edit</i></a>
+        @endif
+      @else
       <a href="{{route($editUrl,$user_value->id)}}"><i class="material-icons">edit</i></a>
-      <a href="{{route($deleteUrl,$user_value->id)}}" onclick="return confirm('Are you sure you want to delete this item')"><i class="material-icons">delete</i></a>
+      @endif
+      @if($deleteUrl=='company-user-delete')
+        @if(in_array('delete',Helper::getUserPermissionsModule('company_user')))
+        <a href="{{route($deleteUrl,$user_value->id)}}" onclick="return confirm('Are you sure you want to delete this item')"><i class="material-icons">delete</i></a>
+        @endif
+      @else
+        <a href="{{route($deleteUrl,$user_value->id)}}" onclick="return confirm('Are you sure you want to delete this item')"><i class="material-icons">delete</i></a>
+      @endif
     </td>      
     </tr>
     @endforeach

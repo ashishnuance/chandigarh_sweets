@@ -27,6 +27,7 @@
       <div class="col s12">
         <div id="file-input" class="card card-tabs">
           @include('panels.flashMessages')
+          @if(in_array('create',Helper::getUserPermissionsModule('product')))
           <div class="card-content">
             <div class="card-title">
               <div class="row">
@@ -35,6 +36,7 @@
                 </div>
               </div>
             </div>
+            
             <div id="view-file-input">
               <div class="row">
                 <div class="col s12">
@@ -59,8 +61,8 @@
                 </div>
               </div>
             </div>
-            
           </div>
+          @endif
         </div>
       </div>
     

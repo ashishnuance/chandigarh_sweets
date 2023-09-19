@@ -18,8 +18,21 @@
             <td>{{$buyer_typechannel_data->companyname->company_name}}</td>
 
             <td>
-            <a href="{{route($editUrl,$buyer_typechannel_data->id)}}"><i class="material-icons">edit</i></a>
-            <a href="{{route($deleteUrl,$buyer_typechannel_data->id)}}" onclick="return confirm('Are you sure?')"><i class="material-icons">delete</i></a>
+              
+              @if($editUrl=='buyer-type-channel.edit')
+                  @if(in_array('update',Helper::getUserPermissionsModule('buyer_type_channel')))
+                  <a href="{{route($editUrl,$buyer_typechannel_data->id)}}"><i class="material-icons">edit</i></a>
+                  @endif
+              @else
+              <a href="{{route($editUrl,$buyer_typechannel_data->id)}}"><i class="material-icons">edit</i></a>
+              @endif
+              @if($deleteUrl=='buyer-type-channel.delete')
+                  @if(in_array('delete',Helper::getUserPermissionsModule('buyer_type_channel')))
+                  <a href="{{route($deleteUrl,$buyer_typechannel_data->id)}}" onclick="return confirm('Are you sure?')"><i class="material-icons">delete</i></a>
+                  @endif
+              @else
+              <a href="{{route($deleteUrl,$buyer_typechannel_data->id)}}" onclick="return confirm('Are you sure?')"><i class="material-icons">delete</i></a>
+              @endif
             </td> 
         </tr>
         @endforeach

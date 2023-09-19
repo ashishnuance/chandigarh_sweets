@@ -32,9 +32,21 @@
     <td>{{($user_value->blocked==1) ? 'Blocked' : 'Un-blocked'}}</td>
     
     <td>
+        @if($editUrl=='buyer.edit')
+            @if(in_array('update',Helper::getUserPermissionsModule('buyer')))
+            <a href="{{route($editUrl,$user_value->id)}}"><i class="material-icons">edit</i></a>
+            @endif
+        @else
+        <a href="{{route($editUrl,$user_value->id)}}"><i class="material-icons">edit</i></a>
+        @endif
+        @if($deleteUrl=='buyer.delete')
+            @if(in_array('delete',Helper::getUserPermissionsModule('buyer')))
+            <a href="{{route($deleteUrl,$user_value->id)}}" onclick="return confirm('Are you sure?')"><i class="material-icons">delete</i></a>
+            @endif
+        @else
+        <a href="{{route($deleteUrl,$user_value->id)}}" onclick="return confirm('Are you sure?')"><i class="material-icons">delete</i></a>
+        @endif
       
-      <a href="{{route($editUrl,$user_value->id)}}"><i class="material-icons">edit</i></a>
-      <a href="{{route($deleteUrl,$user_value->id)}}" onclick="return confirm('Are you sure?')"><i class="material-icons">delete</i></a>
       <a href="mailto:{{$user_value->email}}"><i class="material-icons">mail</i></a>
       
     </td>      

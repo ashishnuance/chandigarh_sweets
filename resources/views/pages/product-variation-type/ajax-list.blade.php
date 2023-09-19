@@ -17,8 +17,20 @@
             <td>{{$product_variation_data->companyname->company_name}}</td>
 
             <td>
-            <a href="{{route($editUrl,$product_variation_data->id)}}"><i class="material-icons">edit</i></a>
-            <a href="{{route($deleteUrl,$product_variation_data->id)}}" onclick="return confirm('Are you sure?')"><i class="material-icons">delete</i></a>
+              @if($editUrl=='product-variation-type.edit')
+                  @if(in_array('update',Helper::getUserPermissionsModule('product_variation_type')))
+                  <a href="{{route($editUrl,$product_variation_data->id)}}"><i class="material-icons">edit</i></a>
+                  @endif
+              @else
+              <a href="{{route($editUrl,$product_variation_data->id)}}"><i class="material-icons">edit</i></a>
+              @endif
+              @if($deleteUrl=='product-variation-type.delete')
+                  @if(in_array('delete',Helper::getUserPermissionsModule('product_variation_type')))
+                  <a href="{{route($deleteUrl,$product_variation_data->id)}}" onclick="return confirm('Are you sure?')"><i class="material-icons">delete</i></a>
+                  @endif
+              @else
+              <a href="{{route($deleteUrl,$product_variation_data->id)}}" onclick="return confirm('Are you sure?')"><i class="material-icons">delete</i></a>
+              @endif
             </td> 
         </tr>
         @endforeach

@@ -15,8 +15,20 @@
             <td>{{$product_category_data->category_name}}</td>
             <td>{{ isset($product_category_data->companyname->company_name) ? $product_category_data->companyname->company_name : '' }}</td>
             <td>
+            @if($editUrl=='product-category.edit')
+                @if(in_array('update',Helper::getUserPermissionsModule('product_category')))
+                <a href="{{route($editUrl,$product_category_data->id)}}"><i class="material-icons">edit</i></a>
+                @endif
+            @else
             <a href="{{route($editUrl,$product_category_data->id)}}"><i class="material-icons">edit</i></a>
+            @endif
+            @if($deleteUrl=='product-category.delete')
+                @if(in_array('delete',Helper::getUserPermissionsModule('product_category')))
+                <a href="{{route($deleteUrl,$product_category_data->id)}}" onclick="return confirm('Are you sure?')"><i class="material-icons">delete</i></a>
+                @endif
+            @else
             <a href="{{route($deleteUrl,$product_category_data->id)}}" onclick="return confirm('Are you sure?')"><i class="material-icons">delete</i></a>
+            @endif
             </td>      
         </tr>
         @endforeach

@@ -20,6 +20,7 @@
       
       <div id="responsive-table" class="card card card-default scrollspy">
         @include('panels.flashMessages')
+        @if(in_array('create',Helper::getUserPermissionsModule('product_category')))
         <div class="card-content">
           <div class="card-title">
             <div class="row">
@@ -53,6 +54,7 @@
             </div>
           </div>
         </div>
+        @endif
         <div class="card-content">
            
           <div class="row">

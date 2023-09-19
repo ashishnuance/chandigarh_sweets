@@ -38,8 +38,9 @@ class ProductsController extends Controller
      */
     public function index(Request $request)
     {
-        if(!$this->getUserPermissionsModule('product','create')){
-            return redirect()->route('superadmin.dashboard')->with('error',__('locale.user_permission_error'));
+        if(!$this->getUserPermissionsModule('product','index') && !$this->getUserPermissionsModule('product','update') && !$this->getUserPermissionsModule('product','delete')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
         };
         
         $userType = auth()->user()->role()->first()->name;
@@ -100,7 +101,9 @@ class ProductsController extends Controller
      */
     public function create($id='')
     {
-        $this->middleware('permission:buyer', ['only' => $this->getUserPermissionsModule('company_user')]);
+        if(!$this->getUserPermissionsModule('product','create')){
+            return redirect()->route('superadmin.dashboard')->with('error',__('locale.user_permission_error'));
+        };
         $userType = auth()->user()->role()->first()->name;
         $product_result=$states=$productSubCategoryResult=false;
         $breadcrumbs = [
@@ -153,8 +156,6 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-
-       //echo '<pre>'; print_r($request->all()); die;
 
         $validator = Validator::make($request->all(), [
             'product_name' => 'required|max:250',
@@ -244,29 +245,6 @@ class ProductsController extends Controller
         }
         $product_variation_result = ProductsVariations::insert($product_variation);
         
-        // if ($request->has('variation')) {
-        //     $product_variation = [];
-        
-        //     foreach ($request->variation as $key => $variation_val) {
-        //         //echo '<pre>'; print_r($key); die;
-        //         for ($i = 0; $i < count($request->variation[$key]); $i++) {
-        //             // $product_variation[$i]['product_id'] = $product->id;
-        //             $product_variation[$i]['name'] = $request->variation[$key];
-
-        //             $product_variation[$i]['main_price'] = 0; // Set a default value for main_price
-        //             $product_variation[$i]['offer_price'] = 0; 
-        //         }
-        
-        //         if (count($request->variation[$key]) < count($request->variation['name'])) {
-        //             $index = count($request->variation['name']) - count($request->variation[$key]);
-        //             $product_variation[$index][$key] = 0;
-        //             $product_variation[$index]['main_price'] = 0; // Set a default value for 
-        //             $product_variation[$index]['offer_price'] = 0;
-        //         }
-        //     }
-        // }
-        
-        // $product_variation_result = ProductsVariations::insert($product_variation);
         
         return redirect()->route($redirectUrl)->with('success',__('locale.success common add'));
         
@@ -291,6 +269,9 @@ class ProductsController extends Controller
      */
     public function edit($id)
     {
+        if(!$this->getUserPermissionsModule('product','update')){
+            return redirect()->route('superadmin.dashboard')->with('error',__('locale.user_permission_error'));
+        };
         $userType = auth()->user()->role()->first()->name;
         $product_result=$states=$productSubCategoryResult=false;
         $breadcrumbs = [
@@ -438,7 +419,9 @@ class ProductsController extends Controller
      */
     public function destroy($id)
     {
-        
+        if(!$this->getUserPermissionsModule('product','delete')){
+            return redirect()->route('superadmin.dashboard')->with('error',__('locale.user_permission_error'));
+        };
         $cartList = Cartlist::whereRaw('FIND_IN_SET("1", product_ids)')->count();
         $orderList = Orderlist::whereRaw('FIND_IN_SET("1", product_ids)')->count();
         if($cartList==0 && $orderList==0){

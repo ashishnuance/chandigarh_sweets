@@ -19,6 +19,7 @@
     {{-- Foreach menu item starts --}}
     @if(!empty($menuData[0]) && isset($menuData[0]))
       @foreach ($menuData[0]->menu as $menu)
+        
         @if(isset($menu->navheader))
         <li class="navigation-header">
           <a class="navigation-header-text">{{ $menu->navheader }}</a>
@@ -31,63 +32,81 @@
           {
           $custom_classes = $menu->class;
           }
-          
+          $permission_arr=[];
         @endphp
         @if( Auth::check() && Auth()->user()->role()->first()->name=='superadmin' && isset($menu->for) && in_array('superadmin', $menu->for)) {{-- For admin --}}
-        
-        <li class="bold {{(request()->is($menu->url.'*')) ? 'active' : '' }}">
-          <?php 
-          $formenu = (isset($menu->for) && !empty($menu->for)) ? $menu->for : [];
-          //print_r($formenu); ?>
-          <a class="{{$custom_classes}} {{ (request()->is($menu->url.'*')) ? 'active '.$configData['activeMenuColor'] : ''}}"
-            @if(!empty($configData['activeMenuColor'])) {{'style=background:none;box-shadow:none;'}} @endif
-            href="@if(($menu->url)==='javascript:void(0)'){{$menu->url}} @else{{url($menu->url)}} @endif"
-            {{isset($menu->newTab) ? 'target="_blank"':''}}>
-            <i class="material-icons">{{$menu->icon}}</i>
-            <span class="menu-title">{{ __('locale.'.$menu->name)}}</span>
-            @if(isset($menu->tag))
-            <span class="{{$menu->tagcustom}}">{{$menu->tag}}</span>
-            @endif
-          </a>
-          @if(isset($menu->submenu))
-          @include('panels.submenu', ['menu' => $menu->submenu])
-          @endif
-        </li>
+          
+            <li class="bold {{(request()->is($menu->url.'*')) ? 'active' : '' }}">
+              <?php 
+              
+              $formenu = (isset($menu->for) && !empty($menu->for)) ? $menu->for : [];
+              //print_r($formenu); ?>
+              <a class="{{$custom_classes}} {{ (request()->is($menu->url.'*')) ? 'active '.$configData['activeMenuColor'] : ''}}"
+                @if(!empty($configData['activeMenuColor'])) {{'style=background:none;box-shadow:none;'}} @endif
+                href="@if(($menu->url)==='javascript:void(0)'){{$menu->url}} @else{{url($menu->url)}} @endif"
+                {{isset($menu->newTab) ? 'target="_blank"':''}}>
+                <i class="material-icons">{{$menu->icon}}</i>
+                <span class="menu-title">{{ __('locale.'.$menu->name)}}</span>
+                @if(isset($menu->tag))
+                <span class="{{$menu->tagcustom}}">{{$menu->tag}}</span>
+                @endif
+              </a>
+              @if(isset($menu->submenu))
+              @php
+              //echo '<pre>';print_r($menu->submenu);echo '</pre>';
+              @endphp
+              @include('panels.submenu', ['menu' => $menu->submenu])
+              @endif
+            </li>
+          
         @elseif( Auth::check() && Auth()->user()->role()->first()->name=='company-admin' && isset($menu->for) && in_array('admin', $menu->for)) {{-- For admin --}}
-        
-      <li class="bold {{(request()->is($menu->url.'*')) ? 'active' : '' }}">
-        <a class="{{$custom_classes}} {{ (request()->is($menu->url.'*')) ? 'active '.$configData['activeMenuColor'] : ''}}"
-          @if(!empty($configData['activeMenuColor'])) {{'style=background:none;box-shadow:none;'}} @endif
-          href="@if(($menu->url)==='javascript:void(0)'){{$menu->url}} @else{{url($menu->url)}} @endif"
-          {{isset($menu->newTab) ? 'target="_blank"':''}}>
-          <i class="material-icons">{{$menu->icon}}</i>
-          <span class="menu-title">{{ __('locale.'.$menu->name)}}</span>
-          @if(isset($menu->tag))
-          <span class="{{$menu->tagcustom}}">{{$menu->tag}}</span>
+          <?php 
+          if(isset($menu->permission_name)){
+            
+            $permission_arr = (isset($menu->permission_name)) ? Helper::getUserPermissionsModule($menu->permission_name) : [];
+            
+          }
+          if(in_array($menu->name,['Dashboard','Profile'])){
+            
+            $permission_arr[] = $menu->name;
+            
+          }
+          ?> 
+          @if(!empty($permission_arr) && isset($menu->permission_name))
+            <li class="bold {{(request()->is($menu->url.'*')) ? 'active' : '' }}">
+              <a class="{{$custom_classes}} {{ (request()->is($menu->url.'*')) ? 'active '.$configData['activeMenuColor'] : ''}}"
+                @if(!empty($configData['activeMenuColor'])) {{'style=background:none;box-shadow:none;'}} @endif
+                href="@if(($menu->url)==='javascript:void(0)'){{$menu->url}} @else{{url($menu->url)}} @endif"
+                {{isset($menu->newTab) ? 'target="_blank"':''}}>
+                <i class="material-icons">{{$menu->icon}}</i>
+                <span class="menu-title">{{ __('locale.'.$menu->name)}}</span>
+                @if(isset($menu->tag))
+                <span class="{{$menu->tagcustom}}">{{$menu->tag}}</span>
+                @endif
+              </a>
+                @if(isset($menu->submenu))
+                @include('panels.submenu', ['menu' => $menu->submenu])
+                @endif
+            </li>
           @endif
-        </a>
-          @if(isset($menu->submenu))
-          @include('panels.submenu', ['menu' => $menu->submenu])
+          @elseif( Auth::check() && Auth()->user()->role()->first()->name=='company-user' && isset($menu->for) && in_array('user', $menu->for)) {{-- For users --}}
+          
+              <li class="bold {{(request()->is($menu->url.'*')) ? 'active' : '' }}">
+                <a class="{{$custom_classes}} {{ (request()->is($menu->url.'*')) ? 'active '.$configData['activeMenuColor'] : ''}}"
+                  @if(!empty($configData['activeMenuColor'])) {{'style=background:none;box-shadow:none;'}} @endif
+                  href="@if(($menu->url)==='javascript:void(0)'){{$menu->url}} @else{{url($menu->url)}} @endif"
+                  {{isset($menu->newTab) ? 'target="_blank"':''}}>
+                  <i class="material-icons">{{$menu->icon}}</i>
+                  <span class="menu-title">{{ __('locale.'.$menu->name)}}</span>
+                  @if(isset($menu->tag))
+                  <span class="{{$menu->tagcustom}}">{{$menu->tag}}</span>
+                  @endif
+                </a>
+                @if(isset($menu->submenu))
+                @include('panels.submenu', ['menu' => $menu->submenu])
+                @endif
+              </li>
           @endif
-        </li>
-        @elseif( Auth::check() && Auth()->user()->role()->first()->name=='company-user' && isset($menu->for) && in_array('user', $menu->for)) {{-- For users --}}
-        
-        <li class="bold {{(request()->is($menu->url.'*')) ? 'active' : '' }}">
-          <a class="{{$custom_classes}} {{ (request()->is($menu->url.'*')) ? 'active '.$configData['activeMenuColor'] : ''}}"
-            @if(!empty($configData['activeMenuColor'])) {{'style=background:none;box-shadow:none;'}} @endif
-            href="@if(($menu->url)==='javascript:void(0)'){{$menu->url}} @else{{url($menu->url)}} @endif"
-            {{isset($menu->newTab) ? 'target="_blank"':''}}>
-            <i class="material-icons">{{$menu->icon}}</i>
-            <span class="menu-title">{{ __('locale.'.$menu->name)}}</span>
-            @if(isset($menu->tag))
-            <span class="{{$menu->tagcustom}}">{{$menu->tag}}</span>
-            @endif
-          </a>
-          @if(isset($menu->submenu))
-          @include('panels.submenu', ['menu' => $menu->submenu])
-          @endif
-        </li>
-        @endif
         @endif
       @endforeach
     @endif

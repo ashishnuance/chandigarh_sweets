@@ -27,7 +27,10 @@ class SubCategoryController extends Controller
  
     public function index(Request $request,$id='')
     {
-
+        if(!$this->getUserPermissionsModule('product_subcategory','index') && !$this->getUserPermissionsModule('product_subcategory','update') && !$this->getUserPermissionsModule('product_subcategory','delete')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         // Urls
         $perpage = config('app.perpage');
         $userType = auth()->user()->role()->first()->name;
@@ -89,28 +92,15 @@ class SubCategoryController extends Controller
         $categoryResult = ProductCategoryModel::get();
 
 
-        //   $company_id = auth()->user()->company->id;
-                 
-        // $user = Auth::user(); 
-        // $company_id =Company::select('id')->$user->id; 
-        // $company_id = auth()->user()->company()->first()->id;
-
-        // dd($company_id); 
-        
-        // $company_id = Helper::loginUserCompanyId();
-        // $categoryResult = ProductCategoryModel::whereHas('companyname', function ($query) use ($company_id) {
-        //     $query->where('company_id', $company_id);
-        //     })->get();
-        // $categoryResult = ProductCategoryModel::whereHas('companyname', function ($query) use ($company_id) {
-        //     $query->where('company_id', $company_id);
-        // })->select('id', 'category_name')->get();
-        
-  
         return view('pages.sub-category.list',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'sub_category_list'=>$sub_Category_List, 'category_list'=>$categoryResult,'editUrl'=>$editUrl,'deleteUrl'=>$deleteUrl,'userType'=>$userType,'exportUrl'=>$exportUrl,'importUrl'=>$importUrl]);
     }
  
     public function create()
     {
+        if(!$this->getUserPermissionsModule('product_subcategory','create')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         $userType = auth()->user()->role()->first()->name;
         $listUrl = 'superadmin.product-subcategory.index';
         $formUrl = 'superadmin.product-subcategory.store';
@@ -179,6 +169,10 @@ class SubCategoryController extends Controller
 
     public function edit($id=0)
     {
+        if(!$this->getUserPermissionsModule('product_subcategory','update')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         $breadcrumbs = [
             ['link' => "/", 'name' => "Home"], ['link' => route("superadmin.product-subcategory.index"), 'name' => __('locale.Sub Category')], ['name' => "Add"],
         ];
@@ -224,7 +218,10 @@ class SubCategoryController extends Controller
 
     public function destroy($id)
     {
-
+        if(!$this->getUserPermissionsModule('product_subcategory','delete')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         ProductSubCategory::find($id)->delete();
         return redirect()->back()->with('success',__('locale.sub category delete successmessage'));
 
@@ -256,17 +253,6 @@ class SubCategoryController extends Controller
         return Excel::download($categoryAdmin, 'product-subcategory-'.$type.time().'.xlsx');
     }
 
-    // public function subCategoryexportFile($type=''){
-        
-    //     $categoryUser = new SubCategoryExport;
-        
-    //     // if($type=='companyadmin'){
-    //     //     $categoryUser = new AdminSubCategoryExport;   
-    //     // }else{
-    //     //     $categoryUser = new SubCategoryExport;
-    //     // }
-    //     return Excel::download($categoryUser, 'sub-category-'.$type.time().'.xlsx');
-    // }
 
   
 }
