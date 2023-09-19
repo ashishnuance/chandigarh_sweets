@@ -167,7 +167,7 @@ class SubCategoryController extends Controller
         $create = ProductSubCategory::create($insert_data);
         
         // echo '<pre>';print_r($request->all());  exit();
-        return redirect()->route($listUrl)->with('success',__('locale.product_category_success'));  
+        return redirect()->route($listUrl)->with('success',__('locale.success common add'));  
        
     }
 
@@ -192,13 +192,7 @@ class SubCategoryController extends Controller
 
         $category = ProductCategoryModel::get();
 
-        // $company_id = Helper::loginUserCompanyId();
-        // $category = ProductCategoryModel::whereHas('companyname', function ($query) use ($company_id) {
-        //     $query->where('company_id', $company_id);
-        //     })->get();
-        // $category = ProductCategoryModel::whereHas('companyname', function ($query) use ($company_id) {
-        //     $query->where('company_id', $company_id);
-        // })->select('id', 'category_name')->get();
+        
         
         $SubCategoryResult = ProductSubCategory::findOrFail($id);
 
