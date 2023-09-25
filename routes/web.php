@@ -32,6 +32,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BuyerTypeChannelController;
 use App\Http\Controllers\ProductVariationTypeController;
 
+use App\Http\Controllers\ProductPriceMapping;
+
 
 
 /*
@@ -168,6 +170,9 @@ Route::group(['middleware' => ['auth']], function () {
 
          Route::post('/product-variation-type-import',[ProductVariationTypeController::class,'productvariationtypeimport'])->name('superadmin.product-variation-type-import');
 
+        /** product price mapping start **/
+        Route::resource('/price-mapping', ProductPriceMapping::class);
+        Route::get('/price-mapping', [ProductPriceMapping::class,'index'])->name('superadmin.price-mapping');
     });
 
     Route::middleware(['companyadmin'])->group(function () {
@@ -232,6 +237,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/buyer/import', [BuyerUserController::class,'buyerImport'])->name('buyer.import');
         Route::get('/buyer/export/{type}', [BuyerUserController::class,'buyerExport'])->name('buyer.export');
 
+        /** product price mapping start **/
+        Route::resource('/price-mapping', ProductPriceMapping::class);
     });
 
 
