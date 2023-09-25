@@ -245,8 +245,11 @@ class ProductsController extends Controller
         }
         $product_variation_result = ProductsVariations::insert($product_variation);
         
-        
+        if(!$this->getUserPermissionsModule('product','index') && !$this->getUserPermissionsModule('product','update') && !$this->getUserPermissionsModule('product','delete')){
+            return redirect()->back()->with('success',__('locale.success common add'));
+        }else{
         return redirect()->route($redirectUrl)->with('success',__('locale.success common add'));
+        }
         
     }
 

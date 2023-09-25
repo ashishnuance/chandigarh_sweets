@@ -137,8 +137,11 @@ class ProductVariationTypeController extends Controller
         $insert_data['name'] = $request['name'];
         $create = ProductVariationType::create($insert_data);
         
-        // echo '<pre>';print_r($request->all());  exit();
-        return redirect()->route($listUrl)->with('success',__('locale.product_variation_type_success'));  
+        if(!$this->getUserPermissionsModule('product_variation_type','index') && !$this->getUserPermissionsModule('product_variation_type','update') && !$this->getUserPermissionsModule('product_variation_type','delete')){
+            return redirect()->back()->with('success',__('locale.success common add'));
+        }else{
+            return redirect()->route($listUrl)->with('success',__('locale.product_variation_type_success'));  
+        }
        
     }
 

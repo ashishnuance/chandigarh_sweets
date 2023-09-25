@@ -9,11 +9,49 @@ use Illuminate\Support\Facades\Validator;
 class BuyerController extends Controller
 {
 
-    //
+    public function index(Request $request)
+    {
+        exit('dd');
+        if(!$this->getUserPermissionsModule('buyer','index')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
+        $perpage = 20;//config('app.perpage');
+        $BuyerResultResponse = [];
+        // Breadcrumbs
+        $breadcrumbs = [
+            ['link' => "/", 'name' => "Home"], ['link' => "buyer", 'name' => "Buyer"], ['name' => "Add"],
+        ];
+        //Pageheader set true for breadcrumbs
+        $pageConfigs = ['pageHeader' => true];
+        $pageTitle = __('locale.Buyer Type List');
+        $BuyerResult = BuyerGroup::select(['id','group_code','group_name','type','currency_code'])->orderBy('id','DESC')->paginate($perpage);
+
+        if($request->ajax()){
+            $BuyerResult = BuyerGroup::select(['id','group_code','group_name','type','currency_code'])->orderBy('id','DESC')
+                        ->when($request->seach_term, function($q)use($request){
+                            $q->where('id', 'like', '%'.$request->seach_term.'%')
+                            ->orWhere('group_name', 'like', '%'.$request->seach_term.'%')
+                            ->orWhere('group_code', 'like', '%'.$request->seach_term.'%');
+                        })
+                        ->paginate($perpage);
+                        // ->when($request->status, function($q)use($request){
+                        //     $q->where('status',$request->status);
+                        // })
+            return view('pages.buyer.buyer-table-list', compact('BuyerResult'))->render();
+        }
+        if($BuyerResult->count()>0){
+            $BuyerResultResponse = $BuyerResult;
+        }
+        return view('pages.buyer.list',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'BuyerResult'=>$BuyerResultResponse]);
+    }
+
     public function create()
     {
-        //dd('hi');
-        // Breadcrumbs
+        if(!$this->getUserPermissionsModule('buyer','create')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         $breadcrumbs = [
             ['link' => "/", 'name' => "Home"], ['link' => "buyer", 'name' => "Buyer"], ['name' => "Add"],
         ];
@@ -51,42 +89,14 @@ class BuyerController extends Controller
         }
     }
 
-    public function index(Request $request)
-    {
-        //exit('inserted');
-        $perpage = 20;//config('app.perpage');
-        $BuyerResultResponse = [];
-        // Breadcrumbs
-        $breadcrumbs = [
-            ['link' => "/", 'name' => "Home"], ['link' => "buyer", 'name' => "Buyer"], ['name' => "Add"],
-        ];
-        //Pageheader set true for breadcrumbs
-        $pageConfigs = ['pageHeader' => true];
-        $pageTitle = __('locale.Buyer Type List');
-        $BuyerResult = BuyerGroup::select(['id','group_code','group_name','type','currency_code'])->orderBy('id','DESC')->paginate($perpage);
-
-        if($request->ajax()){
-            $BuyerResult = BuyerGroup::select(['id','group_code','group_name','type','currency_code'])->orderBy('id','DESC')
-                        ->when($request->seach_term, function($q)use($request){
-                            $q->where('id', 'like', '%'.$request->seach_term.'%')
-                            ->orWhere('group_name', 'like', '%'.$request->seach_term.'%')
-                            ->orWhere('group_code', 'like', '%'.$request->seach_term.'%');
-                        })
-                        ->paginate($perpage);
-                        // ->when($request->status, function($q)use($request){
-                        //     $q->where('status',$request->status);
-                        // })
-            return view('pages.buyer.buyer-table-list', compact('BuyerResult'))->render();
-        }
-        if($BuyerResult->count()>0){
-            $BuyerResultResponse = $BuyerResult;
-        }
-        return view('pages.buyer.list',['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs,'pageTitle'=>$pageTitle,'BuyerResult'=>$BuyerResultResponse]);
-    }
+    
 
     public function edit($id)
     {
-        // Breadcrumbs
+        if(!$this->getUserPermissionsModule('buyer','update')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         $breadcrumbs = [
             ['link' => "/", 'name' => "Home"], ['link' => "buyer", 'name' => "Buyer"], ['name' => "Add"],
         ];
@@ -137,20 +147,16 @@ class BuyerController extends Controller
 
     public function destroy($id)
     {
-       // dd('hi');
-       
+        if(!$this->getUserPermissionsModule('buyer','delete')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         if(BuyerGroup::where('id',$id)->delete()){
             return redirect()->back()->with('success',__('locale.delete_message'));
         }else{
             return redirect()->back()->with('error',__('locale.try_again'));
         }
     }
-
-    // public function show($id)
-    // {
-    //     //exit('show');
-    //     return redirect()->back()->with('success',__('locale.delete_message'));
-    // }
 
 
 }

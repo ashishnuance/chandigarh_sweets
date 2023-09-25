@@ -255,6 +255,10 @@ class UserController extends Controller
 
     public function usersList(Request $request)
     {
+        if(!$this->getUserPermissionsModule('company_user','index') && !$this->getUserPermissionsModule('company_user','update') && !$this->getUserPermissionsModule('company_user','delete')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         $userType = auth()->user()->role()->first()->name;
         $deleteUrl = 'superadmin.company-user-delete';
         $perpage = config('app.perpage');
@@ -303,7 +307,10 @@ class UserController extends Controller
 
     public function usersCreate($id='')
     {
-        
+        if(!$this->getUserPermissionsModule('company_user','create')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         $user_result=$states=$cities=false;
         $userType = auth()->user()->role()->first()->name;
         
@@ -348,6 +355,10 @@ class UserController extends Controller
     }
 
     public function usersUpdate(Request $request, $id){
+        if(!$this->getUserPermissionsModule('company_user','update')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         $userType = auth()->user()->role()->first()->name;
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:250',
@@ -460,8 +471,11 @@ class UserController extends Controller
                 Permission::insert($permissionInsert);
             }
         }
-
-        return redirect()->route($listUrl)->with('success',__('locale.company_user_create_success'));
+        if(!$this->getUserPermissionsModule('company_user','index') && !$this->getUserPermissionsModule('company_user','update') && !$this->getUserPermissionsModule('company_user','delete')){
+            return redirect()->back()->with('success',__('locale.company_user_create_success'));
+        }else{
+            return redirect()->route($listUrl)->with('success',__('locale.company_user_create_success'));
+        }
     }
 
     /**
@@ -493,6 +507,10 @@ class UserController extends Controller
      */
     public function destroyUser($id)
     {   
+        if(!$this->getUserPermissionsModule('company_user','delete')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         if(User::where('id',$id)->delete()){
             return redirect()->back()->with('success',__('locale.delete_message'));
         }else{

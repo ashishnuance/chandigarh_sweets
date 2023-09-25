@@ -29,7 +29,10 @@ class BuyerTypeChannelController extends Controller
     public function index(Request $request,$id='')
     {
         
-        // Urls
+        if(!$this->getUserPermissionsModule('buyer_type_channel','index')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         $perpage = config('app.perpage');
         $userType = auth()->user()->role()->first()->name;
         $editUrl = 'superadmin.buyer-type-channel.edit';
@@ -78,6 +81,10 @@ class BuyerTypeChannelController extends Controller
 
     public function create()
     {
+        if(!$this->getUserPermissionsModule('buyer_type_channel','create')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         $breadcrumbs = [
             ['link' => "/", 'name' => "Home"], ['link' => route('superadmin.buyer-type-channel.index'), 'name' => __('locale.Buyer Type Channel')], ['name' => "Add"],
         ];
@@ -136,8 +143,11 @@ class BuyerTypeChannelController extends Controller
 
         $create = BuyerTypeChannel::create($insert_data);
         
-        // echo '<pre>';print_r($request->all());  exit();
-        return redirect()->route($listUrl)->with('success',__('locale.buyer_type_channel_success'));  
+        if(!$this->getUserPermissionsModule('buyer_type_channel','index') && !$this->getUserPermissionsModule('buyer_type_channel','update') && !$this->getUserPermissionsModule('buyer_type_channel','delete')){
+            return redirect()->back()->with('success',__('locale.success common add'));
+        }else{
+            return redirect()->route($listUrl)->with('success',__('locale.buyer_type_channel_success'));  
+        }
        
     }
 
@@ -148,6 +158,10 @@ class BuyerTypeChannelController extends Controller
 
     public function edit($id=0)
     {
+        if(!$this->getUserPermissionsModule('buyer_type_channel','update')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         $breadcrumbs = [
             ['link' => "/", 'name' => "Home"], ['link' => route("superadmin.buyer-type-channel.index"), 'name' => __('locale.Buyer Type Channel')], ['name' => "Edit"],
         ];
@@ -200,7 +214,10 @@ class BuyerTypeChannelController extends Controller
 
     public function destroy($id)
     {
-
+        if(!$this->getUserPermissionsModule('buyer_type_channel','index') && !$this->getUserPermissionsModule('buyer_type_channel','update') && !$this->getUserPermissionsModule('buyer_type_channel','delete')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         BuyerTypeChannel::find($id)->delete();
         return redirect()->back()->with('success',__('locale.buyer type channel delete successmessage'));
 

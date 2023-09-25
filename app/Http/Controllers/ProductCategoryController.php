@@ -144,8 +144,11 @@ class ProductCategoryController extends Controller
         $insert_data['company_id'] = $request['company_id'];
         $insert_data['category_name'] = $request['category_name'];
         $create = ProductCategoryModel::create($insert_data);
-
-        return redirect()->route($listUrl)->with('success',__('locale.product_category_success'));  
+        if(!$this->getUserPermissionsModule('product_category','index') && !$this->getUserPermissionsModule('product_category','update') && !$this->getUserPermissionsModule('product_category','delete')){
+            return redirect()->back()->with('success',__('locale.success common add'));
+        }else{
+            return redirect()->route($listUrl)->with('success',__('locale.product_category_success'));  
+        }
     }
 
     public function show($id)

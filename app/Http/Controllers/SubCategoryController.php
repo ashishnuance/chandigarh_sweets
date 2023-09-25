@@ -156,8 +156,11 @@ class SubCategoryController extends Controller
         $insert_data['subcat_name'] = $request['subcat_name'];
         $create = ProductSubCategory::create($insert_data);
         
-        // echo '<pre>';print_r($request->all());  exit();
-        return redirect()->route($listUrl)->with('success',__('locale.success common add'));  
+        if(!$this->getUserPermissionsModule('product_subcategory','index') && !$this->getUserPermissionsModule('product_subcategory','update') && !$this->getUserPermissionsModule('product_subcategory','delete')){
+            return redirect()->back()->with('success',__('locale.company_user_create_success'));
+        }else{
+            return redirect()->route($listUrl)->with('success',__('locale.success common add'));  
+        }
        
     }
 

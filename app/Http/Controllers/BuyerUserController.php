@@ -27,6 +27,10 @@ class BuyerUserController extends Controller
      */
     public function index(Request $request)
     {
+        if(!$this->getUserPermissionsModule('buyer','index') && !$this->getUserPermissionsModule('buyer','update') && !$this->getUserPermissionsModule('buyer','delete')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         $userType = auth()->user()->role()->first()->name;
         $perpage = config('app.perpage');
         $samplefile = 'buyer-import.csv';
@@ -68,12 +72,7 @@ class BuyerUserController extends Controller
             $importUrl = 'buyer.import';
             $exportUrl = 'buyer.export';
 
-            //  //f
-            // $usersResult = User::with('buyertypechannelName')->whereHas(
-            //     'role', function($q){
-            //         $q->where('name', 'general');
-            //     })->orderBy('id','DESC');
-            // //ef
+            
 
         }
         
@@ -101,6 +100,10 @@ class BuyerUserController extends Controller
      */
     public function create()
     {
+        if(!$this->getUserPermissionsModule('buyer','create')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         $userType = auth()->user()->role()->first()->name;
         $formUrl = 'superadmin.buyer.store';
         $user_result=$states=$cities=false;
@@ -167,8 +170,12 @@ class BuyerUserController extends Controller
         if(isset($userType) && $userType!=config('custom.superadminrole')){
             $list = 'buyer.index';
         }
+        if(!$this->getUserPermissionsModule('buyer','index') && !$this->getUserPermissionsModule('buyer','update') && !$this->getUserPermissionsModule('buyer','delete')){
+            return redirect()->back()->with('success',__('locale.success common add'));
         
-        return redirect()->route($list)->with('success',__('locale.success common add'));
+        }else{
+            return redirect()->route($list)->with('success',__('locale.success common add'));
+        }
     }
 
     /**
@@ -190,7 +197,10 @@ class BuyerUserController extends Controller
      */
     public function edit($id)
     {
-        // $editMode = true; 
+        if(!$this->getUserPermissionsModule('buyer','update')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
 
         $userType = auth()->user()->role()->first()->name;
         $formUrl = 'superadmin.buyer.update';
@@ -253,6 +263,10 @@ class BuyerUserController extends Controller
      */
     public function destroy($id)
     {
+        if(!$this->getUserPermissionsModule('buyer','delete')){
+            
+            return redirect()->to('/')->with('error',__('locale.user_permission_error'));
+        };
         $buyer = User::find($id);
         if($buyer){
             $buyer->delete();
