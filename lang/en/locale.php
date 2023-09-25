@@ -281,5 +281,8 @@ return [
     "company_delete_error_msg"=>"Company deletion is only allowed after deleting associated products and users.",
     "company_admin_delete_error_msg"=>"Company Admin deletion is only allowed after deleting associated company users.",
     "user_permission_error"=>"User don't have permission for this module",
+    "api_register_error"=>"Email Id or Invite Code not correct",
+    "api_password_change"=>"Password updated successfully",
+    "api_settings_success"=>"App data found successfully",
 ];
 ?>

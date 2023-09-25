@@ -13,6 +13,7 @@ use App\Models\Permission;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Permission\Traits\HasRoles;
 
+
 class User extends Authenticatable
 {
     use HasRoles, HasApiTokens, HasFactory, Notifiable,SoftDeletes;
