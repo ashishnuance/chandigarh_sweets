@@ -352,7 +352,6 @@ class ProductsController extends Controller
         if($userType!=config('custom.superadminrole')){
             $redirectUrl = 'product.index';
         }
-
         if($request->has('product_image')) {
             $allowedfileExtension=['pdf','jpg','png'];
             $folder = storage_path('/product/images/');
@@ -362,10 +361,10 @@ class ProductsController extends Controller
             }
             
             foreach ($request->file('product_image') as $key => $value) {
-
+                
                 $file= $value;
-                $extension =  $file->getClientOriginalExtension();
-
+                echo $extension =  $file->getClientOriginalExtension();
+                
                 $check=in_array($extension, $allowedfileExtension);
                 
                 if($check) {
@@ -374,14 +373,15 @@ class ProductsController extends Controller
                     Image::make($file)->resize(800,400,function ($constraint) {
                             $constraint->aspectRatio();                 
                         })->save($location);
-                    ProductImagesModel::create(['product_id'=>$id,'image'=>$filename,'image_order'=>1]);
-                } 
+                        $pro = ProductImagesModel::create(['product_id'=>$id,'image'=>$filename,'image_order'=>1]);
+                    } 
+                }
+                
             }
             
-        }
-        
-        
-        if($request->has('variation')){
+            
+            
+            if($request->has('variation')){
             $product_variation = [];
             $pro_new1 ='pro_new';
             ProductsVariations::where('product_id',$id)->delete();
