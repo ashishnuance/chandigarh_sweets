@@ -284,5 +284,7 @@ return [
     "api_register_error"=>"Email Id or Invite Code not correct",
     "api_password_change"=>"Password updated successfully",
     "api_settings_success"=>"App data found successfully",
+    "cart_empty" => "Cart is empty",
+    "found_successfully" => "Found Successfully"
 ];
 ?>

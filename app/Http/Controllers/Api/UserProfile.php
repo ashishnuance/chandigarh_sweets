@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\API\BaseController as BaseController;
+use App\Http\Controllers\Api\BaseController as BaseController;
 use Illuminate\Http\Request;
 use Validator;
 use Illuminate\Http\JsonResponse;
@@ -27,6 +27,7 @@ class UserProfile extends BaseController
         $userCheck = User::where('id',$input['user_id']);
         if($userCheck->count()>0){
             $success['password'] = Hash::make($input['password']);
+            User::where('id',$input['user_id'])->update(['password'=>$success['password']]);
             return $this->sendResponse('', __('locale.api_password_change'));
         }else{
             return $this->sendError('Faild.', ['error'=>__('locale.api_register_error')]);

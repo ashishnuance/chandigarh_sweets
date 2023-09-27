@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\UserProfile;
 use App\Http\Controllers\Api\CompanyController;
+use App\Http\Controllers\Api\CheckoutController;
 
 
 /*
@@ -33,5 +34,8 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::get('app-settings', [CompanyController::class,'settings']);
     
     Route::resource('products', ProductController::class);
+    Route::get('products-detail/{slug}', [ProductController::class,'show']);
+    Route::post('add-to-cart', [CheckoutController::class,'add_to_cart']);
+    
 });
 

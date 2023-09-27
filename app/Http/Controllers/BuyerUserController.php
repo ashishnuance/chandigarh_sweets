@@ -204,12 +204,12 @@ class BuyerUserController extends Controller
 
         $userType = auth()->user()->role()->first()->name;
         $formUrl = 'superadmin.buyer.update';
-        $buyer_type_channel_edit = BuyerTypeChannel::get();
+        $buyer_type_channel_data = BuyerTypeChannel::get();
         if(isset($userType) && $userType!=config('custom.superadminrole')){
             $formUrl = 'buyer.update';
             $company_id = Helper::loginUserCompanyId();
 
-            $buyer_type_channel_edit = BuyerTypeChannel::where('company_id', $company_id)->get();
+            $buyer_type_channel_data = BuyerTypeChannel::where('company_id', $company_id)->get();
 
         }
         $user_result=$states=$cities=false;
@@ -227,7 +227,7 @@ class BuyerUserController extends Controller
 
             //echo '<pre>'; print_r($buyer_type_channel_edit); die; 
             
-        return view('pages.buyer-users.create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'countries'=>$countries,'pageTitle'=>$pageTitle,'companies'=>$companies,'user_result'=>$user_result,'states'=>$states,'cities'=>$cities,'userType'=>$userType,'formUrl'=>$formUrl,'buyer_type_channel_edit'=>$buyer_type_channel_edit,
+        return view('pages.buyer-users.create', ['pageConfigs' => $pageConfigs], ['breadcrumbs' => $breadcrumbs,'countries'=>$countries,'pageTitle'=>$pageTitle,'companies'=>$companies,'user_result'=>$user_result,'states'=>$states,'cities'=>$cities,'userType'=>$userType,'formUrl'=>$formUrl,'buyer_type_channel_data'=>$buyer_type_channel_data,
         ]);
     }
 
@@ -297,5 +297,20 @@ class BuyerUserController extends Controller
         }
         return Excel::download($companyUser, 'buyer-'.$type.time().'.xlsx');
         
+    }
+
+    function buyer_type(Request $request){
+        
+        if(isset($request['company_id']) && $request['company_id']!=''){
+            $buyer_channel = BuyerTypeChannel::where('company_id',$request['company_id']);
+            if($buyer_channel->count()>0){
+                $buyer_channel->get();
+            return response()->json(['data'=>$buyer_channel->get()],200);
+            }else{
+                return response()->json(['status'=>404,'message'=>'faild'],404);
+            }
+        }else{
+            return response()->json(['status'=>422,'message'=>'company id required'],422);
+        }
     }
 }

@@ -138,7 +138,9 @@ Route::group(['middleware' => ['auth']], function () {
         /** buyer import and export **/
         Route::post('/buyer/import', [BuyerUserController::class,'buyerImport'])->name('superadmin.buyer.import');
         Route::get('/buyer/export/{type}', [BuyerUserController::class,'buyerExport'])->name('superadmin.buyer.export');
-
+        
+        
+        
 
         /** profile admin side **/
 
@@ -169,6 +171,7 @@ Route::group(['middleware' => ['auth']], function () {
          Route::post('/product-variation-type-import',[ProductVariationTypeController::class,'productvariationtypeimport'])->name('superadmin.product-variation-type-import');
 
     });
+    Route::get('/buyer_type', [BuyerUserController::class,'buyer_type'])->name('buyer-type');
 
     Route::middleware(['companyadmin'])->group(function () {
         Route::get('/', [DashboardController::class, 'dashboardModern'])->name('dashboard');

@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\{ProductCategoryModel,ProductSubCategory,ProductImagesModel,ProductsVariations};
+use App\Models\{ProductCategoryModel,ProductSubCategory,ProductImagesModel,ProductsVariations,ProductPriceMapping};
 use App\Models\ProductVariationType;
+
 
 
 class Products extends Model
@@ -35,6 +36,10 @@ class Products extends Model
     public function company()
     {
     return $this->belongsToMany(Company::class, 'company_product_mapping', 'product_id', 'company_id');
+    }
+
+    public function product_price(){
+        return $this->hasMany(ProductPriceMapping::class, 'product_id', 'id');
     }
 
 

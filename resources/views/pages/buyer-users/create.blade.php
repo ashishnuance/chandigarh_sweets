@@ -71,23 +71,15 @@
                   </div>
                   
                   <div class="col s12 m6 input-field">
-                    <select name="user_type" id="user_type" require>
+                    <select name="user_type" id="user_type_channel" require>
                         <option value="Select" disabled selected>Choose {{__('locale.Channel')}}</option>
-                        @if(isset($user_result->id))
-                            @if(isset($buyer_type_channel_edit) && !empty($buyer_type_channel_edit))
-                                @foreach($buyer_type_channel_edit as $edit_data)
-                                    <option value="{{ $edit_data->id }}"
-                                    {{ ($user_result->user_type == $edit_data->id) ?'selected="selected"' : '' }}>{{ $edit_data->name }}</option>
-                                @endforeach
-                            @endif
-                        @else
-                            @if(isset($buyer_type_channel_data) && !empty($buyer_type_channel_data))
-                                @foreach($buyer_type_channel_data as $buyertypechannel_data)
+                        
+                          @if(isset($buyer_type_channel_data) && !empty($buyer_type_channel_data))
+                              @foreach($buyer_type_channel_data as $buyertypechannel_data)
 
-                                    <option value="{{ $buyertypechannel_data->id }}">{{ $buyertypechannel_data->name }}</option>
-                                @endforeach
-                            @endif
-                        @endif
+                                  <option value="{{ $buyertypechannel_data->id }}">{{ $buyertypechannel_data->name }}</option>
+                              @endforeach
+                          @endif
 
                     </select>
                     <label for="user_type">{{__('locale.Channel')}}</label>
@@ -134,9 +126,9 @@
 <script src="{{asset('js/scripts/form-validation.js')}}"></script>
 <script>
   window.onload=function(){
-    var user_type = "{{(isset($user_result->user_type) && $user_result->user_type!='NULL') ? $user_result->user_type : old('user_type')}}";
-    $('#user_type').val(user_type);
-    $('#user_type').formSelect();
+    // var user_type = "{{(isset($user_result->user_type) && $user_result->user_type!='NULL') ? $user_result->user_type : old('user_type')}}";
+    // $('#user_type').val(user_type);
+    // $('#user_type').formSelect();
     
     var blocked = "{{(isset($user_result->blocked) && $user_result->blocked!='NULL') ? $user_result->blocked : old('blocked')}}";
     $('#blocked').val(blocked);
@@ -150,7 +142,27 @@
   }
     $(document).ready(function () {
       
-
+      
+        $('#company').on('change', function () {
+            var idCompany = this.value;
+            console.log(idCompany,"{{url('buyer_type')}}");
+            $("#user_type_channel").html('<option value="">Select Type</option>');
+            $('#user_type_channel').formSelect();
+            $.ajax({
+                url: "{{url('buyer_type')}}?company_id="+idCompany,
+                type: "get",
+                dataType: 'json',
+                success: function (result) {
+                  console.log(result);
+                    $('#user_type_channel').html('<option value="">Select Type</option>');
+                    $.each(result.data, function (key, value) {
+                        $("#user_type_channel").append('<option value="' + value
+                            .id + '">' + value.name + '</option>');
+                    });
+                    $('#user_type_channel').formSelect();
+                }
+            });
+        });
         $('#country').on('change', function () {
             var idCountry = this.value;
             console.log(idCountry);

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Api;
 
 
 use Illuminate\Http\Request;
@@ -17,11 +17,18 @@ class BaseController extends Controller
      */
     public function sendResponse($result, $message)
     {
-    	$response = [
-            'success' => true,
-            'data'    => $result,
-            'message' => $message,
-        ];
+        if($result!=''){
+            $response = [
+                'success' => true,
+                'data'    => $result,
+                'message' => $message,
+            ];
+        }else{
+            $response = [
+                'success' => true,
+                'message'    => $message
+            ];
+        }
 
 
         return response()->json($response, 200);
