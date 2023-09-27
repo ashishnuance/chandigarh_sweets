@@ -36,6 +36,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::resource('products', ProductController::class);
     Route::get('products-detail/{slug}', [ProductController::class,'show']);
     Route::post('add-to-cart', [CheckoutController::class,'add_to_cart']);
+    Route::get('cart-list', [CheckoutController::class,'cart_list']);
     
 });
 

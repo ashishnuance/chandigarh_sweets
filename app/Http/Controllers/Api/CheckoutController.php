@@ -53,7 +53,7 @@ class CheckoutController extends BaseController
         if($cartResult){
             return $this->sendResponse('',$successMessage);
         }else{
-            return $this->sendError('Faild.', ['error'=>__('locale.try_again')]);
+            return $this->sendError('Failed.', ['error'=>__('locale.try_again')]);
         }
     }
 
@@ -61,10 +61,10 @@ class CheckoutController extends BaseController
         
         $user_id = auth('sanctum')->user()->id;
         $cartlistResult = Cartlist::where('user_id',$user_id);
-        if($cartlistResult){
+        if($cartlistResult->count()>0){
             return $this->sendResponse($cartlistResult->get(),__('locale.found_successfully'));
         }else{
-            return $this->sendError('Faild.', ['error'=>__('locale.cart_empty')]);
+            return $this->sendError('Failed.', ['error'=>__('locale.cart_empty')],400);
         }
     }
 }
