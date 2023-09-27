@@ -38,7 +38,7 @@ class CompanyController extends BaseController
             $settingData['footer_content'] = (isset($setting_data->footer_content) && $setting_data->footer_content!='') ? json_decode($setting_data->footer_content) : [];
             return $this->sendResponse($settingData, __('locale.api_settings_success'));
         }else{
-            return $this->sendError('Faild.', ['error'=>__('locale.api_register_error')]);
+            return $this->sendError('Faild.', ['error'=>__('locale.api_register_error')],400);
         }
     }
 }

@@ -36,7 +36,7 @@ class RegisterController extends BaseController
             $success['token'] =  $userCheck->first()->createToken('MyApp')->plainTextToken;
             return $this->sendResponse($success, 'User register successfully.');
         }else{
-            return $this->sendError('Faild.', ['error'=>__('locale.api_register_error')]);
+            return $this->sendError('Failed.', ['error'=>__('locale.api_register_error')],400);
         }
         
     }
@@ -58,7 +58,7 @@ class RegisterController extends BaseController
             return $this->sendResponse($success, 'User login successfully.');
         } 
         else{ 
-            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+            return $this->sendError('Unauthorised.', ['error'=>'Email ID and Password not match'],400);
         } 
     }
 }

@@ -7,7 +7,7 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Http\Request;
 use Validator;
 use Illuminate\Http\JsonResponse;
-use App\Models\{User,Cartlist};
+use App\Models\{User,Cartlist,ProductsVariations,Products};
 use Illuminate\Support\Facades\Hash;
 
 class CheckoutController extends BaseController
@@ -21,13 +21,20 @@ class CheckoutController extends BaseController
         ]);
    
         if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
+            return $this->sendError('Validation Error.', $validator->errors(),400);       
         }
 
         if($request->order_type!='order' && ($request->product_price=='' || $request->product_price==0)){
-            return $this->sendError('Validation Error.', 'Product price required');  
+            return $this->sendError('Validation Error.', 'Product price required',400);  
         }
-   
+
+        if(ProductsVariations::where('id',$request->product_variant_id)->count()==0){
+            return $this->sendError('Validation Error.', 'Product variant id not correct',400);  
+        }
+        if(Products::where('id',$request->product_id)->count()==0){
+            return $this->sendError('Validation Error.', 'Product id not correct',400);  
+        }
+        
         $input = $request->all();
         $input['product_price'] = ($request->order_type!='order') ? $request->product_price : 0 ;
         $input['user_id'] = auth('sanctum')->user()->id;

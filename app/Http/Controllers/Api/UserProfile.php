@@ -30,7 +30,7 @@ class UserProfile extends BaseController
             User::where('id',$input['user_id'])->update(['password'=>$success['password']]);
             return $this->sendResponse('', __('locale.api_password_change'));
         }else{
-            return $this->sendError('Faild.', ['error'=>__('locale.api_register_error')]);
+            return $this->sendError('Failed.', ['error'=>__('locale.api_register_error')],400);
         }
     }
 }

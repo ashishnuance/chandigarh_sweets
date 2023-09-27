@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API;
    
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\BaseController as BaseController;
-use App\Models\{Products,User};
+use App\Models\{Products,User,ProductsVariations};
 use Validator;
 use App\Http\Resources\ProductResource;
 use Illuminate\Http\JsonResponse;
@@ -68,7 +68,7 @@ class ProductController extends BaseController
             }
             return $this->sendResponse(ProductResource::collection($products_result), 'Products retrieved successfully.');
         }else{
-            return $this->sendError('Product not found.');
+            return $this->sendError('Product not found.','',400);
         }
     }
     /**
@@ -87,7 +87,7 @@ class ProductController extends BaseController
         ]);
    
         if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
+            return $this->sendError('Validation Error.', $validator->errors(),400);       
         }
    
         $product = Products::create($input);
@@ -106,7 +106,7 @@ class ProductController extends BaseController
         $product = Products::where('product_slug','like',$slug)->first();
   
         if (is_null($product)) {
-            return $this->sendError('Product not found.');
+            return $this->sendError('Product not found.','',400);
         }
    
         return $this->sendResponse(new ProductResource($product), 'Product retrieved successfully.');
@@ -129,7 +129,7 @@ class ProductController extends BaseController
         ]);
    
         if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
+            return $this->sendError('Validation Error.', $validator->errors(),400);       
         }
    
         $product->name = $input['name'];
