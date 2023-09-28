@@ -173,8 +173,8 @@ Route::group(['middleware' => ['auth']], function () {
     });
     Route::get('/buyer_type', [BuyerUserController::class,'buyer_type'])->name('buyer-type');
 
-    Route::middleware(['companyadmin'])->group(function () {
-        Route::get('/', [DashboardController::class, 'dashboardModern'])->name('dashboard');
+    Route::prefix('companyadmin')->middleware(['companyadmin'])->group(function () {
+        Route::get('/', [DashboardController::class, 'dashboardCompanyadminModern'])->name('dashboard');
         /** company user **/
         Route::get('/company-user-create', [UserController::class, 'usersCreate'])->name('company-user-create');
         Route::get('/company-user-edit/{id}', [UserController::class, 'usersCreate'])->name('company-user-edit');

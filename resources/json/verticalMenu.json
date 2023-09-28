@@ -104,14 +104,14 @@
       "icon": "person_outline",
       "submenu": [
         {
-          "url": "company-user-create",
+          "url": "companyadmin/company-user-create",
           "name": "Add Company User",
           "i18n": "Add Company User",
           "permission_guard_name":"create",
           "slug": "add-company-user"
         },
         {
-          "url": "company-user-list",
+          "url": "companyadmin/company-user-list",
           "name": "Company-user List",
           "i18n": "Company-user List",
           "permission_guard_name":"read",
@@ -153,14 +153,14 @@
       "icon": "person_outline",
       "submenu": [
         {
-          "url": "buyer/create",
+          "url": "companyadmin/buyer/create",
           "name": "Buyer Registration",
           "i18n": "Buyer Registration",
           "permission_guard_name":"create",
           "slug": "buyer-registration"
         },
         {
-          "url": "buyer",
+          "url": "companyadmin/buyer",
           "name": "Buyer List",
           "i18n": "Buyer List",
           "permission_guard_name":"read",
@@ -230,14 +230,14 @@
       "icon": "view_list",
       "submenu": [
         {
-          "url": "product/create",
+          "url": "companyadmin/product/create",
           "name": "Item Add",
           "permission_guard_name":"create",
           "i18n": "product/create",
           "slug": "item-add"
         },
         {
-          "url": "product",
+          "url": "companyadmin/product",
           "name": "Items List",
           "permission_guard_name":"read",
           "i18n": "product/",
@@ -307,14 +307,14 @@
       "icon": "view_list",
       "submenu": [
         {
-          "url": "product-category/create",
+          "url": "companyadmin/product-category/create",
           "name": "Product Category Create",
           "permission_guard_name":"create",
           "i18n": "product-category/create",
           "slug": "product-category-create"
         },
         {
-          "url": "product-category",
+          "url": "companyadmin/product-category",
           "name": "Product Category List",
           "permission_guard_name":"read",
           "i18n": "product-category",
@@ -361,14 +361,14 @@
       "icon": "view_list",
       "submenu": [
         {
-          "url": "product-subcategory/create",
+          "url": "companyadmin/product-subcategory/create",
           "name": "Sub Category Create",
           "permission_guard_name":"create",
           "i18n": "Sub Category Create",
           "slug": "sub-category-create"
         },
         {
-          "url": "product-subcategory",
+          "url": "companyadmin/product-subcategory",
           "name": "Sub Category List",
           "permission_guard_name":"read",
           "i18n": "Sub Category List",
@@ -412,14 +412,14 @@
       "icon": "person_outline",
       "submenu": [
         {
-          "url": "buyer-type-channel/create",
+          "url": "companyadmin/buyer-type-channel/create",
           "name": "create",
           "i18n": "Buyer Type Channel",
           "permission_guard_name":"create",
           "slug": "buyer-type-channel-create"
         },
         {
-          "url": "buyer-type-channel",
+          "url": "companyadmin/buyer-type-channel",
           "name": "list",
           "i18n": "Buyer Type Channel",
           "permission_guard_name":"read",
@@ -463,14 +463,14 @@
       "icon": "person_outline",
       "submenu": [
         {
-          "url": "product-variation-type/create",
+          "url": "companyadmin/product-variation-type/create",
           "name": "create",
           "i18n": "Product Variation Type",
           "permission_guard_name":"create",
           "slug": "product-variation-type-create"
         },
         {
-          "url": "product-variation-type",
+          "url": "companyadmin/product-variation-type",
           "name": "list",
           "i18n": "Product Variation Type",
           "permission_guard_name":"read",
@@ -509,7 +509,7 @@
     },
     {
       "for" :["admin","user"],
-      "url": "superadmin/profile-edit",
+      "url": "companyadmin/profile-edit",
       "name": "Profile",
       "i18n": "Profile",
       "permission_name":"Profile",

@@ -17,9 +17,18 @@ class DashboardController extends Controller
     {
         if(Auth::user()->role()->first()->id==1){
             return redirect('/superadmin');
-        };
+        }else{
+            return redirect('/companyadmin');
+        }
+        // return view('/pages/dashboard-modern');
+    }
+
+    public function dashboardCompanyadminModern()
+    {
+        
         return view('/pages/dashboard-modern');
     }
+
     public function dashboardSuperadminModern()
     {
         
