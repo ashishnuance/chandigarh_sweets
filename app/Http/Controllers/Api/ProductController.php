@@ -24,11 +24,14 @@ class ProductController extends BaseController
         $auth_user_result = User::with('company')->find($user->id);
         
         $select = ['id','product_code','product_name','product_slug','description','food_type','product_catid','product_subcatid','product_type'];
-        $user_company_id = $auth_user_result->company[0]->id;
+        $user_company_id = (isset($auth_user_result->company[0]) && !empty($auth_user_result->company[0])) ? $auth_user_result->company[0]->id : 0;
+        
         $user_type = $auth_user_result->user_type;
         $products = Products::with(['product_variation','product_price','product_images'])->where(['blocked'=>1])->select($select)
         ->whereHas('company',function($q) use($user_company_id){
+            if($user_company_id>0){
             $q->where('company_id',$user_company_id);
+            }
         });
         if($request->has('search')){
         
@@ -39,7 +42,6 @@ class ProductController extends BaseController
         
         if($products->count()>0){
             $products_result = [];
-            // print_r($products->get()); exit();
             foreach($products->get() as $key => $pro_val){
                 $products_result[$key]['id'] = $pro_val->id;
                 $products_result[$key]['product_code'] = $pro_val->product_code;
