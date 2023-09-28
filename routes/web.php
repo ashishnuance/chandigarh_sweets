@@ -52,6 +52,9 @@ Auth::routes(['verify' => true]);
     Route::post('/superadmin-login', [LoginController::class, 'postLoginFormSuperadmin'])->name('superadmin-login');
 // });
 
+Route::get('/front/{any}',function(){
+    return view('welcome');
+});
 
 Route::get('image/{filename}', [DashboardController::class,'displayImage'])->name('image.displayImage');
 Route::group(['middleware' => ['auth']], function () { 

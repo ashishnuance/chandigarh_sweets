@@ -11,7 +11,7 @@ require('dotenv').config();
  | for your Laravel application. By default, we are compiling the Sass
  | file for the application as well as bundling up all the JS files.
  |
- */
+*/
 
 const glob = require('glob');
 const path = require('path');
@@ -68,7 +68,12 @@ mix.js('resources/js/materialize.js', 'public/js')
     .js('resources/js/plugins.js', 'public/js')
     .js('resources/js/search.js', 'public/js/')
     .sass('resources/sass/style-rtl.scss', 'public/css')
-    .sass('resources/sass/laravel-custom.scss', 'public/css');
+    .sass('resources/sass/laravel-custom.scss', 'public/css')
+    .js('resources/js/app.js', 'public/js')
+    .vue()
+    .postCss('resources/css/app.css', 'public/css', [
+        //
+    ]);;
 
 
 mix.copy('resources/js/vendors.min.js', 'public/js/vendors.min.js');

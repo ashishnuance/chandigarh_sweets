@@ -19,6 +19,11 @@
         "resolve-url-loader": "5.0.0",
         "rtlcss": "^2.4.1",
         "sass": "1.15.2",
-        "sass-loader": "^11.0.1"
+        "sass-loader": "^11.0.1",
+        "vue-loader": "^17.2.2"
+    },
+    "dependencies": {
+        "vue": "^3.2.36",
+        "vue-router": "^4.0.13"
     }
 }
