@@ -22,7 +22,7 @@ class UserProfile extends BaseController
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());       
         }
-   
+        
         $input = $request->all();
         $userCheck = User::where('id',$input['user_id']);
         if($userCheck->count()>0){

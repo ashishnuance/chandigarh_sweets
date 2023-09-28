@@ -38,7 +38,7 @@ class ProductController extends BaseController
         }
         
         if($products->count()>0){
-            
+            $products_result = [];
             // print_r($products->get()); exit();
             foreach($products->get() as $key => $pro_val){
                 $products_result[$key]['id'] = $pro_val->id;
@@ -48,6 +48,16 @@ class ProductController extends BaseController
                 $products_result[$key]['description'] = $pro_val->description;
                 $products_result[$key]['food_type'] = $pro_val->food_type;
                 $products_result[$key]['product_type'] = $pro_val->product_type;
+                $products_result[$key]['price'] = 0;
+                $products_result[$key]['discount'] = 0;
+                if(isset($pro_val->product_price) && !empty($pro_val->product_price)){
+                    foreach($pro_val->product_price as $p => $price_val){
+                        if($price_val->buyer_type==$user_type && $price_val->start_date<=date('Y-m-d')){
+                            $products_result[$key]['price'] = $price_val->price;
+                            $products_result[$key]['discount'] = $price_val->discount;
+                        }
+                    }
+                }
                 if(isset($pro_val->product_images) && !empty($pro_val->product_images)){
                     foreach($pro_val->product_images as $im => $image_val){
                         $products_result[$key]['product_images'][$im]['image'] = route('image.displayImage',$image_val->image);
@@ -56,15 +66,6 @@ class ProductController extends BaseController
                     }
                 }
                 $products_result[$key]['product_variation'] = $pro_val->product_variation;
-                if(isset($pro_val->product_price) && !empty($pro_val->product_price)){
-                    foreach($pro_val->product_price as $p => $price_val){
-                        if($price_val->buyer_type==$user_type && $price_val->start_date>=date('Y-m-d')){
-                            $products_result[$key]['product_price']['price'] = $price_val->price;
-                            $products_result[$key]['product_price']['discount'] = $price_val->discount;
-                        }
-                    }
-
-                }
             }
             return $this->sendResponse(ProductResource::collection($products_result), 'Products retrieved successfully.');
         }else{

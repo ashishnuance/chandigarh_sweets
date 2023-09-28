@@ -53,7 +53,7 @@ Auth::routes(['verify' => true]);
 // });
 
 
-
+Route::get('image/{filename}', [DashboardController::class,'displayImage'])->name('image.displayImage');
 Route::group(['middleware' => ['auth']], function () { 
 
 
@@ -61,7 +61,7 @@ Route::group(['middleware' => ['auth']], function () {
     /** country state city **/
     Route::post('api/fetch-states', [CompanyController::class, 'fetchState']);
     Route::post('api/fetch-cities', [CompanyController::class, 'fetchCity']);
-    Route::get('image/{filename}', [DashboardController::class,'displayImage'])->name('image.displayImage');
+    
     /** new routes start **/
     Route::prefix('superadmin')->middleware(['superadmin'])->group(function () { 
         Route::get('/', [DashboardController::class, 'dashboardSuperadminModern'])->name('superadmin.dashboard');

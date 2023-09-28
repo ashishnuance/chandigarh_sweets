@@ -285,6 +285,8 @@ return [
     "api_password_change"=>"Password updated successfully",
     "api_settings_success"=>"App data found successfully",
     "cart_empty" => "Cart is empty",
-    "found_successfully" => "Found Successfully"
+    "found_successfully" => "Found Successfully",
+    "cart_delete_error_msg" =>"Cart Id or User Id not match",
+    "order_success_submit" => "Order place successfully"
 ];
 ?>
