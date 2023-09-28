@@ -49,10 +49,11 @@ Auth::routes(['verify' => true]);
 
 // Route::prefix('superadmin')->group(function () { 
     Route::get('/superadmin-login', [LoginController::class, 'showLoginFormSuperadmin']);
+    Route::get('/company-login', [LoginController::class, 'showLoginFormCompanyadmin']);
     Route::post('/superadmin-login', [LoginController::class, 'postLoginFormSuperadmin'])->name('superadmin-login');
 // });
 
-Route::get('/front/{any}',function(){
+Route::get('/{any}',function(){
     return view('welcome');
 });
 
@@ -68,7 +69,7 @@ Route::group(['middleware' => ['auth']], function () {
     /** new routes start **/
     Route::prefix('superadmin')->middleware(['superadmin'])->group(function () { 
         Route::get('/', [DashboardController::class, 'dashboardSuperadminModern'])->name('superadmin.dashboard');
-        Route::get('/login', [LoginController::class, 'showLoginForm']);
+        // Route::get('/login', [LoginController::class, 'showLoginForm']);
 
         /** company route */
         Route::resource('/company', CompanyController::class);

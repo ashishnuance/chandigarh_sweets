@@ -1,0 +1,130 @@
+@media screen and (max-width: 991.91px) {
+    .Topbar {
+        background-size: cover;
+    }
+
+    .selectedBox {
+        padding: 11px 7px;
+        max-width: 122px;
+        font-size: 11px;
+    }
+
+    .SubInputBox button a {
+        color: #fff;
+        font-size: 15px;
+    }
+
+    .SubInputBox button {
+        padding: 5px 18px;
+    }
+
+    .SubInputBox input {
+        padding: 7px 135px;
+    }
+
+    .FirstNext,
+    .SecondNext {
+        right: 0;
+        z-index: 1;
+    }
+
+    .FirstPrev,
+    .SecondPrev {
+        left: 0;
+        z-index: 1;
+    }
+
+    .FooterLogo {
+        padding-bottom: 10px;
+        justify-content: start;
+    }
+
+    .FooterLink {
+        justify-content: start;
+    }
+
+    .QuotBannerPopup {
+        height: 100%;
+    }
+
+    .QuotBannerPopup .container .row .col-lg-6 {
+        padding: 20px;
+    }
+
+    .popupCard {
+        padding: 35px 20px 30px 20px;
+    }
+
+    .ProductBtn {
+        flex-direction: column;
+        width: 100%;
+        flex-wrap: nowrap;
+    }
+
+    .ProductBtn a {
+        width: 100%;
+        height: 35px;
+        display: flex;
+        padding: 0px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .ProductContent {
+        width: 100%;
+        padding: 20px 20px 0px;
+        align-items: start;
+    }
+
+    .PinCode {
+        width: 100%;
+    }
+
+    .cardBtn a {
+        padding: 10px 50px;
+    }
+
+    .item {
+        padding: 25px 28px;
+    }
+
+    .QuotBanner .row {
+        height: 100%;
+    }
+
+    section.QuotBanner .col-lg-6:first-child{
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+    }
+    
+    
+    section.QuotBanner .col-lg-6:last-child{
+        clip-path: polygon(0% 0, 100% 0, 100% 100%, 0% 100%)
+    }
+
+    .card.Firstcard.cart-card {flex-direction: column;}
+
+.cart-card .customcard .carddds {
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+.cart-card .customcard {
+    flex-direction: column;
+    row-gap: 15px;
+}
+
+.cart-col {
+    padding: 10px 10px !important;
+}
+.cart-section .col-12{
+    padding: 10px !important;
+}
+
+}
+
+@media only screen and (min-device-width: 768px) and (max-device-width: 912px) {
+    .selectedBox {
+        padding: 11px 16px;
+        max-width: 164px;
+    }
+}

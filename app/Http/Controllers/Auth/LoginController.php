@@ -35,11 +35,11 @@ class LoginController extends Controller
         switch(Auth::user()->role()->first()->id){
 
             case 3:
-                $this->redirectTo = '/';
+                $this->redirectTo = '/companyadmin';
                 return $this->redirectTo;
                 break;
             case 2:
-                    $this->redirectTo = '/';
+                    $this->redirectTo = '/companyadmin';
                 return $this->redirectTo;
                 break;
             case 1:
@@ -47,7 +47,7 @@ class LoginController extends Controller
                 return $this->redirectTo;
                 break;
             default:
-                $this->redirectTo = '/login';
+                $this->redirectTo = '/';
                 return $this->redirectTo;
 
         }
@@ -61,7 +61,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except(['logout','showLoginFormSuperadmin']);
+        $this->middleware('guest')->except(['logout','showLoginFormSuperadmin','showLoginFormCompanyadmin']);
     }
 
     // Login
@@ -78,6 +78,18 @@ class LoginController extends Controller
 
     // Login
     public function showLoginFormSuperadmin()
+    {
+        
+        $pageConfigs = ['bodyCustomClass' => 'login-bg', 'isCustomizer' => false];
+        $formUrl = 'superadmin-login';
+        return view('/auth/login', [
+            'pageConfigs' => $pageConfigs,
+            'formUrl' => $formUrl
+        ]);
+    }
+
+    // Login
+    public function showLoginFormCompanyadmin()
     {
         
         $pageConfigs = ['bodyCustomClass' => 'login-bg', 'isCustomizer' => false];
