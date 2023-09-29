@@ -1,9 +1,9 @@
 <template>
     <div>
         <div>
-            <router-link to="/front/home">Home</router-link>
-            <router-link to="/front/login">login</router-link>
-            <router-link to="/front/register">register</router-link>
+            <router-link to="/home">Home</router-link>
+            <router-link to="/login">login</router-link>
+            <router-link to="/register">register</router-link>
         </div>
 
         <router-view></router-view>

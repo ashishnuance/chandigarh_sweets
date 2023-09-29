@@ -1,0 +1,842 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,700;0,800;0,900;1,500&family=Quicksand:wght@500;700&display=swap');
+
+* {
+    font-family: 'Quicksand', sans-serif;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+    cursor: pointer;
+}
+
+ul {
+    padding: 0;
+    list-style-type: none;
+}
+
+.custom {
+    padding: 50px;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 4;
+}
+
+.navbar {
+    background-color: #981817;
+}
+
+
+a.navbar-brand{
+    max-width: 120px;
+}
+
+.NavIcon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+}
+
+.NavIcon li {
+    background-color: #8F1117;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    width: 60px;
+    height: auto;
+    border-radius: 10px;
+}
+
+.NavIcon li p {
+    margin: 0;
+    color: #fff;
+    font-size: 12px;
+    text-transform: capitalize;
+}
+
+/* Topbar start */
+.Topbar {
+    background: url("../img/bg.png");
+    width: 100%;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    height: 450px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.TopContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.TopContent h5 {
+    color: #fff;
+    padding: 10px 0px;
+}
+
+.SubInputBox {
+    position: relative;
+    width: 100%;
+}
+
+.SubInputBox input {
+    width: 100%;
+    outline: none;
+    border: none;
+    padding: 10px 174px;
+    border-radius: 20px;
+}
+.SubInput{
+    padding: 10px 20px !important;
+}
+
+.SubInputBox button {
+    position: absolute;
+    right: 0px;
+    padding: 10px 30px;
+    border-radius: 20px;
+    outline: none;
+    display: flex;
+    align-items: center;
+    border: none;
+    background: #FF9A00;
+    color: #fff;
+    bottom: 0;
+    top: 0;
+}
+
+
+.selectedBox {
+    position: absolute;
+    max-width: 165px;
+    width: 100%;
+    padding: 11px;
+    left: -1px;
+    border-radius: 0;
+    background-color: #70707069;
+    border-radius: 25px 0px 0px 25px;
+    font-size: 15px;
+    font-weight: 800;
+    text-transform: uppercase;
+    border: none;
+    top: 0;
+}
+.selectedBox:focus{
+    box-shadow: none;
+}
+.SubInputBox button a {
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 11px;
+}
+/* Topbar End */
+/* Swiper Start */
+.FirstSlider {
+    position: relative;
+}
+
+.Firstcard {
+    display: flex;
+    background-color: #F0F1F1;
+    padding: 20px;
+}
+
+
+.Firstcard h5 {
+    font-weight: bold;
+    color: #212529;
+}
+
+.cardBtn {
+    display: flex;
+    gap: 5px;
+    width: 100%;
+}
+
+.cardBtn button {
+    color: #fff;
+    font-size: 9px;
+    text-decoration: none;
+    border-radius: 30px;
+    border: 0;
+}
+
+.ProductBtn a {
+    padding: 10px 24px;
+    color: #fff;
+    font-size: 9px;
+    text-decoration: none;
+    border-radius: 31px;
+}
+
+.BtnProduct {
+    display: flex;
+    gap: 5px;
+}
+
+.BtnProduct a {
+    padding: 10px 27px;
+    color: #fff;
+    font-size: 14px;
+    text-decoration: none;
+    border-radius: 31px;
+}
+
+.cardFirstBtn {
+    background-color: #A51A19;
+    padding: 8px 24px;
+}
+
+.cardSecondBtn {
+    background-color: #FF9A00;
+    padding: 8px 24px;
+}
+
+
+.FirstNext,
+.SecondNext {
+    right: -40px;
+    z-index: 1;
+}
+
+.FirstPrev,
+.SecondPrev {
+    left: -40px;
+    z-index: 1;
+}
+
+.FirstNext::after,
+.FirstPrev::after,
+.SecondNext::after,
+.SecondPrev::after {
+    font-size: 12px;
+    background-color: #FF9A00;
+    padding: 6px;
+    color: #fff;
+}
+
+.customcard {
+    width: 100%;
+}
+
+.thumbCardImg {
+    width: 100%;
+}
+
+.thumbCardImg img {
+    width: 100%;
+}
+
+/* swiper end */
+
+/* Subscribe Start */
+.SubscribeSection {
+    background-color: #BFBEBE;
+    padding: 40px;
+}
+
+.Subscribe {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.Subscribe h5 {
+    font-weight: 900;
+    padding-bottom: 19px;
+}
+
+/* Subscribe End*/
+
+/* Product page start */
+.Product {
+    padding: 115px 0px 40px 0px;
+}
+
+.ProductCard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #F0F1F1;
+    padding: 20px 60px;
+}
+
+.PrductPrice {
+    display: flex;
+    justify-content: space-between;
+}
+
+.ProductContent {
+    display: flex;
+    flex-direction: column;
+    row-gap: 25px;
+}
+
+.ProductHead {
+    margin-bottom: 10px;
+}
+
+.Qty {
+    display: flex;
+    gap: 10px;
+    background-color: #FF9A00;
+    width: 112px;
+    height: 36px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    color: #fff;
+    padding: 12px 0px;
+}
+
+.Qty p {
+    margin: 0;
+}
+
+.QtyAdd {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.QtyAdd p {
+    margin: 0;
+
+}
+
+.QtyAdd h6 {
+    margin: 0;
+    margin: 0;
+    background-color: #fff;
+    color: #000;
+    padding: 1px 5px;
+}
+
+.ProductBtn a {
+    padding: 8px 95px;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 15px;
+}
+
+.ProductBtn {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.AddCardBtn {
+    background-color: brown;
+}
+
+.WishCardBtn {
+    background-color: #FF9A00;
+}
+
+.PinInput {
+    position: relative;
+    max-width: 592px;
+    width: 100%;
+}
+
+.PinInput input {
+    width: 100%;
+    border: none;
+    background-color: #ddddddab;
+    padding: 5px 15px;
+    border-radius: 12px;
+    color: #000;
+}
+
+.PinInput a {
+    position: absolute;
+    right: 12px;
+    top: 2px;
+    color: red;
+}
+
+.PinCode p {
+    margin: 0px;
+}
+
+.PinCode {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+.ProductHead h6 {
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.ProductHead h5 {
+    font-weight: 800;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.PrductPrice p {
+    margin: 0;
+    font-weight: 900;
+    font-size: 20px;
+}
+
+.Stock {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    color: green;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.Stock span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50px;
+    background-color: green;
+    display: block;
+}
+
+.ProductIcon {
+    display: flex;
+    gap: 10px;
+    margin: 5px;
+}
+
+.ProductIcon i {
+    color: #FF9A00;
+}
+
+/* Product page end */
+/* Quot page start */
+
+.QuotBanner {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: block;
+    margin-top: 75px;
+}
+
+.QuotOrder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.QuotOrder h2 {
+    color: #fff !important;
+    font-weight: bold !important;
+    font-size: 50px !important;
+}
+
+.image-img{
+    filter: brightness(0.5) !important;
+}
+
+/* Quot page end */
+/* QuotPopup page start */
+.QuotBannerPopup {
+    background: url("../img/Group 37.png");
+    width: 100%;
+    height: 665px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.QuotBannerPopup .container .row {
+    padding-top: 90px;
+}
+
+.QuotPopup {
+    border: 4px solid #FF9A00;
+    border-radius: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.QuotPopup h2 {
+    color: #981817;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    padding: 15px;
+    text-transform: uppercase;
+    font-weight: 900;
+}
+
+.QuotPopup h2::after {
+    width: 100%;
+    height: 1px;
+    background-color: #ff9a00;
+    display: block;
+    content: '';
+    margin-top: 10px;
+}
+
+.popupCard {
+    padding: 10px 40px 50px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 25px;
+}
+
+.QuotPopupInput {
+    position: relative;
+    width: 100%;
+
+}
+
+.QuotPopupInput input {
+    width: 100%;
+    outline: none;
+    border: 1px solid #FF9A00;
+    padding: 10px 20px;
+    border-radius: 15px;
+    background: transparent;
+    color: #fff;
+}
+
+
+.QuotPopupInput button {
+    background-color: #FF9A00;
+    position: absolute;
+    right: 1px;
+    top: 1px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 0px 15px 15px 0px;
+    color: #fff;
+}
+
+.AddCard {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.itemsCard {
+    display: flex;
+    gap: 10px;
+}
+
+.item {
+    background: #fff;
+    padding: 25px 35px;
+    border-radius: 10px 10px 0px 0px;
+    border: 3px solid #981817;
+    gap: 10px;
+}
+
+.AddCard a {
+    background-color: #981817;
+    border: none;
+    border-radius: 0px 0px 10px 10px;
+    padding: 4px 0px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+
+
+/* QuotPopup page end */
+/* password page start */
+
+.PswrdPopup {
+    border: 4px solid #FF9A00;
+    border-radius: 60px;
+    margin: 100px 0px 20px 0px;
+}
+
+.PswrdPopup h2 {
+    color: #A51A19;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    padding: 15px;
+    text-transform: uppercase;
+    font-weight: 900;
+}
+
+.PswrdPopup h2::after {
+    width: 100%;
+    height: 1px;
+    background-color: #ff9a00;
+    display: block;
+    content: '';
+    margin-top: 10px;
+}
+.PswrdCard {
+    padding: 0px 24px 27px;
+}
+.BoxInput .form-control{
+    display: inline !important;
+    border-radius: 10px;
+}
+.BoxInput  label{
+    font-weight: 900;
+}
+.PswrdBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 25px;
+    column-gap: 15px;
+}
+.PswrdBtn a {
+    background: #A51A19;
+    padding: 8px 29px;
+    border-radius: 29px;
+    color: #fff;
+    text-transform: uppercase;
+}
+.BoxInput{
+    padding: 5px 0px;
+}
+/* password page end */
+/* footer start */
+
+.infoBox {
+    display: flex;
+    background-color: #8F1117;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+}
+
+.infoBox h5 {
+    margin: 0;
+    color: #fff;
+    font-size: 14px;
+}
+
+.infoBox img {
+
+    width: 40px;
+    height: 40px;
+
+}
+
+.FooterLogo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.FooterLink {
+    display: flex;
+    justify-content: center;
+}
+
+.Footer-2 {
+    background-color: #F5F3F2;
+}
+
+.QuickLink span {
+    font-weight: bold;
+    font-size: 18px;
+    text-transform: uppercase;
+}
+
+.QuickLink li {
+    font-size: 15px;
+}
+
+.SocialIcon {
+    display: flex;
+    gap: 10px;
+}
+
+.SocialIcon i {
+    color: #8F1117;
+}
+.QuickLink li a:hover {
+    color: #8F1117;
+}
+/* footer End */
+
+/* custom-css */
+
+.NavIcon .nav-item .addcart {
+    display: block;
+    position: absolute;
+    background-color: #fff;
+    width: 15px;
+    height: 15px;
+    text-align: center;
+    line-height: 15px;
+    font-size: 10px;
+    border-radius: 50px;
+    right: 10px;
+    bottom: 5px;
+}
+
+.NavIcon .nav-item:last-child {
+    position: relative;
+    background-color: transparent;
+}
+
+.NavIcon .nav-item:last-child img {filter: saturate(0) contrast(230%);}
+
+section.QuotBanner .col-lg-6 {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 0px;
+    overflow: hidden;
+    transform: scale(1.15);
+    transition: all 0.5s ease-in-out;
+}
+
+
+.cart-section .col-12 {
+    padding: 0px;
+}
+
+section.QuotBanner .col-lg-6:hover{
+    transform: scale(1.18);
+}
+
+section.QuotBanner .col-lg-6:first-child{
+    clip-path: polygon(0 0, 89% 0, 100% 100%, 0% 100%);
+}
+
+
+section.QuotBanner .col-lg-6:last-child{
+    clip-path: polygon(0% 0, 100% 0, 100% 100%, 12% 100%)
+}
+
+section.QuotBanner .col-lg-6 img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.5s ease-in-out;
+    position: relative;
+}
+
+section.QuotBanner .col-lg-6:after{
+    content: " ";
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #0000004b;
+}
+
+section.QuotBanner .col-lg-6:hover img {
+    transform: scale(1.07);
+}
+
+section.QuotBanner .col-lg-6:hover .QuotOrder{
+    transform: scale(1.1);
+}
+
+.QuotBanner .row {
+    height: 580px;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+.QuotOrder{
+    position: absolute;
+    z-index: 2;
+    transition: all 0.5s ease-in-out;
+}
+
+.card.cart-card {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    column-gap: 15px;
+}
+
+.cart-card .thumbCardImg {
+    max-width: 100px;
+}
+
+section.cart-section {
+    margin-top: 80px;
+}
+
+.cart-card .customcard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 30px;
+}
+
+.cart-card .customcard h5 {
+    margin-bottom: 0px;
+}
+
+.cart-card .customcard .carddds{
+    display: flex;
+    align-items: center;
+    column-gap: 80px;
+}
+
+.cart-col{
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+    padding: 30px 0 !important;
+}
+
+.cart-section .ProductBtn {
+    padding: 0px 0 30px !important;
+}
+
+.cart-section .ProductBtn .AddCardBtn:hover,
+.cart-section .ProductBtn .WishCardBtn:hover{
+    filter: brightness(0.8);
+}
+
+.price {
+    background-color: #981817;
+    border: none;
+    border-radius: 0px 0px 10px 10px;
+    padding: 4px 0px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    color: #fff;
+}

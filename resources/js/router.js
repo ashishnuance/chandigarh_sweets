@@ -8,22 +8,22 @@ import welcome from './components/welcome.vue';
 
 const routes = [
     {
-        path:'/front/welcome',
+        path:'/welcome',
         name:'Welcome',
         component:welcome
     },
     {
-        path:'/front/home',
+        path:'/home',
         name:'Home',
         component:home
     },
     {
-        path:'/front/login',
+        path:'/login',
         name:'Login',
         component:login
     },
     {
-        path:'/front/register',
+        path:'/register',
         name:'Register',
         component:register
     }

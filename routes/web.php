@@ -52,7 +52,7 @@ Auth::routes(['verify' => true]);
     Route::post('/superadmin-login', [LoginController::class, 'postLoginFormSuperadmin'])->name('superadmin-login');
 // });
 
-Route::get('/front/{any}',function(){
+Route::get('/{any}',function(){
     return view('welcome');
 });
 
