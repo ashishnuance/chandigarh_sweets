@@ -247,7 +247,7 @@ class UserController extends Controller
             $companyUser = new UsersExport;
         }
         
-        return Excel::download($companyUser, 'company-'.$type.time().'.xlsx');
+        return Excel::download($companyUser, 'companyusers-'.$type.time().'.xlsx');
     }
 
     

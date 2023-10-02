@@ -118,7 +118,7 @@
                   </div>
                   
                   <div class="col s12 m6 input-field">
-                    <select name="blocked">
+                    <select name="blocked" id="blocked">
                       <option value="1">Blocked</option>
                       <option value="0">Un-Blocked</option>
                     </select>
@@ -197,65 +197,7 @@
                         </tr>
                         @endforeach
                         @endif
-                      <?php /*
-                      //echo '<pre>'; print_r($user_result); die; ?>
-                        @if(isset($user_result->permission) && !empty($user_result->permission))
-
-                        <?php //echo $editData = user_result) ?>
-                        @foreach($user_result->permission as $moduleValue)
-
-                        <tr>
-
-                          <td>{{ucwords(str_replace('_',' ',$moduleValue->name))}}</td>
-
-                          <td>
-                          <label>
-                              @if ($moduleValue->guard_name == 'read')
-                              <input type="checkbox" name="permission_allow[{{ $moduleValue }}][guard_name][]" value="index" checked />
-                              @else
-                                  <input type="checkbox" name="permission_allow[{{ $moduleValue }}][guard_name][]" value="index" />
-                              @endif
-                              <span></span>
-                          </label>
-                          </td>
-                          <?php //echo '<pre>'; print_r($moduleValue); die; ?>
-                          <td>
-                            <label>
-                              
-                              @if ($moduleValue->guard_name == 'create')
-                              <input type="checkbox" name="permission_allow[{{ $moduleValue }}][guard_name][]" value="create" checked />
-                              @else
-                                  <input type="checkbox" name="permission_allow[{{ $moduleValue }}][guard_name][]" value="create" />
-                              @endif
-                              <span></span>
-                            </label>
-                          </td>
-                          <td>
-                            <label>
-                             
-                              @if ($moduleValue->guard_name == 'update')
-                              <input type="checkbox" name="permission_allow[{{ $moduleValue }}][guard_name][]" value="update" checked />
-                              @else
-                                  <input type="checkbox" name="permission_allow[{{ $moduleValue }}][guard_name][]" value="update" />
-                              @endif
-                              <span></span>
-                            </label>
-                          </td>
-                          <td>
-                            <label>
-                            
-                              @if ($moduleValue->guard_name == 'delete')
-                              <input type="checkbox" name="permission_allow[{{ $moduleValue }}][guard_name][]" value="delete" checked />
-                              @else
-                                  <input type="checkbox" name="permission_allow[{{ $moduleValue }}][guard_name][]" value="delete" />
-                              @endif
-                              <span></span>
-                            </label>
-                          </td>
-                        </tr>
-                        @endforeach
-                        @endif
-                        */ ?>
+                      
                       </tbody>
                     </table>
                     <!-- </div> -->
@@ -298,6 +240,7 @@
     var state_value = "{{(isset($user_result->state) && $user_result->state!='NULL') ? $user_result->state : old('state')}}";
     var city_value = "{{(isset($user_result->city) && $user_result->city!='NULL') ? $user_result->city : old('state')}}";
     var company_value = "{{(isset($user_result->company[0]->id) && $user_result->company[0]->id!='NULL') ? $user_result->company[0]->id : old('company')}}";
+    var blocked = "{{(isset($user_result->blocked) && $user_result->blocked!='NULL') ? $user_result->blocked : 1}}";
     console.log(state_value);
     $('#country').val(country_value);
     $('#country').formSelect();
@@ -305,6 +248,8 @@
     $('#state').formSelect();
     $('#city').val(city_value);
     $('#city').formSelect();
+    $('#blocked').val(blocked);
+    $('#blocked').formSelect();
     $('#company').val(company_value);
     if(country_value_edit && country_value_edit!=''){
       $('#company').attr('disabled',true);

@@ -63,7 +63,7 @@
     <div class="col s12 m12 l12">
       <div id="responsive-table" class="card card card-default scrollspy">
         <div class="card-content">
-            <a class="btn waves-effect waves-light right" href="{{asset('company-export')}}">{{__('locale.export_company')}}
+            <a class="btn waves-effect waves-light right" href="{{route('company-export')}}">{{__('locale.export_company')}}
                 <i class="material-icons right"></i>
             </a>
           <div class="row">
@@ -71,8 +71,8 @@
             </div>
             <div class="col s12 table-result">
                 <div class="input-field col m6 s12">
-                  <label for="serach">{{__('locale.search')}}</label>
-                  <input id="serach" type="text" name="serach" data-error=".errorTxt12">
+                  <label for="search">{{__('locale.search')}}</label>
+                  <input id="search" type="text" name="search" data-error=".errorTxt12">
                   <small class="errorTxt12"></small>
                 </div>
               <!-- <div class="col m3">
@@ -108,25 +108,25 @@
             seach_term = "";
         }
         $.ajax({ 
-            url:"/company?page="+page+"&status="+status+"&seach_term="+seach_term,
+            url:"company?page="+page+"&status="+status+"&seach_term="+seach_term,
             success:function(data){
               console.log(data);
-                $('.table-result table').html('');
-                $('.table-result table').html(data);
+                $('.table-result').html('');
+                $('.table-result').html(data);
             }
         })
     }
 
-    $('body').on('keyup', '#serach', function(){
+    $('body').on('keyup', '#search', function(){
         var status = $('#status').val();
-        var seach_term = $('#serach').val();
+        var seach_term = $('#search').val();
         var page = $('#hidden_page').val();
         fetch_data(page, status, seach_term);
     });
 
     $('body').on('change', '#status', function(){
         var status = $('#status').val();
-        var seach_term = $('#serach').val();
+        var seach_term = $('#search').val();
         var page = $('#hidden_page').val();
         fetch_data(page, status, seach_term);
     });
@@ -134,8 +134,9 @@
     $('body').on('click', '.pager a', function(event){
         event.preventDefault();
         var page = $(this).attr('href').split('page=')[1];
+        console.log('page',page);
         $('#hidden_page').val(page);
-        var serach = $('#serach').val();
+        var search = $('#search').val();
         var seach_term = $('#status').val();
         fetch_data(page,status, seach_term);
     });
