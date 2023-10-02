@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('food_type')->default('veg');
             $table->string('product_type')->default('domestic');
             $table->text('description')->nullable();
-            $table->bigInteger('product_catid')->unsigned();
-            $table->bigInteger('product_subcatid')->unsigned();
+            $table->unsignedInteger('product_catid');
+            $table->unsignedInteger('product_subcatid');
             $table->integer('blocked')->default(1);
             $table->timestamps();
 

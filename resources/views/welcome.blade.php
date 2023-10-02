@@ -17,9 +17,75 @@
     <body>
         <div id="app">
         </div>
+    </div>
 
+    <script src="{{ mix('js/app.js') }}"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+  <script>
+    var swiper = new Swiper(".FirstSwiper", {
+      slidesPerView: 4,
+      spaceBetween: 30,
+      navigation: {
+        nextEl: ".FirstNext",
+        prevEl: ".FirstPrev",
+      },
+      breakpoints: {
+
+        320: {
+          slidesPerView: 1,
+        },
+
+        480: {
+          slidesPerView: 1,
+        },
+
+        768: {
+          slidesPerView: 2,
+        },
+
+        1024: {
+          slidesPerView: 4,
+        }
+      }
+    });
+  </script>
+  <script>
+    var swiper = new Swiper(".SecondSwiper", {
+      slidesPerView: 4,
+      spaceBetween: 30,
+      navigation: {
+        nextEl: ".SecondNext ",
+        prevEl: ".SecondPrev",
+      },
+      breakpoints: {
+
+        320: {
+          slidesPerView: 1,
+        },
+
+        480: {
+          slidesPerView: 1,
+        },
+
+        768: {
+          slidesPerView: 2,
+        },
+
+        1024: {
+          slidesPerView: 4,
+        }
+      }
+    });
+  </script>
+</body>
+
+<<<<<<< HEAD
         <script src="{{ mix('js/app.js') }}"></script>
         
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     </body>
+=======
+>>>>>>> 562eb0d8a931e52e71917acd0eabb6e5499e4477
 </html>
