@@ -40,6 +40,7 @@ class CompanyController extends Controller
                             $q->where('status',$request->status);
                         })
                         ->paginate($perpage);
+                        // dd($companyResult);
             return view('pages.company.company-table-list', compact('companyResult'))->render();
         }
         if($companyResult->count()>0){
@@ -79,7 +80,7 @@ class CompanyController extends Controller
         
         $validator = Validator::make($request->all(), [
             'company_name' => 'required|max:250',
-            'company_code' => 'required|max:10',
+            'company_code' => 'required|unique:companies|max:10',
             'address1' => 'required|max:250',
             'address2' => 'max:250',
             'pincode' => 'required',
@@ -93,7 +94,7 @@ class CompanyController extends Controller
             ->withErrors($validator)
             ->withInput();
         }
-        // echo '<pre>';print_r($request->all());  exit();
+        
         $company = Company::create($request->all());
         if($company){
             return redirect()->route('company.index')->with('success',__('locale.company_create_success'));
@@ -164,6 +165,11 @@ class CompanyController extends Controller
         if ($validator->fails()) {
             return redirect()->back()
             ->withErrors($validator)
+            ->withInput();
+        }
+        if(Company::where('company_code',$request->company_code)->where('id','!=',$id)->count()>0){
+            return redirect()->back()
+            ->with('error',__('locale.company_code_unique_error'))
             ->withInput();
         }
         unset($request['_method']);

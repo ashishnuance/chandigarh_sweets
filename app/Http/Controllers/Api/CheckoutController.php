@@ -23,11 +23,14 @@ class CheckoutController extends BaseController
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors(),400);       
         }
-
-        if($request->order_type!='order' && ($request->product_price=='' || $request->product_price==0)){
+        if(!in_array(strtolower($request->order_type),['order','quotation'])){
+            return $this->sendError('Validation Error.', 'Order type not valid',400);  
+        }
+        if($request->order_type=='order' && $request->product_price==''){
             return $this->sendError('Validation Error.', 'Product price required',400);  
         }
-
+        
+        // print_r($request->all()); exit();
         if(ProductsVariations::where('id',$request->product_variant_id)->count()==0){
             return $this->sendError('Validation Error.', 'Product variant id not correct',400);  
         }
@@ -36,7 +39,7 @@ class CheckoutController extends BaseController
         }
         
         $input = $request->all();
-        $input['product_price'] = ($request->order_type!='order') ? $request->product_price : 0 ;
+        $input['product_price'] = ($request->order_type=='order') ? $request->product_price : 0 ;
         $input['user_id'] = auth('sanctum')->user()->id;
         $checkCart = Cartlist::where(['product_id'=>$request->product_id,'product_variant_id'=>$request->product_variant_id,'user_id'=>$input['user_id']]);
         
@@ -71,6 +74,7 @@ class CheckoutController extends BaseController
                     $products_result[$key]['product_name'] = $cart_val->products->product_name;
                     $products_result[$key]['product_slug'] = $cart_val->products->product_slug;
                     $products_result[$key]['food_type'] = $cart_val->products->food_type;
+                    $products_result[$key]['product_images'] = '';
                     if(isset($cart_val->products->product_images) && !empty($cart_val->products->product_images)){
                         foreach($cart_val->products->product_images as $im => $image_val){
                             $products_result[$key]['product_images'] = route('image.displayImage',$image_val->image);    

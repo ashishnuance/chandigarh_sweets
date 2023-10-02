@@ -143,8 +143,8 @@
                   <small class="errorTxt12"></small>
                 </div>
                 <div class="input-field col m6 s12">
-                    <select name="blocked">
-                    <option value="1" disabled selected>{{__('locale.blocked')}}</option>
+                    <select name="blocked" id="blocked">
+                    <option value="1">{{__('locale.blocked')}}</option>
                     <option value="0">{{__('locale.unblocked')}}</option>
                     </select>
                     <label>{{__('locale.blocked')}}</label>
@@ -180,6 +180,7 @@
     var country_value = "{{(isset($company_result->country) && $company_result->country!='NULL') ? $company_result->country : old('country')}}";
     var state_value = "{{(isset($company_result->state) && $company_result->state!='NULL') ? $company_result->state : old('state')}}";
     var city_value = "{{(isset($company_result->city) && $company_result->city!='NULL') ? $company_result->city : old('state')}}";
+    var blocked = "{{(isset($company_result->blocked) && $company_result->blocked!='NULL') ? $company_result->blocked : 1}}";
     console.log(state_value);
     $('#country').val(country_value);
     $('#country').formSelect();
@@ -187,6 +188,8 @@
     $('#state').formSelect();
     $('#city').val(city_value);
     $('#city').formSelect();
+    $('#blocked').val(blocked);
+    $('#blocked').formSelect();
   }
     $(document).ready(function () {
       

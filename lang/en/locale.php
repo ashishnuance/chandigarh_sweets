@@ -287,6 +287,7 @@ return [
     "cart_empty" => "Cart is empty",
     "found_successfully" => "Found Successfully",
     "cart_delete_error_msg" =>"Cart Id or User Id not match",
-    "order_success_submit" => "Order place successfully"
+    "order_success_submit" => "Order place successfully",
+    "company_code_unique_error"=>"Company code already in use"
 ];
 ?>
