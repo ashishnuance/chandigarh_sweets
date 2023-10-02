@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 class CheckoutController extends BaseController
 {
     function add_to_cart(Request $request){
+        // print_r($request->all()); exit();
         $validator = Validator::make($request->all(), [
             'product_id' => 'required',
             'product_qty' => 'required:min:1',
@@ -51,7 +52,8 @@ class CheckoutController extends BaseController
         }
 
         if($cartResult){
-            return $this->sendResponse('',$successMessage);
+            $cartItemCount = Cartlist::where(['user_id'=>$input['user_id']]);
+            return $this->sendResponse($cartItemCount->count(),$successMessage);
         }else{
             return $this->sendError('Failed.', ['error'=>__('locale.try_again')]);
         }

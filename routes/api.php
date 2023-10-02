@@ -29,9 +29,9 @@ Route::controller(RegisterController::class)->group(function(){
     Route::post('login', 'login');
 });
         
+Route::get('app-settings', [CompanyController::class,'settings']);
 Route::middleware('auth:sanctum')->group( function () {
     Route::post('generate-password', [UserProfile::class,'generate_password']);
-    Route::get('app-settings', [CompanyController::class,'settings']);
     
     Route::resource('products', ProductController::class);
     Route::get('products-detail/{slug}', [ProductController::class,'show']);

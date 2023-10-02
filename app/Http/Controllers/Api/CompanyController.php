@@ -25,15 +25,15 @@ class CompanyController extends BaseController
             $settingData['home_banner'] = (isset($setting_data->home_banner) && $setting_data->home_banner!='') ? json_decode($setting_data->home_banner) : [];
             if(!empty($settingData['home_banner'])){
                 foreach($settingData['home_banner'] as $k => $val){
-                    $settingData['home_banner'][$k]->image = asset('/banner/images/').'/'.$val->image;
+                    $settingData['home_banner'][$k]->image = route('image.displayImage',$val->image);
                 }
             }
 
             $settingData['logos'] = (isset($setting_data->logos) && $setting_data->logos!='') ? json_decode($setting_data->logos) : [];
             if(!empty($settingData['logos'])){
                 
-                $settingData['logos']->header_logo = asset('/logo/images/').'/'.$settingData['logos']->header_logo;
-                $settingData['logos']->footer_logo = asset('/logo/images/').'/'.$settingData['logos']->footer_logo;
+                $settingData['logos']->header_logo = route('image.displayImage',$settingData['logos']->header_logo);
+                $settingData['logos']->footer_logo = route('image.displayImage',$settingData['logos']->footer_logo);
             }
             $settingData['footer_content'] = (isset($setting_data->footer_content) && $setting_data->footer_content!='') ? json_decode($setting_data->footer_content) : [];
             return $this->sendResponse($settingData, __('locale.api_settings_success'));

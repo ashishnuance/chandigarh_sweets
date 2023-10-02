@@ -1,9 +1,14 @@
 import { createWebHistory,createRouter } from "vue-router";
 
 import home from './pages/home.vue';
-import login from './pages/login.vue';
-import register from './pages/registration.vue';
+import login from './pages/auth/login.vue';
+import register from './pages/auth/registration.vue';
 import welcome from './components/welcome.vue';
+import password from './pages/auth/password';
+import quotation from './pages/quotation';
+import orders from './pages/orders';
+import product from './pages/product';
+import cart from './pages/cartlist';
 
 
 const routes = [
@@ -26,6 +31,31 @@ const routes = [
         path:'/register',
         name:'Register',
         component:register
+    },
+    {
+        path:'/password',
+        name:'Password',
+        component:password
+    },
+    {
+        path:'/quotation',
+        name:'quotation',
+        component:quotation
+    },
+    {
+        path:'/orders',
+        name:'orders',
+        component:orders
+    },
+    {
+        path:'/product',
+        name:'product',
+        component:product
+    },
+    {
+        path:'/cart',
+        name:'cart',
+        component:cart
     }
 ];
 

@@ -27,6 +27,7 @@ class ProductController extends BaseController
         $user_company_id = (isset($auth_user_result->company[0]) && !empty($auth_user_result->company[0])) ? $auth_user_result->company[0]->id : 0;
         
         $user_type = $auth_user_result->user_type;
+        
         $products = Products::with(['product_variation','product_price','product_images'])->where(['blocked'=>1])->select($select)
         ->whereHas('company',function($q) use($user_company_id){
             if($user_company_id>0){
