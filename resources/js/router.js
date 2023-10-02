@@ -15,47 +15,74 @@ const routes = [
     {
         path:'/welcome',
         name:'Welcome',
-        component:welcome
+        component:welcome,
+        meta:{
+            isAuth:false
+        }
     },
     {
         path:'/home',
         name:'Home',
-        component:home
+        component:home,
+        meta:{
+            isAuth:false
+        }
     },
     {
-        path:'/login',
+        path:'/app-login',
         name:'Login',
-        component:login
+        component:login,
+        meta:{
+            isAuth:false
+        }
     },
     {
-        path:'/register',
+        path:'/app-register',
         name:'Register',
-        component:register
+        component:register,
+        meta:{
+            isAuth:false
+        }
     },
     {
         path:'/password',
         name:'Password',
-        component:password
+        component:password,
+        meta:{
+            isAuth:false
+        }
     },
     {
         path:'/quotation',
         name:'quotation',
-        component:quotation
+        component:quotation,
+        meta:{
+            isAuth:true
+        }
     },
     {
         path:'/orders',
         name:'orders',
-        component:orders
+        component:orders,
+        meta:{
+            isAuth:true
+        }
     },
     {
         path:'/product',
         name:'product',
-        component:product
+        component:product,
+        meta:{
+            isAuth:true
+        }
     },
     {
         path:'/cart',
         name:'cart',
-        component:cart
+        component:cart,
+        meta:{
+            isAuth:true
+        }
     }
 ];
 
@@ -63,5 +90,15 @@ const router = createRouter({
     history: createWebHistory(),
     routes
 });
+
+router.beforeEach((to,from,next) => {
+    if(to.meta.isAuth){
+        let auth_user = JSON.parse(localStorage.getItem('auth_user'));
+        if(!auth_user){
+            next({name:'Login'});
+        }
+    }
+    next()
+})
 
 export default router;

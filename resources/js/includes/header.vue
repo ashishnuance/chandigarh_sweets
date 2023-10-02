@@ -21,7 +21,7 @@
                         <p>messages</p>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/register">
+                        <router-link to="/app-register">
                         <img src="img/icon5.png" alt="">
                         <p>sign up</p>
                     </router-link>

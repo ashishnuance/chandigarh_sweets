@@ -48,7 +48,7 @@ class RegisterController extends BaseController
      */
     public function login(Request $request): JsonResponse
     {
-        //print_r($request->all); exit();
+        // print_r($request->all); exit();
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
             $user = Auth::user(); 
             $success['token'] =  $user->createToken('MyApp')->plainTextToken; 

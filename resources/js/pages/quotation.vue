@@ -12,12 +12,13 @@
                      </div>
                      <div class="itemsCard">
                         <div class="AddCard" v-for="product in products">
-                           <router-link to="/product">
-                              <div class="item">{{ product.product_name }}</div>
-                           </router-link>
-                           <input type="number" name="qty" value="1" class="qty-{{product.id}}"/>
-                           <button class="btn btn-danger" @click="addToCart(product.id)">Add</button>
-                           
+                           <form method="post" @submit.prevent="addToCart(product)">
+                              <router-link to="/product">
+                                 <div class="item">{{ product.product_name }}</div>
+                              </router-link>
+                              <input type="number" v-model="product_qty" />
+                              <button class="btn btn-danger" type="submit">Add</button>
+                           </form>
                         </div>
                      </div>
                   </div>
@@ -54,11 +55,12 @@
          
          getProductsList(){
             const api_url = `${CONFIG.API_URL_ROOT}/products`;
-            console.log('api_url',api_url);
+            let auth_user = JSON.parse(localStorage.getItem('auth_user'));
+            console.log('api_url',api_url,auth_user);
             fetch(api_url, {
                method:'get',
                headers:{
-                  'Authorization': `Bearer ${CONFIG.AUTH_TOKEN}`
+                  'Authorization': `Bearer ${auth_user.token}`
                }
             })
             .then(response => response.json())
@@ -66,24 +68,26 @@
                console.log('response',response);
                this.products = response.data;
             })
-            .catch(err => console.log('err',err));
+            .catch(err => console.log('err get product',err));
          },
-         async addToCart(productId){
-            console.log("here",productId)
+         async addToCart(productElement){
+            let app = this;
+            console.log("here",productElement,productElement['discount'],app.product_qty)
             let cartProduct = new FormData();
             
-            cartProduct.append("product_id",productId);
+            cartProduct.append("product_id",productElement['id']);
             cartProduct.append("order_type",'order');
-            cartProduct.append("product_qty",1);
-            cartProduct.append("product_price",20);
-            cartProduct.append("product_variant_id",38);
+            cartProduct.append("product_qty",app.product_qty);
+            cartProduct.append("product_price",productElement['price']);
+            cartProduct.append("product_variant_id",productElement['product_variation'][0]['id']);
             
             const api_url = CONFIG.API_URL_ROOT+'/add-to-cart';
+            let auth_user = JSON.parse(localStorage.getItem('auth_user'));
             console.log('api_url',api_url,cartProduct);
             await fetch(api_url, {
                method:'POST',
                headers:{
-                  'Authorization': `Bearer 10|kH7UaGq21KOJRKHtRcmaBJ1cYIoIURcV2y8jwfwA62124d08`
+                  'Authorization': `Bearer ${auth_user.token}`
                },
                body:cartProduct
             })

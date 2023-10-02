@@ -25,7 +25,7 @@ class CheckoutController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors(),400);       
         }
 
-        if($request->order_type!='order' && ($request->product_price=='' || $request->product_price==0)){
+        if($request->order_type=='order' && $request->product_price==''){
             return $this->sendError('Validation Error.', 'Product price required',400);  
         }
 
@@ -37,7 +37,7 @@ class CheckoutController extends BaseController
         }
         
         $input = $request->all();
-        $input['product_price'] = ($request->order_type!='order') ? $request->product_price : 0 ;
+        $input['product_price'] = ($request->order_type=='order') ? $request->product_price : 0 ;
         $input['user_id'] = auth('sanctum')->user()->id;
         $checkCart = Cartlist::where(['product_id'=>$request->product_id,'product_variant_id'=>$request->product_variant_id,'user_id'=>$input['user_id']]);
         

@@ -5,20 +5,20 @@
             <div class="PswrdPopup">
                <h2>Log In</h2>
                <div class=" PswrdCard">
-                  <form action="" method="post">
+                  <form method="post" @submit.prevent="login">
                      <div class="BoxInput">
                         <label class="form-label">Email ID</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" v-model="email">
                      </div>
                      <div class="BoxInput">
-                     <label class="form-label">Password</label>
-                     <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                     <router-link to="/password">Forget Password</router-link>
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" v-model="password">
                         
+                        <router-link to="/register">Sign In</router-link>
+                           
                      </div>
                      <div class="PswrdBtn">
                         <button type="submit">Submit</button>
-                        <router-link to="/register">Sign In</router-link>
                      </div>
                   </form>
                </div>
@@ -26,24 +26,36 @@
          </div>
       </div>
    </div>
-
-   <footer>
-      <section>
-         <div class="container-fluid  p-0">
-            <div class="row g-0">
-               <div class="col-lg-6 col-12">
-                  <div class="infoBox">
-                     <h5>Copyright © 2022 Chandigarh Sweets Ltd.</h5>
-                  </div>
-               </div>
-               <div class="col-lg-6 col-12">
-                  <div class="infoBox">
-                     <h5>Developed By: Developer</h5>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </section>
-      
-   </footer>
 </template>
+
+<script>
+   import CONFIG from '../../config';
+   export default {
+      data(){
+         return [];
+      }, 
+      methods:{
+         async login(){
+            let app = this;
+            let api_url = CONFIG.API_URL_ROOT+'/login';
+            console.log(app.email,app.password)
+            let loginFormData = new FormData();
+            loginFormData.append('email',app.email);
+            loginFormData.append('password',app.password);
+            await fetch(api_url,{
+               method:'post',
+               body:loginFormData
+            }).then(response => response.json())
+            .then(response => {
+               console.log('Login',response.data)
+               if(response.data.token){
+                  localStorage.setItem('auth_user',JSON.stringify(response.data));
+                  this.$router.push({name:'Home'});
+               }else{
+                  alert(response.message);
+               }
+            }).catch(err=>console.log('login error',err))
+         }
+      }
+   }
+</script>

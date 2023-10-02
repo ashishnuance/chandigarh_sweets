@@ -5,46 +5,64 @@
             <div class="PswrdPopup">
                <h2>Sign In</h2>
                <div class=" PswrdCard">
-                  <div class="BoxInput">
-                     <label class="form-label">Vendor Code</label>
-                     <input type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                  </div>
-                  <div class="BoxInput">
-                     <label class="form-label">Mobile Number</label>
-                     <input type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                  </div>
-                  <div class="BoxInput">
-                     <label class="form-label">Email ID</label>
-                     <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                  <form method="post" @submit.prevent="register">
+                     <div class="BoxInput">
+                        <label class="form-label">Email ID</label>
+                        <input type="email" v-model="email" class="form-control" id="exampleInputEmail2" aria-describedby="emailHelp" required>
+                     </div>
+                     <div class="BoxInput">
+                        <label class="form-label">Vendor Code</label>
+                        <input type="text" v-model="invite_code" class="form-control" id="exampleInputCode" aria-describedby="emailHelp" required>
+                        <router-link to="/app-login">Login</router-link>
+                     </div>
                      
-                  </div>
-                  <div class="PswrdBtn">
-                     <a href="">Submit</a>
-                     <a href="login.html">Login</a>
-                  </div>
+                     <div class="PswrdBtn">
+                        <button type="submit" class="btn btn-default">Submit</button>
+                     </div>
+                  </form>
                </div>
             </div>
          </div>
       </div>
    </div>
-
-   <footer>
-      <section>
-         <div class="container-fluid  p-0">
-            <div class="row g-0">
-               <div class="col-lg-6 col-12">
-                  <div class="infoBox">
-                     <h5>Copyright © 2022 Chandigarh Sweets Ltd.</h5>
-                  </div>
-               </div>
-               <div class="col-lg-6 col-12">
-                  <div class="infoBox">
-                     <h5>Developed By: Developer</h5>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </section>
-      
-   </footer>
 </template>
+<script>
+   import CONFIG from '../../config';
+   import { inject } from 'vue'
+   const swal = inject('$swal')
+   export default {
+      data(){
+         return [
+
+         ];
+      },
+      methods:{
+         async register(){
+            var app = this;
+            let registerData = new FormData();
+            registerData.append('invite_code',app.invite_code);
+            registerData.append('email',app.email);
+            let api_url = CONFIG.API_URL_ROOT+"/register";
+            console.log('registerData',registerData,api_url);
+            await fetch(api_url,{
+               method:"post",
+               headers:{
+                  'Authorization': `Bearer ${CONFIG.AUTH_TOKEN}`
+               },
+               body:registerData
+            }).then(response => response.json())
+            .then(response => {
+               console.log(response.data);
+               if(response.data.token){
+                  localStorage.setItem('auth_user',JSON.stringify(response.data))
+                  this.$router.push({ name: 'Password' });
+               }else{
+                  alert(response.message);
+               }
+            })
+            .catch(err => console.log('error',err));
+                          
+         }
+      }
+   }
+</script>
