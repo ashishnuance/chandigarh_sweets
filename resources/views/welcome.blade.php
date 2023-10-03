@@ -81,11 +81,8 @@
   </script>
 </body>
 
-<<<<<<< HEAD
         <script src="{{ mix('js/app.js') }}"></script>
         
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     </body>
-=======
->>>>>>> 562eb0d8a931e52e71917acd0eabb6e5499e4477
 </html>

@@ -140,6 +140,7 @@ class CheckoutController extends BaseController
     }
 
     function checkout(Request $request){
+        
         $validator = Validator::make($request->all(), [
             'user_id'=>'required',
             'product_data'=>"required|array|min:1",
@@ -178,6 +179,7 @@ class CheckoutController extends BaseController
         $checkoutData = $request->input();
         $checkoutData['product_json'] = json_encode($request->product_data);
         if(CheckoutModel::create($checkoutData)){
+            Cartlist::where(['user_id'=>$request->user_id])->delete();
             return $this->sendResponse('',__('locale.order_success_submit'));
         }else{
             return $this->sendError('Failed.', ['error'=>__('locale.try_again')],400);

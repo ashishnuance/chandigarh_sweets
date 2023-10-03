@@ -20,7 +20,7 @@
                         <img src="img/icon4.png" alt="">
                         <p>messages</p>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-if="!isLogedIn">
                         <router-link to="/app-register">
                         <img src="img/icon5.png" alt="">
                         <p>sign up</p>
@@ -51,7 +51,8 @@
             return {
                 headerSettings: [],
                 pagination: {},
-                cartItemCount:0
+                cartItemCount:0,
+                isLogedIn:false
             };
         },
 
@@ -61,6 +62,7 @@
         mounted(){
             this.getCartCount();
             this.updateSharedData();
+            this.checkAuth();
         },
         computed:{
             sharedData() {
@@ -71,24 +73,31 @@
             updateSharedData() {
                 this.$store.commit('updateSharedData', this.cartItemCount);
             },
+            checkAuth(){
+                let auth_user = JSON.parse(localStorage.getItem('auth_user'));
+                if(auth_user.token && auth_user.token!=''){
+                    this.isLogedIn=true;
+                }
+            },  
             getHeaderSettings() {
                 console.log(`token ${CONFIG.AUTH_TOKEN}`);
                 let api_url = `${CONFIG.API_URL_ROOT}/app-settings`;
                 console.log('api_url',api_url);
                 fetch(api_url)
-                    .then(response => response.json())
-                    .then(response => {
-                        this.headerSettings = response.data.logos;
-                        console.log('response',response.data.home_banner[0].image);
-                    })
-                    .catch(err => console.log(err));
+                .then(response => response.json())
+                .then(response => {
+                    this.headerSettings = response.data.logos;
+                    console.log('response',response.data.home_banner[0].image);
+                })
+                .catch(err => console.log(err));
             },
             getCartCount(){
                 let api_url = CONFIG.API_URL_ROOT+'/cart-list';
+                let auth_user = JSON.parse(localStorage.getItem('auth_user'));
                 fetch(api_url,{
                     method:'get',
                     headers:{
-                        'Authorization': `Bearer ${CONFIG.AUTH_TOKEN}`
+                        'Authorization': `Bearer ${auth_user.token}`
                     }
                 }).then(response => response.json())
                 .then(response =>{

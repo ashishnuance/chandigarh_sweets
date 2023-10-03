@@ -1,8 +1,8 @@
 <template>
     <section class="cart-section">
         <div class="container">
-            <div class="row">
-                <div class="col-12 cart-col">
+            <div class="row" v-if="cartListItemCheck">
+                <div class="col-12 cart-col" >
                     <div class="card Firstcard cart-card" v-for="cart_product in cartListItem">
                         <div class="thumbCardImg">
                             <img src="img/Group 22.png" class="card-img-top" alt="...">
@@ -25,11 +25,17 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="col-12">
                 <div class="ProductBtn ">
                     <a href="javascript:void(0);"  @click="postCheckout()" class="AddCardBtn">Place Order</a>
                     <router-link to="/quotation" class="WishCardBtn">Continue Shopping</router-link>
                 </div>
+                </div>
+            </div>
+            <div class="row" v-else>
+                <div class="col-12 cart-col" >
+                    <h2>Your Cart is Empty</h2>
                 </div>
             </div>
         </div>
@@ -40,12 +46,12 @@
     export default {
         data(){
             return{
-                cartListItem:[]
+                cartListItem:[],
+                cartListItemCheck:false
             }
         },
         created(){
             this.getCartListItem();
-
         },
         methods:{
             getCartListItem(){
@@ -59,8 +65,11 @@
                     }
                 }).then(response => response.json())
                 .then(response =>{
-                    console.log(response.data.length)
-                    this.cartListItem = response.data;
+                    if(response.data.length && response.data.length>0){
+                        console.log(response.data.length)
+                        this.cartListItem = response.data;
+                        this.cartListItemCheck=true;
+                    }
                 }).catch(err => console.log('err',err));
             },
             postCheckout(){
@@ -75,12 +84,14 @@
                 fetch(api_url,{
                     method:'post',
                     headers:{
+                        "Content-Type": "application/json",
                         'Authorization': `Bearer ${auth_user.token}`
                     },
                     body:JSON.stringify(checkoutData)
                 }).then(response => response.json())
                 .then(response =>{
                     console.log('checkout',response)
+                    this.cartListItemCheck=false;
                 }).catch(err => console.log('checkout error',err))
                 console.log('checkoutData',checkoutData)
             }

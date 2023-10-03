@@ -34,6 +34,12 @@
       data(){
          return [];
       }, 
+      computed:{
+         
+         isLogin() {
+            return this.$store.state.isLogin;
+         },
+      },
       methods:{
          async login(){
             let app = this;
@@ -50,6 +56,7 @@
                console.log('Login',response.data)
                if(response.data.token){
                   localStorage.setItem('auth_user',JSON.stringify(response.data));
+                  this.$store.commit('updateLoginStatus', true);
                   this.$router.push({name:'Home'});
                }else{
                   alert(response.message);

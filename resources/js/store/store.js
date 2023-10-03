@@ -3,7 +3,8 @@ import { createStore } from 'vuex';
 
 export default createStore({
     state:{
-        sharedData: 'Initial Value',
+        sharedData: 0,
+        isLogin:false,
     },
     mutations:{
         // updateCartItemValueData(cartItemCountValue,newCartItemValue){
@@ -11,6 +12,9 @@ export default createStore({
         // }
         updateSharedData(state, newValue) {
             state.sharedData = newValue;
+        },
+        updateLoginStatus(state, newValue) {
+            state.isLogin = newValue;
         },
     }
 })

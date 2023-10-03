@@ -74,9 +74,6 @@ mix.js('resources/js/materialize.js', 'public/js')
     .css('resources/css/responsive.css', 'public/css')
     .css('resources/css/animate.css', 'public/css')
     .js('resources/js/app.js', 'public/js')
-    .css('resources/css/style.css', 'public/css')
-    .css('resources/css/master.css', 'public/css')
-    .css('resources/css/responsive.css', 'public/css')
     .vue()
     .postCss('resources/css/app.css', 'public/css', [
         //
