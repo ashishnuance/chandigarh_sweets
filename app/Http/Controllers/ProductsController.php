@@ -57,11 +57,9 @@ class ProductsController extends Controller
         $editUrl = 'superadmin.product.edit';
         $deleteUrl = 'superadmin.product.delete';
         $sampleFileName = 'product-import.csv';
-        $productResult = Products::with('product_variation')->with(['category','subcategory','company'])->select(['id','product_code','product_name','product_slug','product_catid','product_subcatid','food_type','blocked'])->orderBy('id','DESC');
+        $productResult = Products::with('product_variation')->with(['category','subcategory','company'])->select(['id','product_code','product_name','product_slug','product_catid','product_subcatid','food_type','blocked','product_order_type'])->orderBy('id','DESC');
 
-        // dd($productResult[0]->product_variation[0]->productvariationName); exit();
-
-        // dd($productResult); exit();
+        
 
         if($userType!=config('custom.superadminrole')){
             $company_id = Helper::loginUserCompanyId();
@@ -71,9 +69,9 @@ class ProductsController extends Controller
             $editUrl = 'product.edit';
             $deleteUrl = 'product.delete';
         }
-        // dd($productResult->get()); exit();
+
         if($request->ajax()){
-            // exit('abc');
+
             $productResult = $productResult->when($request->seach_term, function($q)use($request){
                             $q->where('product_name', 'like', '%'.$request->seach_term.'%')
                             ->orWhere('product_code', 'like', '%'.$request->seach_term.'%')
@@ -425,7 +423,7 @@ class ProductsController extends Controller
         if(!$this->getUserPermissionsModule('product','delete')){
             return redirect()->route('superadmin.dashboard')->with('error',__('locale.user_permission_error'));
         };
-        $cartList = Cartlist::whereRaw('FIND_IN_SET("1", product_ids)')->count();
+        $cartList = Cartlist::whereRaw('FIND_IN_SET("1", product_id)')->count();
         $orderList = Orderlist::whereRaw('FIND_IN_SET("1", product_ids)')->count();
         if($cartList==0 && $orderList==0){
             Products::where('id',$id)->delete();

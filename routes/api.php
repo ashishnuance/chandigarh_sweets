@@ -40,6 +40,10 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('remove-cart-item', [CheckoutController::class,'remove_item']);
     Route::post('remove-all-cart-items', [CheckoutController::class,'delete_cart']);
     Route::post('checkout', [CheckoutController::class,'checkout']);
+    Route::get('user-orders/{type?}', [CheckoutController::class,'user_orders']);
+    Route::get('orders-detail/{order_id}', [CheckoutController::class,'user_orders_detail']);
+    
+    
     
 });
 

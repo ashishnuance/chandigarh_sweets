@@ -181,4 +181,38 @@ class CheckoutController extends BaseController
             return $this->sendError('Failed.', ['error'=>__('locale.try_again')],400);
         }
     }
+
+    function user_orders($type='order'){
+        
+        $orderDataResult = CheckoutModel::where('order_type',$type);
+        if($orderDataResult->count()>0){
+            
+            return $this->sendResponse($orderDataResult->get(),__('locale.found_successfully'));
+        
+        }else{
+            return $this->sendError('Failed.', ['error'=>__('locale.no_record_found')],400);
+        }
+    }
+
+    function user_orders_detail($order_id){
+        
+        $orderDataResult = CheckoutModel::where('id',$order_id);
+        $orderDataResultArray = [];
+        if($orderDataResult->count()>0){
+            
+            $product_json = json_decode($orderDataResult->first()->product_json);
+            foreach($product_json as $pro_key => $product_value){
+                $productResult = Products::where('id',$product_value->product_id)->whereHas('product_variation',function($q) use($product_value){
+                    $q->where('id',$product_value->product_variant_id);
+                });
+                if($productResult->count()>0){
+                    $orderDataResultArray[$pro_key] = $productResult->first();
+                }
+            }
+            return $this->sendResponse($orderDataResultArray,__('locale.found_successfully'));
+        
+        }else{
+            return $this->sendError('Failed.', ['error'=>__('locale.no_record_found')],400);
+        }
+    }
 }

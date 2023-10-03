@@ -30,7 +30,13 @@ class Products extends Model
     }
 
     public function product_variation(){
-        return $this->hasMany(ProductsVariations::class, 'product_id', 'id')->with('productvariationName');
+        return $this->hasMany(ProductsVariations::class, 'product_id', 'id');
+        //->with('productvariationName');
+    }
+
+    public function productvariationName()
+    {
+        return $this->hasOne(ProductVariationType::class, 'id', 'variation_type');
     }
 
     public function company()
