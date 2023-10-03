@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Company;
 use App\Models\ProductCompanyMapping as ProductCompanyMappingModel;
 use App\Models\{Products,ProductsVariations,ProductImagesModel,ProductsVariationsOptions};
-use App\Models\{ProductCategoryModel,ProductSubCategory};
+use App\Models\{ProductCategoryModel,ProductSubCategory,ProductPriceMapping};
 use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Support\Str;
@@ -67,6 +67,7 @@ class ProductCompanyMapping extends Controller
      */
     public function create()
     {
+        $userType = auth()->user()->role()->first()->name;
         $formUrl = 'product-mapping.store';
         $breadcrumbs = [
             ['link' => "/", 'name' => "Home"], ['link' => "superadmin/product-mapping", 'name' => __("locale.product mapping")], ['name' => "Add"],
@@ -74,7 +75,15 @@ class ProductCompanyMapping extends Controller
         //Pageheader set true for breadcrumbs
 
         $companyResult = Company::select(['id','company_name','company_code'])->get();
-        $productResult = Products::select(['id','product_code','product_name'])->get();
+        $productResult =[];
+        $productResult = Products::with('productvariationWithName')->select(['id','product_code','product_name','product_slug','product_order_type'])->get();
+        if($userType!=config('custom.superadminrole')){
+            $company_id = Helper::loginUserCompanyId();
+            
+            $productResult = Products::with('productvariationWithName')->select(['id','product_code','product_name','product_slug','product_order_type'])->whereHas('company',function($query) use ($company_id) {
+                $query->where('company_id',$company_id);
+            })->get();
+        }
 
         $pageConfigs = ['pageHeader' => true];
         $pageTitle = __('locale.Product category Add');
@@ -92,6 +101,7 @@ class ProductCompanyMapping extends Controller
         $validator = Validator::make($request->all(), [
             'company_id' => 'required',
             "product_ids"    => "required|array|min:1",
+            "product_variant"    => "required|array|min:1",
         ]);
         
         if ($validator->fails()) {
@@ -99,13 +109,44 @@ class ProductCompanyMapping extends Controller
             ->withErrors($validator)
             ->withInput();
         }
-        // dd($request->all());
-        $productMappingData = [];
+        $product_mapping=[];
+        // echo '<pre>';
         for($p=0;$p<count($request->product_ids);$p++){
-            $productMappingData[] = ['company_id'=>$request->company_id,'product_id'=>$request->product_ids[$p]];
+            $request->product_ids[$p];
+            
+            if(isset($request->product_variant) && !empty($request->product_variant)){
+                
+                foreach($request->product_variant as $k => $val){
+                    if($request->product_ids[$p]==$k){
+                        
+                        foreach($val as $vk => $vl){
+                            
+                            for($vari=0;$vari<count($vl);$vari++){
+                                $product_mapping[$vari][$vk] = $vl[$vari];
+                                if($vk=='valid_date'){
+                                    $valid_date = explode('-',$vl[$vari]);
+                                    $product_mapping[$vari]['start_date'] = date('Y-m-d',strtotime($valid_date[0]));
+                                    $product_mapping[$vari]['end_date'] = date('Y-m-d',strtotime($valid_date[1]));
+                                }
+                                $product_mapping[$vari]['company_id'] = $request->company_id;
+                                $product_mapping[$vari]['product_id'] = $request->product_ids[$p];
+                                if($vk=='id'){
+                                    $product_mapping[$vari]['product_variant_id'] = $vl[$vari];
+                                }
+                                $product_mapping[$vari]['buyer_type'] = 1;
+                                unset($product_mapping[$vari]['valid_date']);
+                                unset($product_mapping[$vari]['id']);
+                            }
+                        }
+                    }
+                    
+                }
+                
+            }
         }
-        if(!empty($productMappingData)){
-            ProductCompanyMappingModel::insert($productMappingData);
+        
+        if(!empty($product_mapping)){
+            ProductPriceMapping::insert($product_mapping);
             return redirect()->route('product-mapping.index')->with('success',__('locale.success common add'));
         }
         return redirect()->route('product-mapping.index')->with('error',__('locale.try_again'));

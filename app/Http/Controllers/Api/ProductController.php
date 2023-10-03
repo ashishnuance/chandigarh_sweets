@@ -23,7 +23,7 @@ class ProductController extends BaseController
         
         $auth_user_result = User::with('company')->find($user->id);
         
-        $select = ['id','product_code','product_name','product_slug','description','food_type','product_catid','product_subcatid','product_type'];
+        $select = ['id','product_code','product_name','product_slug','description','food_type','product_catid','product_subcatid','product_type','product_order_type'];
         $user_company_id = (isset($auth_user_result->company[0]) && !empty($auth_user_result->company[0])) ? $auth_user_result->company[0]->id : 0;
         
         $user_type = $auth_user_result->user_type;
@@ -50,6 +50,7 @@ class ProductController extends BaseController
                 $products_result[$key]['description'] = $pro_val->description;
                 $products_result[$key]['food_type'] = $pro_val->food_type;
                 $products_result[$key]['product_type'] = $pro_val->product_type;
+                $products_result[$key]['product_order_type'] = $pro_val->product_order_type;
                 
                 if(isset($pro_val->product_images) && !empty($pro_val->product_images)){
                     foreach($pro_val->product_images as $im => $image_val){

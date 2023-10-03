@@ -463,4 +463,24 @@ class ProductsController extends Controller
         }
         return Excel::download($companyUser, 'products-'.$type.time().'.xlsx');
     }
+
+    // product by company id
+    function company_product($company_id=0){
+        if($company_id>0){
+            $productResult = Products::with('productvariationWithName')->select(['id','product_code','product_name','product_slug','product_order_type'])->orderBy('id','DESC');
+            
+            $productResult = $productResult->whereHas('company',function($query) use ($company_id) {
+                $query->where('company_id',$company_id);
+            });
+            if($productResult->count()>0){
+                $product_html = '';
+                // foreach($productResult->get() as $product_val){
+                    
+                // }
+                return response()->json($product_html);
+            }else{
+                return response()->json([]);
+            }
+        }
+    }
 }

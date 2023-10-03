@@ -31,6 +31,7 @@ use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BuyerTypeChannelController;
 use App\Http\Controllers\ProductVariationTypeController;
+use App\Http\Controllers\ProductCompanyMapping;
 
 
 
@@ -116,7 +117,7 @@ Route::group(['middleware' => ['auth']], function () {
         /** product company mapping **/
         Route::resource('/product-mapping',ProductCompanyMapping::class);
         Route::get('/product-mapping/destroy/{id}',[ProductCompanyMapping::class,'destroy'])->name('product-mapping.delete');
-
+        Route::get('/company-product/{company_id?}',[ProductsController::class,'company_product'])->name('company-product');
         /** sub category admin side **/
 
         Route::resource('/product-subcategory',SubCategoryController::class);

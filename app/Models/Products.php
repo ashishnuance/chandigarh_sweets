@@ -34,9 +34,9 @@ class Products extends Model
         //->with('productvariationName');
     }
 
-    public function productvariationName()
+    public function productvariationWithName()
     {
-        return $this->hasOne(ProductVariationType::class, 'id', 'variation_type');
+        return $this->hasMany(ProductsVariations::class, 'product_id', 'id')->with('productvariationName');
     }
 
     public function company()

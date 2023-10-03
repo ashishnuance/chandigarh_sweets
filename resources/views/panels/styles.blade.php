@@ -29,3 +29,5 @@
 <link rel="stylesheet" type="text/css" href="{{asset('css/laravel-custom.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('css/custom/custom.css')}}">
 <!-- END: Custom CSS-->
+
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
