@@ -130,6 +130,8 @@ class ProductCompanyMapping extends Controller
                                 }
                                 $product_mapping[$vari]['company_id'] = $request->company_id;
                                 $product_mapping[$vari]['product_id'] = $request->product_ids[$p];
+                                $product_mapping[$vari]['item_code'] = null;
+                                
                                 if($vk=='id'){
                                     $product_mapping[$vari]['product_variant_id'] = $vl[$vari];
                                 }
