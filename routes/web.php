@@ -32,6 +32,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BuyerTypeChannelController;
 use App\Http\Controllers\ProductVariationTypeController;
 
+use App\Http\Controllers\MailController;
+
 
 
 /*
@@ -53,9 +55,32 @@ Auth::routes(['verify' => true]);
     Route::post('/superadmin-login', [LoginController::class, 'postLoginFormSuperadmin'])->name('superadmin-login');
 // });
 
-Route::get('/{any}',function(){
+/*** front app routes start ***/
+Route::get('/home',function(){
     return view('welcome');
 });
+Route::get('/app-login',function(){
+    return view('welcome');
+});
+Route::get('/app-register',function(){
+    return view('welcome');
+});
+Route::get('/quotation',function(){
+    return view('welcome');
+});
+Route::get('/orders',function(){
+    return view('welcome');
+});
+Route::get('/password',function(){
+    return view('welcome');
+});
+Route::get('/cart',function(){
+    return view('welcome');
+});
+Route::get('/product',function(){
+    return view('welcome');
+});
+/*** front app routes end ***/
 
 Route::get('image/{filename}', [DashboardController::class,'displayImage'])->name('image.displayImage');
 Route::group(['middleware' => ['auth']], function () { 
@@ -68,6 +93,9 @@ Route::group(['middleware' => ['auth']], function () {
     
     /** new routes start **/
     Route::prefix('superadmin')->middleware(['superadmin'])->group(function () { 
+
+        Route::get('send-mail', [MailController::class, 'index']);
+
         Route::get('/', [DashboardController::class, 'dashboardSuperadminModern'])->name('superadmin.dashboard');
         // Route::get('/login', [LoginController::class, 'showLoginForm']);
 
@@ -413,3 +441,4 @@ Route::get('/user-lock-screen', [AuthenticationController::class, 'lockScreen'])
 Route::get('/page-404', [MiscController::class, 'page404']);
 Route::get('/page-maintenance', [MiscController::class, 'maintenancePage']);
 Route::get('/page-500', [MiscController::class, 'page500']);
+

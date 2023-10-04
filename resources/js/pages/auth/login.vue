@@ -40,6 +40,7 @@
             return this.$store.state.isLogin;
          },
       },
+     
       methods:{
          async login(){
             let app = this;
@@ -55,8 +56,11 @@
             .then(response => {
                console.log('Login',response.data)
                if(response.data.token){
-                  localStorage.setItem('auth_user',JSON.stringify(response.data));
-                  this.$store.commit('updateLoginStatus', true);
+                  // localStorage.setItem('auth_user',JSON.stringify(response.data));
+                  // this.$store.commit('updateLoginStatus', true);
+                  // this.$store.commit('setToken', response.data.token);
+                  this.$store.dispatch('setToken',response.data.token)
+                  this.$store.dispatch('setAuth',true)
                   this.$router.push({name:'Home'});
                }else{
                   alert(response.message);

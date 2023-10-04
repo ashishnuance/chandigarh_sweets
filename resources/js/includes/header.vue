@@ -18,13 +18,13 @@
                     
                     <li class="nav-item">
                         <img src="img/icon4.png" alt="">
-                        <p>messages</p>
+                        <p>messages {{isLogedIn}}</p>
                     </li>
                     <li class="nav-item" v-if="!isLogedIn">
                         <router-link to="/app-register">
-                        <img src="img/icon5.png" alt="">
-                        <p>sign up</p>
-                    </router-link>
+                            <img src="img/icon5.png" alt="">
+                            <p>sign up</p>
+                        </router-link>
                     </li>
                     
                     <li class="nav-item">
@@ -34,6 +34,11 @@
                             <span class="addcart">{{ sharedData }}</span>
                         <!-- </a> -->
                         </router-link>
+                    </li>
+                    <li class="nav-item" v-if="isLogedIn">
+                        <a href="javascript:void(0);" @click="userLogout">
+                            <span class="addcart">Logout</span>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -57,27 +62,35 @@
         },
 
         created() {
+            
             this.getHeaderSettings();
+
         },
         mounted(){
             this.getCartCount();
             this.updateSharedData();
             this.checkAuth();
+            console.log('state.token',this.$store.state.token);
         },
         computed:{
             sharedData() {
                 return this.$store.state.sharedData;
             },
+            
         },
         methods: {
+            
             updateSharedData() {
                 this.$store.commit('updateSharedData', this.cartItemCount);
             },
             checkAuth(){
-                let auth_user = JSON.parse(localStorage.getItem('auth_user'));
-                if(auth_user.token && auth_user.token!=''){
-                    this.isLogedIn=true;
+                if(this.$store.state.token){
+                this.isLogedIn=true;
                 }
+                // let auth_user = JSON.parse(localStorage.getItem('auth_user'));
+                // if(auth_user.token && auth_user.token!=''){
+                //     this.isLogedIn=true;
+                // }
             },  
             getHeaderSettings() {
                 console.log(`token ${CONFIG.AUTH_TOKEN}`);
@@ -92,18 +105,22 @@
                 .catch(err => console.log(err));
             },
             getCartCount(){
-                let api_url = CONFIG.API_URL_ROOT+'/cart-list';
-                let auth_user = JSON.parse(localStorage.getItem('auth_user'));
-                fetch(api_url,{
-                    method:'get',
-                    headers:{
-                        'Authorization': `Bearer ${auth_user.token}`
-                    }
-                }).then(response => response.json())
-                .then(response =>{
-                    console.log(response.data.length)
-                    this.$store.commit('updateSharedData', response.data.length);
-                }).catch(err => console.log('err',err));
+                // let api_url = CONFIG.API_URL_ROOT+'/cart-list';
+                // fetch(api_url,{
+                //     method:'get',
+                //     headers:{
+                //         'Authorization': 'Bearer '+$store.state.token
+                //     }
+                // }).then(response => response.json())
+                // .then(response =>{
+                //     console.log(response.data.length)
+                //     this.$store.commit('updateSharedData', response.data.length);
+                // }).catch(err => console.log('err',err));
+            },
+            userLogout(){
+                
+                this.$store.dispatch('removeToken')
+                this.$router.push({name:'Login'});
             }
         }
     }

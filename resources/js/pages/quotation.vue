@@ -43,24 +43,16 @@
          this.getProductsList();
 
       },
-      computed:{
-         // cartItemCountValue(){
-         //       return this.$store.state.cartItemCountValue;
-         // },
-         sharedData() {
-            return this.$store.state.sharedData;
-         },
-      },
       methods:{
          
          getProductsList(){
             const api_url = `${CONFIG.API_URL_ROOT}/products`;
-            let auth_user = JSON.parse(localStorage.getItem('auth_user'));
+            let auth_user = this.$store.state.token;
             console.log('api_url',api_url,auth_user);
             fetch(api_url, {
                method:'get',
                headers:{
-                  'Authorization': `Bearer ${auth_user.token}`
+                  'Authorization': `Bearer ${auth_user}`
                }
             })
             .then(response => response.json())
@@ -70,7 +62,7 @@
             })
             .catch(err => console.log('err get product',err));
          },
-         async addToCart(productElement){
+         /*async addToCart(productElement){
             let app = this;
             console.log("here",productElement,productElement['discount'],app.product_qty)
             let cartProduct = new FormData();
@@ -82,12 +74,12 @@
             cartProduct.append("product_variant_id",productElement['product_variation'][0]['id']);
             
             const api_url = CONFIG.API_URL_ROOT+'/add-to-cart';
-            let auth_user = JSON.parse(localStorage.getItem('auth_user'));
+            let auth_user = this.$store.state.token;
             console.log('api_url',api_url,cartProduct);
             await fetch(api_url, {
                method:'POST',
                headers:{
-                  'Authorization': `Bearer ${auth_user.token}`
+                  'Authorization': `Bearer ${auth_user}`
                },
                body:cartProduct
             })
@@ -98,7 +90,7 @@
                this.$store.commit('updateSharedData', response.data);
             })
             .catch(err => console.log('err',err));
-         }
+         }*/
       }
    }
 </script>

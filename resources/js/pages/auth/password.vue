@@ -34,7 +34,7 @@
             async generatePassword(){
                 let app = this;
                 let api_url = CONFIG.API_URL_ROOT+'/generate-password';
-                let auth_user = JSON.parse(localStorage.getItem('auth_user'));
+                let auth_user = localStorage.getItem('auth_user');
                 console.log(auth_user.user_id)
                 let paswordFormData = new FormData();
                 paswordFormData.append('password',app.password);

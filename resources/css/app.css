@@ -2,3 +2,6 @@
     position: fixed;
     z-index: 9;
 }
+.img-fluid{
+    width: 80px;
+}

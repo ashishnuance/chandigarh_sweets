@@ -6,7 +6,7 @@ import router from './router.js'
 import App from './layouts/app.vue';
 import axios from 'axios';
 // Vue.prototype.$http = axios;
-import store from './store/store.js';
+import store from './store/index.js';
 
 // new Vue({
 //     render: (h) => h(App),

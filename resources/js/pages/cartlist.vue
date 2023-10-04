@@ -5,7 +5,7 @@
                 <div class="col-12 cart-col" >
                     <div class="card Firstcard cart-card" v-for="cart_product in cartListItem">
                         <div class="thumbCardImg">
-                            <img src="img/Group 22.png" class="card-img-top" alt="...">
+                            <img src="{{ cart_product.product_images }}" class="card-img-top" alt="..." style="width:80px;">
                         </div>
                         <div class="card-body p-0 customcard">
                             <div class="carddds">
@@ -22,6 +22,7 @@
                             <div class="PrductPrice ">
                                 <p>Rs {{ cart_product.product_price }}/-</p>
                             </div>
+                            <button type="button" @click="removeItem(cart_product.id)">Remove</button>
                         </div>
                     </div>
                 </div>
@@ -54,14 +55,35 @@
             this.getCartListItem();
         },
         methods:{
+            removeItem(cart_id){
+                let api_url = CONFIG.API_URL_ROOT+'/remove-cart-item';
+                let auth_user = this.$store.state.token;
+                console.log('cart-page',api_url,auth_user);
+                let cartBodyItem = new FormData();
+                cartBodyItem.append('cart_id',cart_id);
+                fetch(api_url,{
+                    method:'post',
+                    headers:{
+                        'Authorization': `Bearer ${auth_user}`
+                    },
+                    body: cartBodyItem 
+                }).then(response => response.json())
+                .then(response =>{
+                    if(response.data.length && response.data.length>0){
+                        console.log(response.data.length)
+                        this.cartListItem = response.data;
+                        this.cartListItemCheck=true;
+                    }
+                }).catch(err => console.log('err',err));
+            },
             getCartListItem(){
                 let api_url = CONFIG.API_URL_ROOT+'/cart-list';
-                let auth_user = JSON.parse(localStorage.getItem('auth_user'));
-                console.log('cart-page',api_url)
+                let auth_user = this.$store.state.token;
+                console.log('cart-page',api_url,auth_user)
                 fetch(api_url,{
                     method:'get',
                     headers:{
-                        'Authorization': `Bearer ${auth_user.token}`
+                        'Authorization': `Bearer ${auth_user}`
                     }
                 }).then(response => response.json())
                 .then(response =>{
@@ -74,7 +96,7 @@
             },
             postCheckout(){
                 let api_url = CONFIG.API_URL_ROOT+'/checkout';
-                let auth_user = JSON.parse(localStorage.getItem('auth_user'));
+                let auth_user = this.$store.state.token;
                 let checkoutData = {
                     'order_type':'order',
                     'user_id':auth_user.user_id,
@@ -85,7 +107,7 @@
                     method:'post',
                     headers:{
                         "Content-Type": "application/json",
-                        'Authorization': `Bearer ${auth_user.token}`
+                        'Authorization': `Bearer ${auth_user}`
                     },
                     body:JSON.stringify(checkoutData)
                 }).then(response => response.json())

@@ -93,7 +93,7 @@ const router = createRouter({
 
 router.beforeEach((to,from,next) => {
     if(to.meta.isAuth){
-        let auth_user = JSON.parse(localStorage.getItem('auth_user'));
+        let auth_user = localStorage.getItem('auth_user');
         if(!auth_user){
             next({name:'Login'});
         }

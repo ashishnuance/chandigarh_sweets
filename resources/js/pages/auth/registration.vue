@@ -54,7 +54,7 @@
             .then(response => {
                console.log(response.data);
                if(response.data.token){
-                  localStorage.setItem('auth_user',JSON.stringify(response.data))
+                  localStorage.setItem('auth_user',response.data.token)
                   this.$router.push({ name: 'Password' });
                }else{
                   alert(response.message);
