@@ -77,7 +77,7 @@ Route::get('/password',function(){
 Route::get('/cart',function(){
     return view('welcome');
 });
-Route::get('/product',function(){
+Route::get('/product/{slug}',function(){
     return view('welcome');
 });
 /*** front app routes end ***/

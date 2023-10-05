@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API;
    
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\BaseController as BaseController;
-use App\Models\{Products,User,ProductsVariations};
+use App\Models\{Products,User,ProductsVariations,ProductPriceMapping,ProductVariationType};
 use Validator;
 use App\Http\Resources\ProductResource;
 use Illuminate\Http\JsonResponse;
@@ -23,7 +23,7 @@ class ProductController extends BaseController
         
         $auth_user_result = User::with('company')->find($user->id);
         
-        $select = ['id','product_code','product_name','product_slug','description','food_type','product_catid','product_subcatid','product_type'];
+        $select = ['id','product_code','product_name','product_slug','description','food_type','product_catid','product_subcatid','product_type','product_order_type'];
         $user_company_id = (isset($auth_user_result->company[0]) && !empty($auth_user_result->company[0])) ? $auth_user_result->company[0]->id : 0;
         
         $user_type = $auth_user_result->user_type;
@@ -51,24 +51,36 @@ class ProductController extends BaseController
                 $products_result[$key]['description'] = $pro_val->description;
                 $products_result[$key]['food_type'] = $pro_val->food_type;
                 $products_result[$key]['product_type'] = $pro_val->product_type;
+                $products_result[$key]['product_order_type'] = $pro_val->product_order_type;
                 $products_result[$key]['price'] = 0;
                 $products_result[$key]['discount'] = 0;
-                if(isset($pro_val->product_price) && !empty($pro_val->product_price)){
-                    foreach($pro_val->product_price as $p => $price_val){
-                        if($price_val->buyer_type==$user_type && $price_val->start_date<=date('Y-m-d')){
-                            $products_result[$key]['price'] = $price_val->price;
-                            $products_result[$key]['discount'] = $price_val->discount;
+                if(!empty($pro_val->product_variation) && $pro_val->product_variation!=''){
+                    foreach($pro_val->product_variation as $pvr_key => $pro_vari_val){
+                        unset($pro_vari_val['offer_price']);
+                        unset($pro_vari_val['created_at']);
+                        unset($pro_vari_val['updated_at']);
+                        $products_result[$key]['product_variation'][$pvr_key] = $pro_vari_val;
+                        $products_result[$key]['product_variation'][$pvr_key]['variation_value'] = $pro_vari_val->quantity;
+                        $products_result[$key]['product_variation'][$pvr_key]['variation_type'] = ProductVariationType::where('id',$pro_vari_val->variation_type)->first()->name;
+                        unset($pro_vari_val['quantity']);
+                        if($pro_val->id && $pro_vari_val->id){
+                            $productPriceMapping = ProductPriceMapping::where(['product_id'=>$pro_val->id,'product_variant_id'=>$pro_vari_val->id]);
+                            if($productPriceMapping->count()>0){
+                                $products_result[$key]['product_variation'][$pvr_key]['main_price'] = $productPriceMapping->latest()->first()->price;
+                                $products_result[$key]['product_variation'][$pvr_key]['discount'] = $productPriceMapping->latest()->first()->discount;
+                            }
                         }
                     }
                 }
                 if(isset($pro_val->product_images) && !empty($pro_val->product_images)){
                     foreach($pro_val->product_images as $im => $image_val){
+                        $products_result[$key]['product_images'][$im]['id'] = $image_val->id;
                         $products_result[$key]['product_images'][$im]['image'] = route('image.displayImage',$image_val->image);
                         $products_result[$key]['product_images'][$im]['image_order'] = $image_val->image_order;
 
                     }
                 }
-                $products_result[$key]['product_variation'] = $pro_val->product_variation;
+                
             }
             return $this->sendResponse(ProductResource::collection($products_result), 'Products retrieved successfully.');
         }else{
@@ -107,8 +119,75 @@ class ProductController extends BaseController
      */
     public function show($slug): JsonResponse
     {
-        $product = Products::where('product_slug','like',$slug)->first();
+        $user =  auth('sanctum')->user();
+        
+        $auth_user_result = User::with('company')->find($user->id);
+        
+        $select = ['id','product_code','product_name','product_slug','description','food_type','product_catid','product_subcatid','product_type','product_order_type'];
+        $user_company_id = (isset($auth_user_result->company[0]) && !empty($auth_user_result->company[0])) ? $auth_user_result->company[0]->id : 0;
+        
+        $user_type = $auth_user_result->user_type;
+        $products = Products::with(['product_variation','product_images'])->where(['blocked'=>1])->select($select)->where('product_slug','like',$slug);
+        
+        
+        $products_result = [];
+        if($products->count()>0){
+            $pro_val = $products->first();
+            // foreach($products->get() as $key => $pro_val){
+                $products_result['id'] = $pro_val->id;
+                $products_result['product_code'] = $pro_val->product_code;
+                $products_result['product_name'] = $pro_val->product_name;
+                $products_result['product_slug'] = $pro_val->product_slug;
+                $products_result['description'] = $pro_val->description;
+                $products_result['food_type'] = $pro_val->food_type;
+                $products_result['product_type'] = $pro_val->product_type;
+                $products_result['product_order_type'] = $pro_val->product_order_type;
+                // print_r($products_result); exit();
+                $products_result['product_images'] = [];
+                if(isset($pro_val->product_images) && !empty($pro_val->product_images)){
+                    foreach($pro_val->product_images as $im => $image_val){
+                        $products_result['product_images'][$im]['image'] = route('image.displayImage',$image_val->image);
+                        $products_result['product_images'][$im]['image_order'] = $image_val->image_order;
+
+                    }
+                }
+                if(!empty($pro_val->product_variation) && $pro_val->product_variation!=''){
+                    foreach($pro_val->product_variation as $pvr_key => $pro_vari_val){
+                        unset($pro_vari_val['offer_price']);
+                        unset($pro_vari_val['created_at']);
+                        unset($pro_vari_val['updated_at']);
+                        $products_result['product_variation'][$pvr_key] = $pro_vari_val;
+                        $products_result['product_variation'][$pvr_key]['variation_value'] = $pro_vari_val->quantity;
+                        $products_result['product_variation'][$pvr_key]['variation_type'] = ProductVariationType::where('id',$pro_vari_val->variation_type)->first()->name;
+                        unset($pro_vari_val['quantity']);
+                        if($pro_val->id && $pro_vari_val->id){
+                            $productPriceMapping = ProductPriceMapping::where(['product_id'=>$pro_val->id,'product_variant_id'=>$pro_vari_val->id]);
+                            if($productPriceMapping->count()>0){
+                                $products_result['product_variation'][$pvr_key]['main_price'] = $productPriceMapping->latest()->first()->price;
+                                $products_result['product_variation'][$pvr_key]['discount'] = $productPriceMapping->latest()->first()->discount;
+                            }
+                        }
+                    }
+                }
+            // }
+            return $this->sendResponse(new ProductResource($products_result), 'Products retrieved successfully.');
+        }else{
+            return $this->sendError('Product not found.','',400);
+        }
+
+        $select = ['id','product_code','product_name','product_slug','description','food_type','product_catid','product_subcatid','product_type','product_order_type'];
+        $product = Products::with(['product_variation','product_price','product_images'])->where(['blocked'=>1])->select($select)->where('product_slug','like',$slug)->first();
   
+        if(isset($product->product_images) && !empty($product->product_images)){
+            foreach($product->product_images as $im => $image_val){
+                unset($image_val->created_at);
+                unset($image_val->updated_at);
+                unset($image_val->product_id);
+                $product->product_images[$im]['image'] = route('image.displayImage',$image_val->image);
+                $product->product_images[$im]['image_order'] = $image_val->image_order;
+
+            }
+        }
         if (is_null($product)) {
             return $this->sendError('Product not found.','',400);
         }

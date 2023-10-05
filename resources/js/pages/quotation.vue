@@ -11,9 +11,10 @@
                         <button><i class="fa-solid fa-magnifying-glass"></i></button>
                      </div>
                      <div class="itemsCard">
-                        <div class="AddCard" v-for="product in products">
-                           <form method="post" @submit.prevent="addToCart(product)">
-                              <router-link to="/product">
+                        <div v-if="!products.length">No Product Found</div>
+                        <div class="AddCard" v-for="product in products" >
+                           <form method="post" @submit.prevent="addToCart(product)" v-if="product.product_order_type=='quotation'">
+                              <router-link :to="{name:'Product',params:{slug:product.product_slug}}">
                                  <div class="item">{{ product.product_name }}</div>
                               </router-link>
                               <input type="number" v-model="product_qty" />
@@ -36,7 +37,8 @@
    export default {
       data(){
          return{
-            products:[]
+            products:[],
+            noProductFound:false
          }
       },
       created(){
@@ -59,10 +61,11 @@
             .then(response => {
                console.log('response',response);
                this.products = response.data;
+               
             })
             .catch(err => console.log('err get product',err));
          },
-         /*async addToCart(productElement){
+         async addToCart(productElement){
             let app = this;
             console.log("here",productElement,productElement['discount'],app.product_qty)
             let cartProduct = new FormData();
@@ -88,9 +91,10 @@
                console.log('response',response);
                // this.products = response.data;
                this.$store.commit('updateSharedData', response.data);
+               this.$store.dispatch('setCartCount',response.data)
             })
             .catch(err => console.log('err',err));
-         }*/
+         }
       }
    }
 </script>

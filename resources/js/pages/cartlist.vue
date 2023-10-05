@@ -1,45 +1,117 @@
 <template>
     <section class="cart-section">
-        <div class="container">
-            <div class="row" v-if="cartListItemCheck">
-                <div class="col-12 cart-col" >
-                    <div class="card Firstcard cart-card" v-for="cart_product in cartListItem">
-                        <div class="thumbCardImg">
-                            <img src="{{ cart_product.product_images }}" class="card-img-top" alt="..." style="width:80px;">
-                        </div>
-                        <div class="card-body p-0 customcard">
-                            <div class="carddds">
-                                <h5 class="card-title">{{ cart_product.product_name }}</h5>
-                                <div class="Qty ">
-                                    <p>Qty</p>
-                                    <div class="QtyAdd">
-                                    <p>+</p>
-                                    <h6>{{ cart_product.product_qty }}</h6>
-                                    <p>-</p>
+        <div class="py-5">
+            <div class="container">
+                <div class="row" v-if="cartListItemCheck">
+                    <div class="col-xl-8">
+                        <div class="card border shadow-none" v-for="cart_product in cartListItem">
+                            <div class="card-body">
+            
+                                <div class="d-flex align-items-start border-bottom pb-3">
+                                    <div class="me-4">
+                                        <img v-bind:src="cart_product.product_images" alt="" class="avatar-lg rounded">
+                                    </div>
+                                    <div class="flex-grow-1 align-self-center overflow-hidden">
+                                        <div>
+                                            <h5 class="text-truncate font-size-18"><a href="#" class="text-dark">{{ cart_product.product_name }}</a></h5>
+                                            <p class="mb-0 mt-1">Variant : <span class="fw-medium">Gray</span></p>
+                                        </div>
+                                    </div>
+                                    <div class="flex-shrink-0 ms-2">
+                                        <ul class="list-inline mb-0 font-size-16">
+                                            <li class="list-inline-item">
+                                                <a href="javascript:void(0);" @click="removeItem(cart_product.id)" class="text-muted px-1">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
+            
+                                <div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="mt-3">
+                                                <p class="text-muted mb-2">Price</p>
+                                                <h5 class="mb-0 mt-2"><span class="text-muted me-2"><del class="font-size-16 fw-normal">Rs.{{ cart_product.product_price }}</del></span>Rs.{{ cart_product.product_price }}</h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <div class="mt-3">
+                                                <p class="text-muted mb-2">Quantity</p>
+                                                <div class="d-inline-flex">
+                                                    <select class="form-select form-select-sm w-xl">
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                        <option value="6">6</option>
+                                                        <option value="7">7</option>
+                                                        <option value="8">8</option>
+                                                        <option :value="cart_product.product_qty" selected >{{ cart_product.product_qty }}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="mt-3">
+                                                <p class="text-muted mb-2">Total</p>
+                                                <h5>$900</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+            
                             </div>
-                            <div class="PrductPrice ">
-                                <p>Rs {{ cart_product.product_price }}/-</p>
+                        </div>
+                        <!-- end card -->
+            
+                        
+                    </div>
+            
+                    <div class="col-xl-4">
+                        <div class="mt-5 mt-lg-0">
+                            <div class="card border shadow-none">
+                                <div class="card-header bg-transparent border-bottom py-3 px-4">
+                                    <h5 class="font-size-16 mb-0">Order Summary <span class="float-end">#MN0124</span></h5>
+                                </div>
+                                <div class="card-body p-4 pt-2">
+            
+                                    <div class="table-responsive">
+                                        <table class="table mb-0">
+                                            <tbody>
+                                                <tr>
+                                                    <td>Sub Total :</td>
+                                                    <td class="text-end">$ {{subTotal}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Discount : </td>
+                                                    <td class="text-end">- $ {{discountPrice}}</td>
+                                                </tr>
+                                                
+                                                <tr class="bg-light">
+                                                    <th>Total :</th>
+                                                    <td class="text-end">
+                                                        <span class="fw-bold">
+                                                            $ {{totalPrice}}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- end table-responsive -->
+                                </div>
                             </div>
-                            <button type="button" @click="removeItem(cart_product.id)">Remove</button>
                         </div>
                     </div>
                 </div>
-                
-                <div class="col-12">
-                <div class="ProductBtn ">
-                    <a href="javascript:void(0);"  @click="postCheckout()" class="AddCardBtn">Place Order</a>
-                    <router-link to="/quotation" class="WishCardBtn">Continue Shopping</router-link>
-                </div>
-                </div>
-            </div>
-            <div class="row" v-else>
-                <div class="col-12 cart-col" >
-                    <h2>Your Cart is Empty</h2>
-                </div>
+                <!-- end row -->
+            
             </div>
         </div>
+        
     </section>
 </template>
 <script>
@@ -48,7 +120,10 @@
         data(){
             return{
                 cartListItem:[],
-                cartListItemCheck:false
+                cartListItemCheck:false,
+                totalPrice:0,
+                discountPrice:0,
+                subTotal:0,
             }
         },
         created(){
@@ -56,9 +131,10 @@
         },
         methods:{
             removeItem(cart_id){
+                let cartItemIndex = this.cartListItem.findIndex(x => x.id === cart_id);
                 let api_url = CONFIG.API_URL_ROOT+'/remove-cart-item';
                 let auth_user = this.$store.state.token;
-                console.log('cart-page',api_url,auth_user);
+                console.log('cart-page',api_url,auth_user,cartItemIndex,this.cartListItem.length);
                 let cartBodyItem = new FormData();
                 cartBodyItem.append('cart_id',cart_id);
                 fetch(api_url,{
@@ -69,11 +145,7 @@
                     body: cartBodyItem 
                 }).then(response => response.json())
                 .then(response =>{
-                    if(response.data.length && response.data.length>0){
-                        console.log(response.data.length)
-                        this.cartListItem = response.data;
-                        this.cartListItemCheck=true;
-                    }
+                    this.cartListItem.splice(cartItemIndex,1)
                 }).catch(err => console.log('err',err));
             },
             getCartListItem(){

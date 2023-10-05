@@ -20,6 +20,9 @@ export default createStore({
         },
         UPDATE_TOKEN(state,payload){
             state.token=payload;
+        },
+        UPDATE_CARTCOUNT(state,payload){
+            state.cartItemCount=payload;
         }
     },
     actions:{
@@ -30,11 +33,18 @@ export default createStore({
         removeToken(context){
             localStorage.removeItem('auth_user')
             context.commit('UPDATE_TOKEN',0)
+        },
+        setCartCount(context,payload){
+            localStorage.setItem('cart_count',payload)
+            context.commit('UPDATE_CARTCOUNT',payload);
         }
     },
     getters:{
         getToken:function(state){
             return state.token;
+        }, 
+        getCartCount:function(state){
+            return state.cartItemCount;
         } 
     }
 })

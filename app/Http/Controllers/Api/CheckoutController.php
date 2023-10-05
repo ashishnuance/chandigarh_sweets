@@ -95,16 +95,16 @@ class CheckoutController extends BaseController
 
     function remove_item(Request $request){
         $validator = Validator::make($request->all(), [
-            'cart_id' => 'required',
-            'user_id' => 'required'
+            'cart_id' => 'required' 
         ]);
    
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors(),400);       
         }
 
+        $user_id = auth('sanctum')->user()->id;
 
-        $cartlistResult = Cartlist::where(['id'=>$request->cart_id,'user_id'=>$request->user_id]);
+        $cartlistResult = Cartlist::where(['id'=>$request->cart_id,'user_id'=>$user_id]);
         if($cartlistResult->count()>0){
             if($cartlistResult->delete()){
                 return $this->sendResponse('',__('locale.delete_message'));
@@ -117,15 +117,9 @@ class CheckoutController extends BaseController
     }
 
     function delete_cart(Request $request){
-        $validator = Validator::make($request->all(), [
-            'user_id' => 'required'
-        ]);
-   
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors(),400);       
-        }
-
         
+
+        $user_id = auth('sanctum')->user()->id;
 
         $cartlistResult = Cartlist::where(['user_id'=>$request->user_id]);
         if($cartlistResult->count()>0){

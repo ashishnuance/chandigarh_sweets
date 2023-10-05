@@ -11,17 +11,21 @@
                         <button><i class="fa-solid fa-magnifying-glass"></i></button>
                      </div>
                      <div class="itemsCard">
+                        <div v-if="!products.length">No Product Found</div>
                         <div class="AddCard" v-for="product in products">
-                           <form method="post" @submit.prevent="addToCart(product)">
-                              <img v-bind:src="product.product_images[0].image" alt="{{ product.product_name }}" class="img-fluid" style="width:80px;">
-                              <div class="item">{{ product.product_name }}</div>
-                              <div class="price">
-                                 <span>Rs. {{ product.product_name }}</span>
-                              </div>
+                           <form method="post" @submit.prevent="addToCart(product)" v-if="product.product_order_type=='order'">
+                              <router-link :to="{name:'Product',params:{slug:product.product_slug}}">
+                                 <img v-bind:src="product.product_images[0].image" alt="{{ product.product_name }}" class="img-fluid" style="width:80px;">
+                                 <div class="item">{{ product.product_name }}</div>
+                                 <div class="price">
+                                    <span>Rs. {{ product.product_name }}</span>
+                                 </div>
+                              </router-link>
                               <input type="number" v-model="product_qty" />
                               <button class="btn btn-danger" type="submit">Add</button>
                            </form>
                         </div>
+                        
                      </div>
                   </div>
                </div>
@@ -36,7 +40,8 @@
    export default {
       data(){
          return{
-            products:[]
+            products:[],
+            noProductFound:false
          }
       },
       created(){
@@ -96,6 +101,7 @@
                console.log('response',response);
                // this.products = response.data;
                this.$store.commit('updateSharedData', response.data);
+               this.$store.dispatch('setCartCount',response.data)
             })
             .catch(err => console.log('err',err));
          }

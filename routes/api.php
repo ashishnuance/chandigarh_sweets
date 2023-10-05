@@ -38,7 +38,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('add-to-cart', [CheckoutController::class,'add_to_cart']);
     Route::get('cart-list', [CheckoutController::class,'cart_list']);
     Route::post('remove-cart-item', [CheckoutController::class,'remove_item']);
-    Route::post('remove-all-cart-items', [CheckoutController::class,'delete_cart']);
+    Route::get('remove-all-cart-items', [CheckoutController::class,'delete_cart']);
     Route::post('checkout', [CheckoutController::class,'checkout']);
     
 });

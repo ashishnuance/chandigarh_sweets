@@ -20,22 +20,22 @@
                         <img src="img/icon4.png" alt="">
                         <p>messages {{isLogedIn}}</p>
                     </li>
+                    
+                    <li class="nav-item">
+                        <router-link to="/cart">
+                        <!-- <a href="Cart.html"> -->
+                            <img src="img/icon5.png" alt="">
+                            <span class="addcart">{{ cartItemCount }}</span>
+                            <!-- </a> -->
+                        </router-link>
+                    </li>
                     <li class="nav-item" v-if="!isLogedIn">
                         <router-link to="/app-register">
                             <img src="img/icon5.png" alt="">
                             <p>sign up</p>
                         </router-link>
                     </li>
-                    
-                    <li class="nav-item">
-                        <router-link to="/cart">
-                        <!-- <a href="Cart.html"> -->
-                            <img src="img/icon5.png" alt="">
-                            <span class="addcart">{{ sharedData }}</span>
-                        <!-- </a> -->
-                        </router-link>
-                    </li>
-                    <li class="nav-item" v-if="isLogedIn">
+                    <li class="nav-item" v-else>
                         <a href="javascript:void(0);" @click="userLogout">
                             <span class="addcart">Logout</span>
                         </a>
@@ -58,13 +58,14 @@
                 pagination: {},
                 cartItemCount:0,
                 isLogedIn:false
+                
             };
         },
 
         created() {
             
             this.getHeaderSettings();
-
+            this.cartItemCount = this.$store.getters.getCartCount
         },
         mounted(){
             this.getCartCount();

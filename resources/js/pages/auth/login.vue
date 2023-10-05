@@ -1,31 +1,34 @@
 <template>
-    <div class="container">
-      <div class="row">
-         <div class="col-lg-12 d-flex align-items-center justify-content-center">
-            <div class="PswrdPopup">
-               <h2>Log In</h2>
-               <div class=" PswrdCard">
-                  <form method="post" @submit.prevent="login">
+   <section class="LoginSection">
+      <div class="container">
+         <div class="row">
+            <div class="col-lg-12 d-flex align-items-center justify-content-center">
+               <div class="PswrdPopup">
+                  <h2>Log In</h2>
+                  <div class=" PswrdCard">
+                     <form method="post" @submit.prevent="login">
                      <div class="BoxInput">
                         <label class="form-label">Email ID</label>
                         <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" v-model="email">
                      </div>
                      <div class="BoxInput">
                         <label class="form-label">Password</label>
-                        <input type="password" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" v-model="password">
-                        
-                        <router-link to="/register">Sign In</router-link>
-                           
+                        <input type="password" class="form-control" id="exampleInputpassword" aria-describedby="emailHelp" v-model="password">
                      </div>
+                     
                      <div class="PswrdBtn">
+                        
                         <button type="submit">Submit</button>
+                        <router-link to="/register">Sign In</router-link>
                      </div>
-                  </form>
+                     </form>
+                  </div>
                </div>
             </div>
          </div>
       </div>
-   </div>
+   </section>
+    
 </template>
 
 <script>

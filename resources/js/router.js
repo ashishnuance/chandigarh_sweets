@@ -69,8 +69,8 @@ const routes = [
         }
     },
     {
-        path:'/product',
-        name:'product',
+        path:'/product/:slug',
+        name:'Product',
         component:product,
         meta:{
             isAuth:true
@@ -92,10 +92,15 @@ const router = createRouter({
 });
 
 router.beforeEach((to,from,next) => {
+    let auth_user = localStorage.getItem('auth_user');
     if(to.meta.isAuth){
-        let auth_user = localStorage.getItem('auth_user');
         if(!auth_user){
             next({name:'Login'});
+        }
+    }
+    if(to.name=='Login' || to.name=='Register'){
+        if(auth_user){
+            next({name:'Home'});
         }
     }
     next()

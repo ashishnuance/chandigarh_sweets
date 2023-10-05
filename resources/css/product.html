@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Web Layout</title>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+   <link rel="stylesheet" href="css/style.css">
+   <link rel="stylesheet" href="css/master.css">
+   <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body>
+   <header>
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+          <a class="navbar-brand " href="index.html">
+            <img src="img/logo.png" alt="" class="img-fluid">
+          </a>
+  
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
+            aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+  
+          <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul class="navbar-nav ms-auto NavIcon">
+                
+                <li class="nav-item">
+                    <img src="img/icon4.png" alt="">
+                    <p>messages</p>
+                </li>
+                <li class="nav-item">
+                  <a href="login.html">
+                    <img src="img/icon5.png" alt="">
+                    <p>sign up</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="Cart.html">
+                    <img src="img/icon5.png" alt="">
+                    <span class="addcart">5</span>
+                  </a>
+                </li>
+            </ul>
+        </div>
+        </div>
+      </nav>
+    </header>
+
+   <section class="Product">
+      <div class="container">
+         <div class="row">
+            <div class="col-lg-5 d-flex justify-content-center">
+               <div class="card Firstcard">
+                  <div class="thumbCardImg">
+                     <img src="img/Group 22.png" class="card-img-top" alt="...">
+                  </div>
+               </div>
+            </div>
+            <div class="col-lg-7 d-flex align-items-center">
+               <div class="ProductContent ">
+                  <div class="ProductHead">
+                     <h5>Lorem Ipsum is simply dummy</h5>
+                  </div>
+                  <div class="PrductPrice ">
+                     <p>Rs 000/-</p>
+                     <p class="Stock"><span></span>In Stock</p>
+                  </div>
+                  <div class="dicription">
+                     <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+                  </div>
+                  <div class="Qty">
+                     <div class="qty-input">
+                        <button class="qty-count qty-count--minus" data-action="minus" type="button">-</button>
+                        <input class="product-qty" type="number" name="product-qty" min="0" max="10" value="1">
+                        <button class="qty-count qty-count--add" data-action="add" type="button">+</button>
+                     </div>
+                     <div class="Variant">
+                        <select class="form-control">
+                           <option>Select Variant</option>
+                           <option>Kg</option>
+                           <option>Kg</option>
+                           <option>Kg</option>
+                           <option>Kg</option>
+                           <option>Kg</option>
+                           <option>Kg</option>
+                        </select>
+                     </div>
+                  </div>
+                  <div class="ProductBtn ">
+                     <a href="quot-order.html" class="AddCardBtn">Add card</a>
+                     <a href="quot-order.html" class="WishCardBtn">Wish list</a>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+
+   <footer>
+      <section>
+         <div class="container-fluid  p-0">
+            <div class="row g-0">
+               <div class="col-lg-6 col-12">
+                  <div class="infoBox">
+                     <h5>Copyright © 2022 Chandigarh Sweets Ltd.</h5>
+                  </div>
+               </div>
+               <div class="col-lg-6 col-12">
+                  <div class="infoBox">
+                     <h5>Developed By: Developer</h5>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+      
+   </footer>
+
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
