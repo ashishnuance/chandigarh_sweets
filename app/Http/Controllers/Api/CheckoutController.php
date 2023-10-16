@@ -158,8 +158,11 @@ class CheckoutController extends BaseController
         }
 
         $user_id = auth('sanctum')->user()->id;
+        $userData = User::with('company')->where('id',$user_id)->first();
+        $company_id = $userData->company[0]->id;
         
-        if(Company::where('id',$request->company_id)->count()==0){
+        //print_r($company_id); exit();
+        if(Company::where('id',$company_id)->count()==0){
             return $this->sendError('Validation Error.', 'Company id is not correct',400);  
         }
 
@@ -186,6 +189,8 @@ class CheckoutController extends BaseController
 
         $checkoutData = $request->input();
         $checkoutData['user_id'] = $user_id;
+        $checkoutData['company_id'] = $company_id;
+        
         $checkoutData['product_json'] = json_encode($request->product_data);
         if(CheckoutModel::create($checkoutData)){
             Cartlist::where(['user_id'=>$user_id])->delete();

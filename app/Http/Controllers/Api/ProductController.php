@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API;
    
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\BaseController as BaseController;
-use App\Models\{Products,User,ProductsVariations,ProductPriceMapping,ProductVariationType};
+use App\Models\{Products,User,ProductsVariations,ProductPriceMapping,ProductVariationType,ProductCompanyMapping};
 use Validator;
 use App\Http\Resources\ProductResource;
 use Illuminate\Http\JsonResponse;
@@ -27,8 +27,7 @@ class ProductController extends BaseController
         $user_company_id = (isset($auth_user_result->company[0]) && !empty($auth_user_result->company[0])) ? $auth_user_result->company[0]->id : 0;
         
         $user_type = $auth_user_result->user_type;
-        
-        $products = Products::with(['product_variation','product_price','product_images'])->where(['blocked'=>1])->select($select)
+        $products = Products::with(['product_variation','product_images','company'])->where(['blocked'=>1])->select($select)
         ->whereHas('company',function($q) use($user_company_id){
             if($user_company_id>0){
             $q->where('company_id',$user_company_id);
@@ -52,8 +51,14 @@ class ProductController extends BaseController
                 $products_result[$key]['food_type'] = $pro_val->food_type;
                 $products_result[$key]['product_type'] = $pro_val->product_type;
                 $products_result[$key]['product_order_type'] = $pro_val->product_order_type;
-                $products_result[$key]['price'] = 0;
-                $products_result[$key]['discount'] = 0;
+                
+                if(isset($pro_val->product_images) && !empty($pro_val->product_images)){
+                    foreach($pro_val->product_images as $im => $image_val){
+                        $products_result[$key]['product_images'][$im]['image'] = route('image.displayImage',$image_val->image);
+                        $products_result[$key]['product_images'][$im]['image_order'] = $image_val->image_order;
+
+                    }
+                }
                 if(!empty($pro_val->product_variation) && $pro_val->product_variation!=''){
                     foreach($pro_val->product_variation as $pvr_key => $pro_vari_val){
                         unset($pro_vari_val['offer_price']);
@@ -72,15 +77,7 @@ class ProductController extends BaseController
                         }
                     }
                 }
-                if(isset($pro_val->product_images) && !empty($pro_val->product_images)){
-                    foreach($pro_val->product_images as $im => $image_val){
-                        $products_result[$key]['product_images'][$im]['id'] = $image_val->id;
-                        $products_result[$key]['product_images'][$im]['image'] = route('image.displayImage',$image_val->image);
-                        $products_result[$key]['product_images'][$im]['image_order'] = $image_val->image_order;
-
-                    }
-                }
-                
+                $products_result[$key]['company_id'] = $pro_val->company[0]->id;
             }
             return $this->sendResponse(ProductResource::collection($products_result), 'Products retrieved successfully.');
         }else{
