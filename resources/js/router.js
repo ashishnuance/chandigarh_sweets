@@ -9,6 +9,7 @@ import quotation from './pages/quotation';
 import orders from './pages/orders';
 import product from './pages/product';
 import cart from './pages/cartlist';
+import thankyou from './pages/thankyou';
 
 
 const routes = [
@@ -21,7 +22,7 @@ const routes = [
         }
     },
     {
-        path:'/home',
+        path:'/',
         name:'Home',
         component:home,
         meta:{
@@ -83,7 +84,16 @@ const routes = [
         meta:{
             isAuth:true
         }
+    },
+    {
+        path:'/thankyou',
+        name:'Thankyou',
+        component:thankyou,
+        meta:{
+            isAuth:true
+        }
     }
+
 ];
 
 const router = createRouter({

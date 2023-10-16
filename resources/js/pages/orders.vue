@@ -14,15 +14,29 @@
                         <div v-if="!products.length">No Product Found</div>
                         <div class="AddCard" v-for="product in products">
                            <form method="post" @submit.prevent="addToCart(product)" v-if="product.product_order_type=='order'">
-                              <router-link :to="{name:'Product',params:{slug:product.product_slug}}">
-                                 <img v-bind:src="product.product_images[0].image" alt="{{ product.product_name }}" class="img-fluid" style="width:80px;">
-                                 <div class="item">{{ product.product_name }}</div>
+                              
+                                 <div class="InnnerAddCard">
+                                    <div class="item">
+                                       <router-link :to="{name:'Product',params:{slug:product.product_slug}}">
+                                       <img src="http://localhost:8000/img/Group 22.png" alt="">
+
+                                    </router-link></div>
+                                    <router-link to="/" class="productName">{{ product.product_name }}</router-link>
+                                    <div class="price">
+                                       <input type="hidden" name="product_qty" v-model="product_qty" />
+                                       <input type="hidden" name="product_price" value="product_qty" />
+                                       <button class="btn text-white" type="submit">Add</button>
+                                       <router-link :to="{name:'Product',params:{slug:product.product_slug}}">Rs. {{ product.product_variation[0].main_price }}</router-link>
+                                    </div>
+                                    <!-- <div class="item">{{ product.product_name }}</div>
                                  <div class="price">
-                                    <span>Rs. {{ product.product_name }}</span>
+                                    <span>Rs. {{ product.product_variation[0].main_price }}</span>
+                                 </div> -->
                                  </div>
-                              </router-link>
-                              <input type="number" v-model="product_qty" />
-                              <button class="btn btn-danger" type="submit">Add</button>
+                                
+                              <!-- </router-link> -->
+                              <!-- <input type="number" v-model="product_qty" /> -->
+                              <!-- <button class="btn btn-danger" type="submit">Add</button> -->
                            </form>
                         </div>
                         
@@ -41,7 +55,8 @@
       data(){
          return{
             products:[],
-            noProductFound:false
+            noProductFound:false,
+            product_qty:1
          }
       },
       created(){
@@ -70,7 +85,7 @@
             })
             .then(response => response.json())
             .then(response => {
-               console.log('response',response);
+               console.log('response',response.data);
                this.products = response.data;
             })
             .catch(err => console.log('err get product',err));
@@ -83,7 +98,7 @@
             cartProduct.append("product_id",productElement['id']);
             cartProduct.append("order_type",'order');
             cartProduct.append("product_qty",app.product_qty);
-            cartProduct.append("product_price",productElement['price']);
+            cartProduct.append("product_price",productElement['product_variation'][0]['main_price']);
             cartProduct.append("product_variant_id",productElement['product_variation'][0]['id']);
             
             const api_url = CONFIG.API_URL_ROOT+'/add-to-cart';

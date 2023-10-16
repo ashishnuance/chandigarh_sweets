@@ -33,6 +33,8 @@ use App\Http\Controllers\BuyerTypeChannelController;
 use App\Http\Controllers\ProductVariationTypeController;
 
 use App\Http\Controllers\MailController;
+use App\Http\Controllers\FrontController;
+
 
 
 
@@ -47,7 +49,7 @@ use App\Http\Controllers\MailController;
 |
 */
 
-Auth::routes(['verify' => true]);
+// Auth::routes(['verify' => false]);
 
 // Route::prefix('superadmin')->group(function () { 
     Route::get('/superadmin-login', [LoginController::class, 'showLoginFormSuperadmin']);
@@ -56,7 +58,8 @@ Auth::routes(['verify' => true]);
 // });
 
 /*** front app routes start ***/
-Route::get('/home',function(){
+
+Route::get('/',function(){
     return view('welcome');
 });
 Route::get('/app-login',function(){
@@ -78,6 +81,9 @@ Route::get('/cart',function(){
     return view('welcome');
 });
 Route::get('/product/{slug}',function(){
+    return view('welcome');
+});
+Route::get('/thankyou',function(){
     return view('welcome');
 });
 /*** front app routes end ***/
@@ -442,3 +448,4 @@ Route::get('/page-404', [MiscController::class, 'page404']);
 Route::get('/page-maintenance', [MiscController::class, 'maintenancePage']);
 Route::get('/page-500', [MiscController::class, 'page500']);
 
+Route::get('/',[FrontController::class,'index'])->name('page404');

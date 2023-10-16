@@ -7,7 +7,7 @@ use App\Http\Controllers\Api\BaseController as BaseController;
 use Illuminate\Http\Request;
 use Validator;
 use Illuminate\Http\JsonResponse;
-use App\Models\{User,Cartlist,ProductsVariations,Products,CheckoutModel,Company};
+use App\Models\{User,Cartlist,ProductsVariations,Products,CheckoutModel,Company,ProductVariationType};
 use Illuminate\Support\Facades\Hash;
 
 class CheckoutController extends BaseController
@@ -45,10 +45,16 @@ class CheckoutController extends BaseController
         $checkCart = Cartlist::where(['product_id'=>$request->product_id,'product_variant_id'=>$request->product_variant_id,'user_id'=>$input['user_id']]);
         
         if($checkCart->count()>0){
-            $cartupdate['product_qty'] = ($checkCart->first()->product_qty+$request->product_qty);
-            $cartResult = Cartlist::where('id',$checkCart->first()->id)->update($cartupdate);
-            $cartResult=true;
-            $successMessage = __('locale.success common update');
+            if($checkCart->first()->order_type==$request->order_type){
+                $cartupdate['product_qty'] = $request->product_qty;//($checkCart->first()->product_qty+$request->product_qty);
+                $cartResult = Cartlist::where('id',$checkCart->first()->id)->update($cartupdate);
+                $cartResult=true;
+                $successMessage = __('locale.success common update');
+            }else{
+                Cartlist::where(['user_id'=>$input['user_id']])->delete();
+                $cartResult = Cartlist::create($input);
+                $successMessage = __('locale.success common add');
+            }
         }else{
             $cartResult = Cartlist::create($input);
             $successMessage = __('locale.success common add');
@@ -66,7 +72,7 @@ class CheckoutController extends BaseController
         try{
             $user_id = auth('sanctum')->user()->id;
 
-            $cartlistResult = Cartlist::with('products')->where('user_id',$user_id);
+            $cartlistResult = Cartlist::with(['products'])->where('user_id',$user_id);
             
             if($cartlistResult->count()>0){
                 $products_result = [];
@@ -76,6 +82,12 @@ class CheckoutController extends BaseController
                     $products_result[$key]['product_name'] = $cart_val->products->product_name;
                     $products_result[$key]['product_slug'] = $cart_val->products->product_slug;
                     $products_result[$key]['food_type'] = $cart_val->products->food_type;
+                    if($cart_val->product_variant_id>0){
+                        $products_variants_value = ProductsVariations::where('id',$cart_val->product_variant_id)->first();
+                        // echo $products_variants_value->id; exit();
+                        $products_variants_name = ProductVariationType::where('id',$products_variants_value->variation_type)->first();
+                        $products_result[$key]['products_variants'] = $products_variants_value->quantity.$products_variants_name->name;
+                    }
                     $products_result[$key]['product_images'] = '';
                     if(isset($cart_val->products->product_images) && !empty($cart_val->products->product_images)){
                         foreach($cart_val->products->product_images as $im => $image_val){
@@ -136,7 +148,7 @@ class CheckoutController extends BaseController
     function checkout(Request $request){
         
         $validator = Validator::make($request->all(), [
-            'user_id'=>'required',
+            
             'product_data'=>"required|array|min:1",
             'order_type' => 'required'
         ]);
@@ -145,6 +157,8 @@ class CheckoutController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors(),400);       
         }
 
+        $user_id = auth('sanctum')->user()->id;
+        
         if(Company::where('id',$request->company_id)->count()==0){
             return $this->sendError('Validation Error.', 'Company id is not correct',400);  
         }
@@ -171,9 +185,10 @@ class CheckoutController extends BaseController
         }
 
         $checkoutData = $request->input();
+        $checkoutData['user_id'] = $user_id;
         $checkoutData['product_json'] = json_encode($request->product_data);
         if(CheckoutModel::create($checkoutData)){
-            Cartlist::where(['user_id'=>$request->user_id])->delete();
+            Cartlist::where(['user_id'=>$user_id])->delete();
             return $this->sendResponse('',__('locale.order_success_submit'));
         }else{
             return $this->sendError('Failed.', ['error'=>__('locale.try_again')],400);

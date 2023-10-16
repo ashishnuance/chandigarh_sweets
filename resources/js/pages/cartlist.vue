@@ -14,7 +14,7 @@
                                     <div class="flex-grow-1 align-self-center overflow-hidden">
                                         <div>
                                             <h5 class="text-truncate font-size-18"><a href="#" class="text-dark">{{ cart_product.product_name }}</a></h5>
-                                            <p class="mb-0 mt-1">Variant : <span class="fw-medium">Gray</span></p>
+                                            <p class="mb-0 mt-1">Variant : <span class="fw-medium">{{ cart_product.products_variants }}</span></p>
                                         </div>
                                     </div>
                                     <div class="flex-shrink-0 ms-2">
@@ -39,25 +39,25 @@
                                         <div class="col-md-5">
                                             <div class="mt-3">
                                                 <p class="text-muted mb-2">Quantity</p>
-                                                <div class="d-inline-flex">
-                                                    <select class="form-select form-select-sm w-xl">
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option :value="cart_product.product_qty" selected >{{ cart_product.product_qty }}</option>
-                                                    </select>
-                                                </div>
+                                                <div class="Qty">
+                                                    <div class="qty-input">
+                                                        <button class="qty-count qty-count--minus" data-action="minus" type="button">-</button>
+                                                        <input class="product-qty" type="number" name="product-qty" min="0" max="10">
+                                                        <button class="qty-count qty-count--add" data-action="add" type="button">+</button>
+                                                    </div>
+                                                    <div class="Variant">
+                                                        <!-- <select class="form-control" v-if="productDetail.product_variation">
+                           <option>Select Variant</option>
+                           <option v-for="pro_vari in productDetail.product_variation" :key="pro_vari.id" v-value="pro_vari.id">{{ pro_vari.variation_value }} {{ pro_vari.variation_type }}</option>
+                        </select> -->
+                    </div>
+                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="mt-3">
                                                 <p class="text-muted mb-2">Total</p>
-                                                <h5>$900</h5>
+                                                <h5>Rs {{ cart_product.product_price*cart_product.product_qty }}</h5>
                                             </div>
                                         </div>
                                     </div>
@@ -66,7 +66,21 @@
                             </div>
                         </div>
                         <!-- end card -->
-            
+                        
+                        <div class="row my-4">
+                            <div class="col-sm-6">
+                                <div class="ProductBtn justify-content-start">
+                                    <router-link to="/{{cartListItem[0].order_type}}" class="btn theme-btn">
+                                    <i class="fa fa-arrow-left me-1"></i> Continue Shopping </router-link>
+                                </div>
+                            </div> <!-- end col -->
+                            <div class="col-sm-6">
+                                <div class="text-sm-end mt-2 mt-sm-0 ProductBtn justify-content-end">
+                                    <a href="javascript:void(0);" @click.prevent="postCheckout()" class="btn theme-btn">
+                                        <i class="fa fa-bag me-1"></i> Checkout </a>
+                                </div>
+                            </div> <!-- end col -->
+                        </div>
                         
                     </div>
             
@@ -107,8 +121,17 @@
                         </div>
                     </div>
                 </div>
-                <!-- end row -->
-            
+                <div class="row" v-else>
+                    <div class="CartEmpty">
+                    <div class="EmptyImg">
+                        <img src="http://localhost:8000/img/emptyCart.jpg" alt="">
+                       
+                    </div>
+                   <h2>Your Cart is Empty</h2> 
+                   <p>Add something to make me happy</p>
+                   <router-link to="/" class="EmptyBtn">Continue Shoping</router-link>   
+            </div>
+                </div>
             </div>
         </div>
         
@@ -124,12 +147,27 @@
                 totalPrice:0,
                 discountPrice:0,
                 subTotal:0,
+                product_qty:0
             }
         },
         created(){
             this.getCartListItem();
         },
         methods:{
+            increaseQty(pro_qty){
+                console.log(pro_qty,this.product_qty)
+                this.product_qty = (pro_qty+1);
+                console.log(this.product_qty)
+            },
+            decreaseQty(pro_qty){
+                console.log(pro_qty,this.product_qty)
+                if(pro_qty>1){
+                this.product_qty = (pro_qty-1);
+                }else{
+                this.product_qty = pro_qty;
+                }
+                console.log(this.product_qty)
+            },
             removeItem(cart_id){
                 let cartItemIndex = this.cartListItem.findIndex(x => x.id === cart_id);
                 let api_url = CONFIG.API_URL_ROOT+'/remove-cart-item';
@@ -159,10 +197,14 @@
                     }
                 }).then(response => response.json())
                 .then(response =>{
+                    console.log('response',response);
                     if(response.data.length && response.data.length>0){
                         console.log(response.data.length)
                         this.cartListItem = response.data;
                         this.cartListItemCheck=true;
+                    }
+                    if(response.success===false){
+                        this.cartListItemCheck=false;
                     }
                 }).catch(err => console.log('err',err));
             },
@@ -170,7 +212,7 @@
                 let api_url = CONFIG.API_URL_ROOT+'/checkout';
                 let auth_user = this.$store.state.token;
                 let checkoutData = {
-                    'order_type':'order',
+                    'order_type':this.cartListItem[0].order_type,
                     'user_id':auth_user.user_id,
                     'company_id':1,
                     'product_data':this.cartListItem
@@ -188,7 +230,8 @@
                     this.cartListItemCheck=false;
                 }).catch(err => console.log('checkout error',err))
                 console.log('checkoutData',checkoutData)
-            }
+            },
+            
         }
     }
 </script>

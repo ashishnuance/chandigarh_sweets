@@ -55,6 +55,7 @@ class FormController extends Controller
 
         return view('pages.form-editor', ['breadcrumbs' => $breadcrumbs], ['pageConfigs' => $pageConfigs]);
     }
+    
     public function fileUploads()
     {
         $breadcrumbs = [

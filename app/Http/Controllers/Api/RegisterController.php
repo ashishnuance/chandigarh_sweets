@@ -29,6 +29,7 @@ class RegisterController extends BaseController
    
         $input = $request->all();
         $userCheck = User::where('email',$input['email'])->where('invite_code',$input['invite_code']);
+        // dd($userCheck->toSql());
         if($userCheck->count()>0){
             $success['user_id'] = $userCheck->first()->id;
             $success['name'] = $userCheck->first()->name;

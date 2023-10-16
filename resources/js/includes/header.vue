@@ -1,50 +1,50 @@
 <template>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-light">
-            <div class="container">
-            <a class="navbar-brand " href="index.html">
-                <router-link to="/home">
-                <img v-bind:src="headerSettings.header_logo" alt="" class="img-fluid">
-                </router-link>
-            </a>
-    
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
-                aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-    
-            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-                <ul class="navbar-nav ms-auto NavIcon">
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <div class="container">
+        <router-link to="/" class="navbar-brand ">
+            <img v-bind:src="headerSettings.header_logo" alt="" class="img-fluid">
+        </router-link>
+        
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
+            aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+          <ul class="navbar-nav ms-auto NavIcon">
+
+            
+                <li class="nav-item">
+                    <img src="img/icon4.png" alt="">
+                    <p>messages {{isLogedIn}}</p>
+                </li>
+                <li class="nav-item" v-if="!isLogedIn">
+                    <router-link to="/app-register">
+                        <img src="img/icon5.png" alt="">
+                        <p>sign up</p>
+                    </router-link>
+                </li>
+                <li class="nav-item" v-else>
+                    <a href="javascript:void(0);" @click="userLogout()">
+                        <img src="img/icon5.png" alt="">
+                        <p>Logout</p>
+                    </a>
+                </li>
+                <li class="nav-item" v-if="isLogedIn">
                     
-                    <li class="nav-item">
-                        <img src="img/icon4.png" alt="">
-                        <p>messages {{isLogedIn}}</p>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <router-link to="/cart">
-                        <!-- <a href="Cart.html"> -->
-                            <img src="img/icon5.png" alt="">
-                            <span class="addcart">{{ cartItemCount }}</span>
-                            <!-- </a> -->
-                        </router-link>
-                    </li>
-                    <li class="nav-item" v-if="!isLogedIn">
-                        <router-link to="/app-register">
-                            <img src="img/icon5.png" alt="">
-                            <p>sign up</p>
-                        </router-link>
-                    </li>
-                    <li class="nav-item" v-else>
-                        <a href="javascript:void(0);" @click="userLogout">
-                            <span class="addcart">Logout</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            </div>
-        </nav>
-    </header> 
+                    <router-link to="/cart">
+                        <img src="img/icon5.png" alt="">
+                        <span class="addcart">{{$store.state.cartItemCount}}</span>
+                    </router-link>
+                </li>
+          </ul>
+      </div>
+      </div>
+    </nav>
+  </header>
+    
 </template>
 
 <script>

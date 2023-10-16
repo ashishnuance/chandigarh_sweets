@@ -1,28 +1,29 @@
 <template>
     <div class="container">
         <div class="row">
-        <div class="col-lg-12 d-flex align-items-center justify-content-center">
-            <div class="PswrdPopup">
-            <h2>Password</h2>
-            <div class=" PswrdCard">
-                <form method="post" @submit.prevent="generatePassword">
-                    <div class="BoxInput">
-                        <label class="form-label">Password</label>
-                        <input type="password" class="form-control" id="exampleInputEmail1" aria-describedby="password" v-model="password">
+            <div class="col-lg-12 d-flex align-items-center justify-content-center">
+                <div class="PswrdPopup">
+                    <h2>Password</h2>
+                    <div class=" PswrdCard">
+                        <form method="post" @submit.prevent="generatePassword">
+                            <div class="BoxInput">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" v-model="password">
+                            </div>
+                            <div class="BoxInput">
+                            <label class="form-label">Confirm Password</label>
+                            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" v-model="password_confirmation">
+                            </div>
+                            <div class="PswrdBtn">
+                            <button type="submit" class="btn btn-danger">Generate</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="BoxInput">
-                        <label class="form-label">Confirm Password</label>
-                        <input type="password" class="form-control" id="exampleInputEmail1" aria-describedby="confirm-password" v-model="password_confirmation">
-                    </div>
-                    <div class="PswrdBtn">
-                    <button type="submit" class="btn btn-danger">Generate</button>
-                    </div>
-                </form>
+                </div>
             </div>
-            </div>
-        </div>
         </div>
     </div>
+    
 </template>
 <script>
     import CONFIG from '../../config';
@@ -39,7 +40,6 @@
                 let paswordFormData = new FormData();
                 paswordFormData.append('password',app.password);
                 paswordFormData.append('password_confirmation',app.password_confirmation);
-                paswordFormData.append('user_id',auth_user.user_id);
                 await fetch(api_url,{
                     method:'post',
                     headers:{
